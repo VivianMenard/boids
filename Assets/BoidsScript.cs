@@ -7,22 +7,19 @@ public class BoidsScript : MonoBehaviour
 {
     public GameObject Boid;
     public int NumberOfBoids;
-    public GameObject Area;
+    private AreaScript area;
     void Start()
     {
+        area = GameObject.FindGameObjectWithTag("Area").
+            GetComponent<AreaScript>();
+
         for (int i=0; i < NumberOfBoids; i++)
         {
-            float maxOffsetX = Area.transform.localScale.x / 2;
-            float maxOffsetY = Area.transform.localScale.y / 2;
-            float maxOffsetZ = Area.transform.localScale.z / 2;
-
-            Vector3 randomLocalPosition = new Vector3(
-                UnityEngine.Random.Range(-maxOffsetX, maxOffsetX),
-                UnityEngine.Random.Range(-maxOffsetY, maxOffsetY),
-                UnityEngine.Random.Range(-maxOffsetZ, maxOffsetZ)
+            Vector3 randomPosition = new Vector3(
+                UnityEngine.Random.Range(area.minX, area.maxX),
+                UnityEngine.Random.Range(area.minY, area.maxY),
+                UnityEngine.Random.Range(area.minZ, area.maxZ)
             );
-
-            Vector3 randomPosition = Area.transform.position + randomLocalPosition;
 
             Instantiate(
                 Boid,  
