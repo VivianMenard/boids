@@ -321,7 +321,7 @@ GameObject:
   - component: {fileID: 1119471558}
   m_Layer: 0
   m_Name: BoidsManager
-  m_TagString: Untagged
+  m_TagString: BoidsManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -338,8 +338,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76656174a1e25294c84c4aebfa0ad7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  maxVelocity: 10
   Boid: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
-  NumberOfBoids: 10
+  NumberOfBoids: 100
 --- !u!4 &1119471559
 Transform:
   m_ObjectHideFlags: 0
@@ -580,17 +581,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28b003709857a914ca175fef960f9075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  minX: 0
-  maxX: 0
-  minY: 0
-  maxY: 0
-  minZ: 0
-  maxZ: 0
+  minPt: {x: 0, y: 0, z: 0}
+  maxPt: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
   - {fileID: 963194228}
   - {fileID: 705507995}
-  - {fileID: 1119471559}
   - {fileID: 1762060542}
+  - {fileID: 1119471559}
