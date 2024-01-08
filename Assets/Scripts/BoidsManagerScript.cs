@@ -5,9 +5,14 @@ using UnityEngine;
 
 public class BoidsManagerScript : MonoBehaviour
 {
-    public float minVelocity;
-    public float maxVelocity;
-    [SerializeField] private int NumberOfBoids; 
+    public float velocity;
+    public float visionDistance;
+    public float visionAngle;
+
+    public float momentumStrengh;
+    public float alignmentStrengh;
+
+    [SerializeField] private int numberOfBoids; 
     [SerializeField] private GameObject Boid;
     private AreaScript area;
     void Start() {
@@ -19,7 +24,7 @@ public class BoidsManagerScript : MonoBehaviour
     void Update() {}
 
     private void SpawnBoids() {
-        for (int _ = 0; _ < NumberOfBoids; _++) {
+        for (int _ = 0; _ < numberOfBoids; _++) {
             Instantiate(
                 Boid,  
                 GetRandomPositionInArea(),

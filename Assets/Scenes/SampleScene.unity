@@ -338,9 +338,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76656174a1e25294c84c4aebfa0ad7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  maxVelocity: 10
+  velocity: 5
+  momentumStrengh: 5
+  separationStrengh: 0
+  alignmentStrengh: 1
+  cohesionStrengh: 0
+  numberOfBoids: 100
   Boid: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
-  NumberOfBoids: 100
 --- !u!4 &1119471559
 Transform:
   m_ObjectHideFlags: 0
@@ -369,7 +373,7 @@ GameObject:
   - component: {fileID: 1313484086}
   - component: {fileID: 1313484085}
   m_Layer: 0
-  m_Name: Plane
+  m_Name: Floor
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -407,7 +411,7 @@ MeshCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 5
   m_Convex: 0
   m_CookingOptions: 30
@@ -432,7 +436,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: 56f017debb6995b40b916d780183053b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -499,7 +503,7 @@ BoxCollider:
   m_LayerOverridePriority: 0
   m_IsTrigger: 0
   m_ProvidesContacts: 0
-  m_Enabled: 1
+  m_Enabled: 0
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
