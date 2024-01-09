@@ -9,6 +9,13 @@ public class BoidScript : MonoBehaviour
     private AreaScript area;
     private BoidsManagerScript boidsManager;
     private int visionDistance;
+
+    private enum Rule {
+        SEPARATION,
+        ALIGNMENT,
+        COHESION
+    }
+
     void Start() {
         area = GameObject.FindGameObjectWithTag("Area").
             GetComponent<AreaScript>();
@@ -22,12 +29,11 @@ public class BoidScript : MonoBehaviour
     void Update() {}
 
     private void FixedUpdate() {
-        if (boidsManager.clock == id % boidsManager.nbFrameBetweenUpdates) {
+        if (boidsManager.clock == id % boidsManager.nbFrameBetweenUpdates)
             ComputeNewDirection();
-        }
 
         Move();
-        TeleportIfOutOfBorders(); 
+        TeleportIfOutOfBorders();
     }
 
     private void ComputeNewDirection() {
@@ -36,47 +42,90 @@ public class BoidScript : MonoBehaviour
             visionDistance
         );
 
-        Vector3 nearbyBoidsDirectionSum = Vector3.zero;
-        Vector3 nearbyBoidsPositionSum = Vector3.zero;
-        int nbBoidsInFOV = 0;
+        Vector3 separationPositionSum = Vector3.zero,
+            alignmentDirectionSum = Vector3.zero,
+            cohesionPositionSum = Vector3.zero;
+
+        int nbBoidsSeparation = 0,
+            nbBoidsAlignment = 0,
+            nbBoidsCohesion = 0;
 
         foreach (Collider collider in collidersNearby) {
-            if (!IsAVisibleBoid(collider)){
+            if (!IsAVisibleBoid(collider))
                 continue;
+
+            float squaredDistance = (
+                collider.transform.position - transform.position
+            ).sqrMagnitude;
+
+            if (squaredDistance > boidsManager.squaredCohesionRadius) {
+                nbBoidsCohesion += 1;
+                cohesionPositionSum += collider.transform.position;
+            } 
+            else if (squaredDistance < boidsManager.squaredSeparationRadius) {
+                nbBoidsSeparation += 1;
+                separationPositionSum += collider.transform.position;
+            } 
+            else {
+                nbBoidsAlignment += 1;
+                BoidScript boidScript = collider.GetComponent<BoidScript>();
+                alignmentDirectionSum += boidScript.Direction;
             }
-
-            nbBoidsInFOV += 1;
-
-            nearbyBoidsPositionSum += collider.transform.position;
-
-            BoidScript boidScript = collider.GetComponent<BoidScript>();
-            nearbyBoidsDirectionSum += boidScript.Direction;
         }
 
-        AdaptVisionDistance(nbBoidsInFOV);
+        AdaptVisionDistance(nbBoidsSeparation + nbBoidsAlignment + nbBoidsCohesion);
 
-        if (nbBoidsInFOV == 0){
-            return;
-        }
+        Vector3 separationDirection = ComputeDirectionForRule(
+                Rule.SEPARATION, separationPositionSum, nbBoidsSeparation),
+            alignmentDirection = ComputeDirectionForRule(
+                Rule.ALIGNMENT, alignmentDirectionSum, nbBoidsAlignment),
+            cohesionDirection = ComputeDirectionForRule(
+                Rule.COHESION, cohesionPositionSum, nbBoidsCohesion);
 
-        Vector3 averageDirection = nearbyBoidsDirectionSum.normalized;
-
-        Vector3 averagePosition = nearbyBoidsPositionSum / (float)nbBoidsInFOV;
-        Vector3 directionToAveragePosition = (averagePosition - transform.position).normalized;
+        float separationCoeff = ComputeRuleCoeff(
+                nbBoidsSeparation, boidsManager.separationStrengh),
+            alignmentCoeff = ComputeRuleCoeff(
+                nbBoidsAlignment, boidsManager.alignmentStrengh),
+            cohesionCoeff = ComputeRuleCoeff(
+                nbBoidsCohesion, boidsManager.cohesionStrengh);
 
         Vector3 newDirection = (
             (
                 boidsManager.momentumStrengh * Direction + 
-                boidsManager.alignmentStrengh * averageDirection + 
-                boidsManager.cohesionStrengh * directionToAveragePosition
+                separationCoeff * separationDirection +
+                alignmentCoeff * alignmentDirection + 
+                cohesionCoeff * cohesionDirection
             ) / (
                 boidsManager.momentumStrengh + 
-                boidsManager.alignmentStrengh + 
-                boidsManager.cohesionStrengh
+                separationCoeff +
+                alignmentCoeff + 
+                cohesionCoeff
             )
         ).normalized;
 
         SetDirection(newDirection);
+    }
+
+    private Vector3 ComputeDirectionForRule(Rule rule, Vector3 relevantSum, int nbInvolvedBoids) {
+        if (nbInvolvedBoids == 0)
+            return Vector3.zero;
+        
+        if (rule == Rule.ALIGNMENT) {
+            Vector3 averageDirection = relevantSum.normalized;
+            return averageDirection;
+        }
+
+        Vector3 averagePosition = relevantSum / (float)nbInvolvedBoids;
+        Vector3 directionToAveragePosition = (averagePosition - transform.position).normalized;
+
+        if (rule == Rule.SEPARATION)
+            return -directionToAveragePosition;
+        
+        return directionToAveragePosition;
+    }
+
+    private float ComputeRuleCoeff(int nbInvolvedBoids, float ruleStrengh) {
+        return (nbInvolvedBoids == 0) ? 0 : ruleStrengh;
     }
 
     private void AdaptVisionDistance(int nbBoidsInFOV) {

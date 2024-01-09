@@ -13,7 +13,13 @@ public class BoidsManagerScript : MonoBehaviour
     public float idealNbNeighbors;
     public float visionAngle;
 
+    public float separationRadius;
+    public float cohesionRadius;
+    [HideInInspector] public float squaredSeparationRadius;
+    [HideInInspector] public float squaredCohesionRadius;
+
     public float momentumStrengh;
+    public float separationStrengh;
     public float alignmentStrengh;
     public float cohesionStrengh;
 
@@ -23,6 +29,9 @@ public class BoidsManagerScript : MonoBehaviour
     void Start() {
         area = GameObject.FindGameObjectWithTag("Area").
             GetComponent<AreaScript>();
+
+        squaredSeparationRadius = separationRadius * separationRadius;
+        squaredCohesionRadius = cohesionRadius * cohesionRadius;
 
         clock = 0;
 
