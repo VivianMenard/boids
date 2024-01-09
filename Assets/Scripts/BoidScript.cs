@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class BoidScript : MonoBehaviour
 {
+    public int id;
     public Vector3 Direction;
     private AreaScript area;
     private BoidsManagerScript boidsManager;
@@ -21,7 +22,10 @@ public class BoidScript : MonoBehaviour
     void Update() {}
 
     private void FixedUpdate() {
-        ComputeNewDirection();
+        if (boidsManager.clock == id % boidsManager.nbFrameBetweenUpdates) {
+            ComputeNewDirection();
+        }
+        
         Move();
         TeleportIfOutOfBorders(); 
     }

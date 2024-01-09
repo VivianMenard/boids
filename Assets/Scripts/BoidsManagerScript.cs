@@ -1,10 +1,13 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.CompilerServices;
 using UnityEngine;
 
 public class BoidsManagerScript : MonoBehaviour
 {
+    public int nbFrameBetweenUpdates;
+    [HideInInspector] public int clock;
     public float velocity;
     public int maxVisionDistance;
     public float idealNbNeighbors;
@@ -20,17 +23,25 @@ public class BoidsManagerScript : MonoBehaviour
         area = GameObject.FindGameObjectWithTag("Area").
             GetComponent<AreaScript>();
 
+        clock = 0;
+
         SpawnBoids();
     }
     void Update() {}
 
+    private void FixedUpdate() {
+        clock = (clock + 1) % nbFrameBetweenUpdates;
+    }
+
     private void SpawnBoids() {
-        for (int _ = 0; _ < numberOfBoids; _++) {
-            Instantiate(
+        for (int boidId = 0; boidId < numberOfBoids; boidId++) {
+            GameObject boid = Instantiate(
                 Boid,  
                 GetRandomPositionInArea(),
                 Quaternion.identity
             );
+            BoidScript boidScript = boid.GetComponent<BoidScript>();
+            boidScript.id = boidId;
         }
     }
 
