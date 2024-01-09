@@ -7,11 +7,14 @@ public class BoidScript : MonoBehaviour
     public Vector3 Direction;
     private AreaScript area;
     private BoidsManagerScript boidsManager;
+    private int visionDistance;
     void Start() {
         area = GameObject.FindGameObjectWithTag("Area").
             GetComponent<AreaScript>();
         boidsManager = GameObject.FindGameObjectWithTag("BoidsManager").
             GetComponent<BoidsManagerScript>();
+
+        visionDistance = boidsManager.maxVisionDistance;
 
         SetDirection(GetRandomDirection());
     }
@@ -26,7 +29,7 @@ public class BoidScript : MonoBehaviour
     private void ComputeNewDirection() {
         Collider[] collidersNearby = Physics.OverlapSphere(
             transform.position, 
-            boidsManager.visionDistance
+            visionDistance
         );
 
         Vector3 nearbyBoidsDirectionSum = Vector3.zero;
@@ -43,6 +46,8 @@ public class BoidScript : MonoBehaviour
             nearbyBoidsDirectionSum += boidScript.Direction;
         }
 
+        AdaptVisionDistance(nbBoidsInFieldOfView);
+
         if (nbBoidsInFieldOfView == 0){
             return;
         }
@@ -55,6 +60,16 @@ public class BoidScript : MonoBehaviour
         ).normalized;
 
         SetDirection(newDirection);
+    }
+
+    private void AdaptVisionDistance(int nbBoidsInFieldOfView) {
+        if (nbBoidsInFieldOfView > boidsManager.idealNbNeighbors 
+            && visionDistance > 1){
+            visionDistance--;
+        } else if (nbBoidsInFieldOfView < boidsManager.idealNbNeighbors 
+            && visionDistance < boidsManager.maxVisionDistance) {
+            visionDistance++;
+        }
     }
 
     private bool IsAVisibleBoid(Collider collider) {

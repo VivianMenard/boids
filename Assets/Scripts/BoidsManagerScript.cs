@@ -6,7 +6,8 @@ using UnityEngine;
 public class BoidsManagerScript : MonoBehaviour
 {
     public float velocity;
-    public float visionDistance;
+    public int maxVisionDistance;
+    public float idealNbNeighbors;
     public float visionAngle;
 
     public float momentumStrengh;

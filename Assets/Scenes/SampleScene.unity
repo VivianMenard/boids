@@ -339,11 +339,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   velocity: 5
-  momentumStrengh: 5
-  separationStrengh: 0
+  maxVisionDistance: 10
+  idealNbNeighbors: 6
+  visionAngle: 60
+  momentumStrengh: 8
   alignmentStrengh: 1
-  cohesionStrengh: 0
-  numberOfBoids: 100
+  numberOfBoids: 300
   Boid: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
 --- !u!4 &1119471559
 Transform:
