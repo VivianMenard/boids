@@ -25,7 +25,7 @@ public class BoidScript : MonoBehaviour
         if (boidsManager.clock == id % boidsManager.nbFrameBetweenUpdates) {
             ComputeNewDirection();
         }
-        
+
         Move();
         TeleportIfOutOfBorders(); 
     }
@@ -37,47 +37,60 @@ public class BoidScript : MonoBehaviour
         );
 
         Vector3 nearbyBoidsDirectionSum = Vector3.zero;
-        int nbBoidsInFieldOfView = 0;
+        Vector3 nearbyBoidsPositionSum = Vector3.zero;
+        int nbBoidsInFOV = 0;
 
         foreach (Collider collider in collidersNearby) {
             if (!IsAVisibleBoid(collider)){
                 continue;
             }
 
-            nbBoidsInFieldOfView += 1;
+            nbBoidsInFOV += 1;
+
+            nearbyBoidsPositionSum += collider.transform.position;
 
             BoidScript boidScript = collider.GetComponent<BoidScript>();
             nearbyBoidsDirectionSum += boidScript.Direction;
         }
 
-        AdaptVisionDistance(nbBoidsInFieldOfView);
+        AdaptVisionDistance(nbBoidsInFOV);
 
-        if (nbBoidsInFieldOfView == 0){
+        if (nbBoidsInFOV == 0){
             return;
         }
 
-        Vector3 averageDirection = nearbyBoidsDirectionSum / (float)nbBoidsInFieldOfView;
+        Vector3 averageDirection = nearbyBoidsDirectionSum.normalized;
+
+        Vector3 averagePosition = nearbyBoidsPositionSum / (float)nbBoidsInFOV;
+        Vector3 directionToAveragePosition = (averagePosition - transform.position).normalized;
 
         Vector3 newDirection = (
-            (boidsManager.momentumStrengh * Direction + boidsManager.alignmentStrengh * averageDirection)
-            / (boidsManager.momentumStrengh + boidsManager.alignmentStrengh)
+            (
+                boidsManager.momentumStrengh * Direction + 
+                boidsManager.alignmentStrengh * averageDirection + 
+                boidsManager.cohesionStrengh * directionToAveragePosition
+            ) / (
+                boidsManager.momentumStrengh + 
+                boidsManager.alignmentStrengh + 
+                boidsManager.cohesionStrengh
+            )
         ).normalized;
 
         SetDirection(newDirection);
     }
 
-    private void AdaptVisionDistance(int nbBoidsInFieldOfView) {
-        if (nbBoidsInFieldOfView > boidsManager.idealNbNeighbors 
+    private void AdaptVisionDistance(int nbBoidsInFOV) {
+        if (nbBoidsInFOV > boidsManager.idealNbNeighbors 
             && visionDistance > 1){
             visionDistance--;
-        } else if (nbBoidsInFieldOfView < boidsManager.idealNbNeighbors 
+        } else if (nbBoidsInFOV < boidsManager.idealNbNeighbors 
             && visionDistance < boidsManager.maxVisionDistance) {
             visionDistance++;
         }
     }
 
     private bool IsAVisibleBoid(Collider collider) {
-        return !IsMyCollider(collider) && IsBoidCollider(collider) && IsInMyFieldOfView(collider);
+        return !IsMyCollider(collider) && IsBoidCollider(collider) && IsInMyFOV(collider);
     }
 
     private bool IsMyCollider(Collider collider) {
@@ -88,7 +101,7 @@ public class BoidScript : MonoBehaviour
         return collider.gameObject.layer == gameObject.layer;
     }
 
-    private bool IsInMyFieldOfView(Collider collider) {
+    private bool IsInMyFOV(Collider collider) {
         float angle = Vector3.Angle(
             (collider.transform.position - transform.position).normalized,
             Direction

@@ -15,6 +15,7 @@ public class BoidsManagerScript : MonoBehaviour
 
     public float momentumStrengh;
     public float alignmentStrengh;
+    public float cohesionStrengh;
 
     [SerializeField] private int numberOfBoids; 
     [SerializeField] private GameObject Boid;
