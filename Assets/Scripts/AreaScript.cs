@@ -4,8 +4,9 @@ using UnityEngine;
 
 public class AreaScript : MonoBehaviour
 {
-    public Vector3 minPt;
-    public Vector3 maxPt;
+    public float margin;
+    [HideInInspector] public Vector3 minPt;
+    [HideInInspector] public Vector3 maxPt;
 
     private Vector3 previousPosition;
     private Vector3 previousScale;
@@ -33,8 +34,8 @@ public class AreaScript : MonoBehaviour
     private void ComputeBoundaries() {
         Vector3 delta = transform.localScale / 2;
 
-        minPt = transform.position - delta;
-        maxPt = transform.position + delta;
+        minPt = transform.position - delta + margin * Vector3.one;
+        maxPt = transform.position + delta - margin * Vector3.one;
     }
 
     private void ResetRotation() {
