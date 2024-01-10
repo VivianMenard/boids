@@ -6,7 +6,7 @@ using UnityEngine;
 
 public class BoidsManagerScript : MonoBehaviour
 {
-    public int nbFrameBetweenUpdates;
+    public int calculationInterval; // number of FixedUpdates between velocity calculations
     [HideInInspector] public int clock;
     public float velocity;
     public int maxVisionDistance;
@@ -40,7 +40,7 @@ public class BoidsManagerScript : MonoBehaviour
     void Update() {}
 
     private void FixedUpdate() {
-        clock = (clock + 1) % nbFrameBetweenUpdates;
+        clock = (clock + 1) % calculationInterval;
     }
 
     private void SpawnBoids() {

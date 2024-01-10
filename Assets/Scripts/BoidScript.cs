@@ -9,6 +9,9 @@ public class BoidScript : MonoBehaviour
     private AreaScript area;
     private BoidsManagerScript boidsManager;
     private int visionDistance;
+    private Quaternion lastRotation;
+    private Quaternion targetRotation;
+    private int sinceLastCalculation;
 
     private enum Rule {
         SEPARATION,
@@ -24,13 +27,15 @@ public class BoidScript : MonoBehaviour
 
         visionDistance = boidsManager.maxVisionDistance;
 
-        SetDirection(GetRandomDirection());
+        SetDirection(GetRandomDirection(), initialization:true);
     }
     void Update() {}
 
     private void FixedUpdate() {
-        if (boidsManager.clock == id % boidsManager.nbFrameBetweenUpdates)
+        if (boidsManager.clock == id % boidsManager.calculationInterval)
             ComputeNewDirection();
+
+        UpdateRotation();
 
         Move();
         TeleportIfOutOfBorders();
@@ -167,9 +172,22 @@ public class BoidScript : MonoBehaviour
         ).normalized;
     }
 
-    private void SetDirection(Vector3 newDirection) {
+    private void SetDirection(Vector3 newDirection, bool initialization = false) {
         Direction = newDirection;
-        transform.rotation = Quaternion.LookRotation(Direction);
+
+        Quaternion newRotation = Quaternion.LookRotation(Direction);
+        
+        lastRotation = (initialization) ? newRotation: targetRotation;
+        targetRotation = newRotation;
+
+        sinceLastCalculation = 0;
+    }
+
+    private void UpdateRotation() {
+        float rotationProgress = (float)sinceLastCalculation / (float)boidsManager.calculationInterval;
+        transform.rotation = Quaternion.Lerp(lastRotation, targetRotation, rotationProgress);
+
+        sinceLastCalculation++;
     }
 
     private void Move() {

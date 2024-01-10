@@ -338,15 +338,22 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76656174a1e25294c84c4aebfa0ad7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  nbFrameBetweenUpdates: 5
+  calculationInterval: 5
+  timeBetweenCalculations: 0
   clock: 0
-  velocity: 5
+  velocity: 8
   maxVisionDistance: 8
   idealNbNeighbors: 6
   visionAngle: 60
-  momentumStrengh: 8
+  separationRadius: 2
+  cohesionRadius: 5
+  squaredSeparationRadius: 0
+  squaredCohesionRadius: 0
+  momentumStrengh: 0.5
+  separationStrengh: 1
   alignmentStrengh: 1
-  numberOfBoids: 1000
+  cohesionStrengh: 1
+  numberOfBoids: 1
   Boid: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
 --- !u!4 &1119471559
 Transform:
