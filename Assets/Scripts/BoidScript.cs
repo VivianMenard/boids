@@ -6,6 +6,7 @@ public class BoidScript : MonoBehaviour
 {
     public int id;
     public Vector3 Direction;
+
     private AreaScript area;
     private BoidsManagerScript boidsManager;
     private int visionDistance;
@@ -29,6 +30,7 @@ public class BoidScript : MonoBehaviour
 
         SetDirection(GetRandomDirection(), initialization:true);
     }
+    
     void Update() {}
 
     private void FixedUpdate() {
@@ -161,7 +163,7 @@ public class BoidScript : MonoBehaviour
             Direction
         );
 
-        return angle <= boidsManager.visionAngle;
+        return angle <= boidsManager.visionSemiAngle;
     }
 
     private Vector3 GetRandomDirection() {

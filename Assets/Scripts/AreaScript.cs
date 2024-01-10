@@ -4,16 +4,21 @@ using UnityEngine;
 
 public class AreaScript : MonoBehaviour
 {
+    [Range(0, 5)] 
     public float margin;
-    [HideInInspector] public Vector3 minPt;
-    [HideInInspector] public Vector3 maxPt;
+
+    [HideInInspector] 
+    public Vector3 minPt;
+    [HideInInspector] 
+    public Vector3 maxPt;
 
     private Vector3 previousPosition;
     private Vector3 previousScale;
+    private float previousMargin;
 
     private void Awake() {
         ComputeBoundaries();
-        StoreLocationAndScale();
+        StoreProperties();
     }
 
     void Start() {
@@ -23,9 +28,9 @@ public class AreaScript : MonoBehaviour
     void Update() {}
 
     private void FixedUpdate() {
-        if (HasPositionOrScaleChanged()) {
+        if (HavePropertiesChanged()) {
             ComputeBoundaries();
-            StoreLocationAndScale();
+            StoreProperties();
         }
 
         ResetRotation();
@@ -42,15 +47,17 @@ public class AreaScript : MonoBehaviour
         transform.rotation = Quaternion.identity;
     }
 
-    private void StoreLocationAndScale() {
+    private void StoreProperties() {
         previousPosition = transform.position;
         previousScale = transform.localScale;
+        previousMargin = margin;
     }
 
-    private bool HasPositionOrScaleChanged() {
+    private bool HavePropertiesChanged() {
         return (
             (transform.position != previousPosition) || 
-            (transform.localScale != previousScale)
+            (transform.localScale != previousScale) ||
+            (margin != previousMargin)
         );
     }
 }

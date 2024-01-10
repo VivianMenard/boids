@@ -339,21 +339,21 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   calculationInterval: 5
-  clock: 0
   velocity: 5
   maxVisionDistance: 8
   idealNbNeighbors: 6
-  visionAngle: 60
+  visionSemiAngle: 60
   separationRadius: 2
   cohesionRadius: 5
-  squaredSeparationRadius: 0
-  squaredCohesionRadius: 0
   momentumStrengh: 2
   separationStrengh: 1
   alignmentStrengh: 1
   cohesionStrengh: 1
   numberOfBoids: 1000
   Boid: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
+  clock: 0
+  squaredSeparationRadius: 0
+  squaredCohesionRadius: 0
 --- !u!4 &1119471559
 Transform:
   m_ObjectHideFlags: 0
@@ -594,7 +594,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 28b003709857a914ca175fef960f9075, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  margin: 1
+  margin: 0.75
   minPt: {x: 0, y: 0, z: 0}
   maxPt: {x: 0, y: 0, z: 0}
 --- !u!1660057539 &9223372036854775807

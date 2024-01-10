@@ -6,26 +6,48 @@ using UnityEngine;
 
 public class BoidsManagerScript : MonoBehaviour
 {
+    [Range(1, 10)]
     public int calculationInterval; // number of FixedUpdates between velocity calculations
-    [HideInInspector] public int clock;
+
+    [Range(0, 20)]
     public float velocity;
-    public int maxVisionDistance;
-    public float idealNbNeighbors;
-    public float visionAngle;
+    [Range(0, 15)]
+    public int idealNbNeighbors;
 
+    [Range(0, 15)]
     public float separationRadius;
+    [Range(0, 15)]
     public float cohesionRadius;
-    [HideInInspector] public float squaredSeparationRadius;
-    [HideInInspector] public float squaredCohesionRadius;
 
+    [Range(0, 15)]
+    public int maxVisionDistance;
+    [Range(0, 180)]
+    public int visionSemiAngle;
+    
+    [Range(0, 10)]
     public float momentumStrengh;
+    [Range(0, 10)]
     public float separationStrengh;
+    [Range(0, 10)]
     public float alignmentStrengh;
+    [Range(0, 10)]
     public float cohesionStrengh;
 
-    [SerializeField] private int numberOfBoids; 
-    [SerializeField] private GameObject Boid;
+    [Range(0, 3000), SerializeField]
+    private int numberOfBoids; 
+
+    [HideInInspector] 
+    public int clock = 0;
+
+    [HideInInspector] 
+    public float squaredSeparationRadius;
+    [HideInInspector] 
+    public float squaredCohesionRadius;
+
+    [SerializeField] 
+    private GameObject Boid;
     private AreaScript area;
+
     void Start() {
         area = GameObject.FindGameObjectWithTag("Area").
             GetComponent<AreaScript>();
@@ -33,10 +55,9 @@ public class BoidsManagerScript : MonoBehaviour
         squaredSeparationRadius = separationRadius * separationRadius;
         squaredCohesionRadius = cohesionRadius * cohesionRadius;
 
-        clock = 0;
-
         SpawnBoids();
     }
+    
     void Update() {}
 
     private void FixedUpdate() {
