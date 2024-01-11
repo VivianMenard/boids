@@ -34,7 +34,8 @@ public class BoidsManagerScript : MonoBehaviour
     public float cohesionStrengh;
 
     [Range(0, 3000), SerializeField]
-    private int numberOfBoids; 
+    private int numberOfBoids;
+    private int currentNbBoids = 0;
 
     [HideInInspector] 
     public int clock = 0;
@@ -48,24 +49,42 @@ public class BoidsManagerScript : MonoBehaviour
     private GameObject Boid;
     private AreaScript area;
 
+    private List<GameObject> boids = new List<GameObject>();
+
     void Start() {
         area = GameObject.FindGameObjectWithTag("Area").
             GetComponent<AreaScript>();
 
         squaredSeparationRadius = separationRadius * separationRadius;
         squaredCohesionRadius = cohesionRadius * cohesionRadius;
-
-        SpawnBoids();
     }
     
     void Update() {}
 
     private void FixedUpdate() {
         clock = (clock + 1) % calculationInterval;
+        AdjustNbBoids();
     }
 
-    private void SpawnBoids() {
-        for (int boidId = 0; boidId < numberOfBoids; boidId++) {
+    private void AdjustNbBoids() {
+        if (currentNbBoids < numberOfBoids)
+            SpawnBoids(numberOfBoids - currentNbBoids);
+        else if (currentNbBoids > numberOfBoids) 
+            DespawnBoids(currentNbBoids - numberOfBoids);
+    }
+
+    private void DespawnBoids(int nbToDespanw) {
+        for(int index = currentNbBoids-1; index >= numberOfBoids; index--){
+            GameObject boid = boids[index];
+            boids.RemoveAt(index);
+            Destroy(boid);
+        }
+
+        currentNbBoids -= nbToDespanw;
+    }
+
+    private void SpawnBoids(int nbToSpawn) {
+        for (int boidId = currentNbBoids; boidId < currentNbBoids + nbToSpawn; boidId++) {
             GameObject boid = Instantiate(
                 Boid,  
                 GetRandomPositionInArea(),
@@ -73,7 +92,10 @@ public class BoidsManagerScript : MonoBehaviour
             );
             BoidScript boidScript = boid.GetComponent<BoidScript>();
             boidScript.id = boidId;
+            boids.Add(boid);
         }
+        
+        currentNbBoids += nbToSpawn;
     }
 
     private Vector3 GetRandomPositionInArea() {
