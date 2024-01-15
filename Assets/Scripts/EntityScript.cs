@@ -105,27 +105,27 @@ public abstract class EntityScript : MonoBehaviour
         transform.position = transform.position + parameters.velocity * Direction * Time.deltaTime;
     }
 
+    private float ComputePositionAfterTP1D(float position, float min, float max) {
+        if (position < min)
+            return max;
+        if (position > max) 
+            return min;
+
+        return position;
+    }
+
     protected void TeleportIfOutOfBorders() {
-        Vector3 newPosition = transform.position;
+        transform.position = new Vector3(
+            ComputePositionAfterTP1D(transform.position.x, area.minPt.x, area.maxPt.x),
+            ComputePositionAfterTP1D(transform.position.y, area.minPt.y, area.maxPt.y),
+            ComputePositionAfterTP1D(transform.position.z, area.minPt.z, area.maxPt.z)
+        );
+    }
 
-        if (transform.position.x < area.minPt.x) {
-            newPosition.x = area.maxPt.x;
-        } else if (transform.position.x > area.maxPt.x) {
-            newPosition.x = area.minPt.x;
-        }
-
-        if (transform.position.y < area.minPt.y) {
-            newPosition.y = area.maxPt.y;
-        } else if (transform.position.y > area.maxPt.y) {
-            newPosition.y = area.minPt.y;
-        }
-
-         if (transform.position.z < area.minPt.z) {
-            newPosition.z = area.maxPt.z;
-        } else if (transform.position.z > area.maxPt.z) {
-            newPosition.z = area.minPt.z;
-        }
-
-        transform.position = newPosition;
+    protected Collider[] GetNearbyColliders() {
+        return Physics.OverlapSphere(
+            transform.position, 
+            visionDistance
+        );
     }
 }

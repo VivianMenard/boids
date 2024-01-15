@@ -122,6 +122,7 @@ public class EntitiesManagerScript : MonoBehaviour
                 GetRandomPositionInArea(),
                 Quaternion.identity
             );
+            entity.transform.SetParent(gameObject.transform);
             entitiesList.Add(entity);
         }
 

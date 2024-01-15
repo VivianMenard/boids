@@ -18,10 +18,7 @@ public class BoidScript: EntityScript
     }
 
     protected override void ComputeNewDirection() {
-        Collider[] collidersNearby = Physics.OverlapSphere(
-            transform.position, 
-            visionDistance
-        );
+        Collider[] nearbyColliders = GetNearbyColliders();
 
         Vector3 separationPositionSum = Vector3.zero,
             alignmentDirectionSum = Vector3.zero,
@@ -31,7 +28,7 @@ public class BoidScript: EntityScript
             nbBoidsAlignment = 0,
             nbBoidsCohesion = 0;
 
-        foreach (Collider collider in collidersNearby) {
+        foreach (Collider collider in nearbyColliders) {
             if (!IsAVisibleBoid(collider))
                 continue;
 
@@ -56,13 +53,6 @@ public class BoidScript: EntityScript
 
         AdaptVisionDistance(nbBoidsSeparation + nbBoidsAlignment + nbBoidsCohesion);
 
-        Vector3 separationDirection = ComputeDirectionForRule(
-                Rule.SEPARATION, separationPositionSum, nbBoidsSeparation),
-            alignmentDirection = ComputeDirectionForRule(
-                Rule.ALIGNMENT, alignmentDirectionSum, nbBoidsAlignment),
-            cohesionDirection = ComputeDirectionForRule(
-                Rule.COHESION, cohesionPositionSum, nbBoidsCohesion);
-
         float separationCoeff = ComputeRuleCoeff(
                 nbBoidsSeparation, boidsParams.separationStrengh),
             alignmentCoeff = ComputeRuleCoeff(
@@ -70,18 +60,26 @@ public class BoidScript: EntityScript
             cohesionCoeff = ComputeRuleCoeff(
                 nbBoidsCohesion, boidsParams.cohesionStrengh);
 
+        float coeffSum = boidsParams.momentumStrengh + separationCoeff +
+            alignmentCoeff + cohesionCoeff;
+
+        if (coeffSum == 0)
+            return;
+
+        Vector3 separationDirection = ComputeDirectionForRule(
+                Rule.SEPARATION, separationPositionSum, nbBoidsSeparation),
+            alignmentDirection = ComputeDirectionForRule(
+                Rule.ALIGNMENT, alignmentDirectionSum, nbBoidsAlignment),
+            cohesionDirection = ComputeDirectionForRule(
+                Rule.COHESION, cohesionPositionSum, nbBoidsCohesion);
+
         Vector3 newDirection = (
             (
                 boidsParams.momentumStrengh * Direction + 
                 separationCoeff * separationDirection +
                 alignmentCoeff * alignmentDirection + 
                 cohesionCoeff * cohesionDirection
-            ) / (
-                boidsParams.momentumStrengh + 
-                separationCoeff +
-                alignmentCoeff + 
-                cohesionCoeff
-            )
+            ) / coeffSum
         ).normalized;
 
         SetDirection(newDirection);
