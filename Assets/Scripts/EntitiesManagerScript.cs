@@ -30,6 +30,8 @@ public class BoidsParameters: EntityParameters
     public float alignmentStrengh;
     [Range(0, 10)]
     public float cohesionStrengh;
+    [Range(0, 10)]
+    public float fearStrengh;
     
     [Space, Range(0, 15), Tooltip("Distance below which the boid will try to distance itself from others")]
     public float separationRadius;

@@ -12,5 +12,39 @@ public class PredatorScript : EntityScript
         predatorsParams = (PredatorsParameters)parameters;
     }
 
-    protected override void ComputeNewDirection() {}
+    protected override void ComputeNewDirection() {
+        Collider[] nearbyColliders = GetNearbyColliders();
+
+        Vector3 boidsPositionsSum = Vector3.zero;
+        int nbBoidsInFOV = 0;
+
+        foreach (Collider collider in nearbyColliders) {
+            if (!IsAVisibleBoid(collider))
+                continue;
+
+            nbBoidsInFOV++;
+            boidsPositionsSum += collider.transform.position;
+        }
+
+        float coeffSum = predatorsParams.momentumStrengh + predatorsParams.preyAttractionStrengh;
+
+        if (nbBoidsInFOV == 0 || coeffSum == 0)
+            return;
+
+        Vector3 averagePosition = boidsPositionsSum / (float)nbBoidsInFOV;
+        Vector3 attractionDirection = GetDirectionToPosition(averagePosition);
+
+        Vector3 newDirection = (
+            (
+                predatorsParams.momentumStrengh * Direction + 
+                attractionDirection * predatorsParams.preyAttractionStrengh
+            ) / coeffSum
+        ).normalized;
+
+        SetDirection(newDirection);
+    }
+
+    private bool IsAVisibleBoid(Collider collider) {
+        return !IsMyCollider(collider) && IsInMyFOV(collider) && IsBoidCollider(collider);
+    }
 }

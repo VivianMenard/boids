@@ -9,8 +9,8 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 6240550308047002988}
-  - component: {fileID: 8664226512334624341}
   - component: {fileID: -8211696893038232265}
+  - component: {fileID: 4745662870058721019}
   m_Layer: 6
   m_Name: Predator
   m_TagString: Untagged
@@ -34,8 +34,21 @@ Transform:
   - {fileID: 219779619426657621}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!65 &8664226512334624341
-BoxCollider:
+--- !u!114 &-8211696893038232265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6344359519432126883}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 16c29c8b28d8e984189c49920922121d, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Direction: {x: 0, y: 0, z: 0}
+--- !u!135 &4745662870058721019
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -53,22 +66,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1.6}
-  m_Center: {x: 0, y: 0, z: 0.28}
---- !u!114 &-8211696893038232265
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 6344359519432126883}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 16c29c8b28d8e984189c49920922121d, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  id: 0
-  Direction: {x: 0, y: 0, z: 0}
+  m_Radius: 10
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &326063588763927230
 PrefabInstance:
   m_ObjectHideFlags: 0

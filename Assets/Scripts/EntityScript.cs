@@ -50,10 +50,6 @@ public abstract class EntityScript : MonoBehaviour
         TeleportIfOutOfBorders();
     }
 
-    protected bool IsAVisibleBoid(Collider collider) {
-        return !IsMyCollider(collider) && IsBoidCollider(collider) && IsInMyFOV(collider);
-    }
-
     protected bool IsMyCollider(Collider collider) {
         return collider == this.GetComponent<Collider>();
     }
@@ -112,6 +108,10 @@ public abstract class EntityScript : MonoBehaviour
             return min;
 
         return position;
+    }
+
+    protected Vector3 GetDirectionToPosition(Vector3 position) {
+        return (position - transform.position).normalized;
     }
 
     protected void TeleportIfOutOfBorders() {
