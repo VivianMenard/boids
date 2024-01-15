@@ -320,7 +320,7 @@ GameObject:
   - component: {fileID: 1119471559}
   - component: {fileID: 1119471558}
   m_Layer: 0
-  m_Name: BoidsManager
+  m_Name: EntitiesManager
   m_TagString: BoidsManager
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -339,21 +339,30 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   calculationInterval: 8
-  velocity: 7
-  idealNbNeighbors: 6
-  separationRadius: 2
-  cohesionRadius: 6
-  maxVisionDistance: 8
-  visionSemiAngle: 60
-  momentumStrengh: 2
-  separationStrengh: 1
-  alignmentStrengh: 1
-  cohesionStrengh: 1
-  numberOfBoids: 1300
+  numberOfBoids: 1200
+  numberOfPredators: 0
   clock: 0
-  squaredSeparationRadius: 0
-  squaredCohesionRadius: 0
-  Boid: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
+  boidsParams:
+    prefab: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
+    velocity: 7
+    visionDistance: 8
+    visionSemiAngle: 60
+    momentumStrengh: 2
+    separationStrengh: 1
+    alignmentStrengh: 1
+    cohesionStrengh: 1
+    separationRadius: 2
+    cohesionRadius: 6
+    squaredSeparationRadius: 0
+    squaredCohesionRadius: 0
+    idealNbNeighbors: 6
+  predatorsParams:
+    prefab: {fileID: 6344359519432126883, guid: 4a99d52c6ca7350469280d5621b9d7ac, type: 3}
+    velocity: 7
+    visionDistance: 0
+    visionSemiAngle: 0
+    momentumStrengh: 0
+    preyAttractionStrengh: 0
 --- !u!4 &1119471559
 Transform:
   m_ObjectHideFlags: 0
