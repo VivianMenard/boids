@@ -340,29 +340,41 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   calculationInterval: 8
   numberOfBoids: 1200
-  numberOfPredators: 0
+  numberOfPredators: 1
   clock: 0
   boidsParams:
     prefab: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
-    velocity: 7
+    velocity: 5
+    maxBonusVelocity: 1.5
+    accelerationTime: 0.25
+    decelerationTime: 1
+    velocityIncrement: 0
+    velocityDecrement: 0
     visionDistance: 8
     visionSemiAngle: 60
     momentumStrengh: 2
     separationStrengh: 1
     alignmentStrengh: 1
     cohesionStrengh: 1
+    fearStrengh: 5
     separationRadius: 2
-    cohesionRadius: 6
+    cohesionRadius: 5
     squaredSeparationRadius: 0
     squaredCohesionRadius: 0
     idealNbNeighbors: 6
   predatorsParams:
     prefab: {fileID: 6344359519432126883, guid: 4a99d52c6ca7350469280d5621b9d7ac, type: 3}
-    velocity: 7
-    visionDistance: 0
-    visionSemiAngle: 0
-    momentumStrengh: 0
-    preyAttractionStrengh: 0
+    velocity: 6
+    maxBonusVelocity: 4
+    accelerationTime: 0.75
+    decelerationTime: 2
+    velocityIncrement: 0
+    velocityDecrement: 0
+    visionDistance: 15
+    visionSemiAngle: 60
+    momentumStrengh: 1
+    preyAttractionStrengh: 1
+    nbPreyForBonusVelocity: 200
 --- !u!4 &1119471559
 Transform:
   m_ObjectHideFlags: 0

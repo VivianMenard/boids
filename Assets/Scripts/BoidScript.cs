@@ -63,6 +63,7 @@ public class BoidScript: EntityScript
         }
 
         AdaptVisionDistance(nbBoidsSeparation + nbBoidsAlignment + nbBoidsCohesion);
+        velocityBonusActivated = nbPredators != 0;
 
         float separationCoeff = ComputeRuleCoeff(
                 nbBoidsSeparation, boidsParams.separationStrengh),

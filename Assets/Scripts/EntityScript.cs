@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -16,6 +17,8 @@ public abstract class EntityScript : MonoBehaviour
     protected EntityParameters parameters;
 
     protected int visionDistance;
+    protected float velocityBonusFactor=1;
+    protected bool velocityBonusActivated=false;
 
     protected Quaternion lastRotation;
     protected Quaternion targetRotation;
@@ -45,6 +48,7 @@ public abstract class EntityScript : MonoBehaviour
             ComputeNewDirection();
 
         UpdateRotation();
+        AdaptVelocity();
 
         Move();
         TeleportIfOutOfBorders();
@@ -73,9 +77,9 @@ public abstract class EntityScript : MonoBehaviour
 
     protected Vector3 GetRandomDirection() {
         return new Vector3(
-            Random.Range(-1f, 1f),
-            Random.Range(-1f, 1f),
-            Random.Range(-1f, 1f)
+            UnityEngine.Random.Range(-1f, 1f),
+            UnityEngine.Random.Range(-1f, 1f),
+            UnityEngine.Random.Range(-1f, 1f)
         ).normalized;
     }
 
@@ -98,7 +102,7 @@ public abstract class EntityScript : MonoBehaviour
     }
 
     protected void Move() {
-        transform.position = transform.position + parameters.velocity * Direction * Time.deltaTime;
+        transform.position = transform.position + parameters.velocity * velocityBonusFactor * Direction * Time.deltaTime;
     }
 
     private float ComputePositionAfterTP1D(float position, float min, float max) {
@@ -127,5 +131,16 @@ public abstract class EntityScript : MonoBehaviour
             transform.position, 
             visionDistance
         );
+    }
+
+    private void AdaptVelocity() {
+        if (velocityBonusActivated)
+            velocityBonusFactor = Math.Min(
+                1 + parameters.maxBonusVelocity, 
+                velocityBonusFactor + parameters.velocityIncrement
+            );
+        else
+            velocityBonusFactor = Math.Max(
+                1, velocityBonusFactor - parameters.velocityDecrement);
     }
 }

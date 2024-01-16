@@ -31,6 +31,8 @@ public class PredatorScript : EntityScript
         if (nbBoidsInFOV == 0 || coeffSum == 0)
             return;
 
+        velocityBonusActivated = nbBoidsInFOV > predatorsParams.nbPreyForBonusVelocity;
+
         Vector3 averagePosition = boidsPositionsSum / (float)nbBoidsInFOV;
         Vector3 attractionDirection = GetDirectionToPosition(averagePosition);
 

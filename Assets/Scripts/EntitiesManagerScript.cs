@@ -11,6 +11,16 @@ public abstract class EntityParameters
 
     [Space, Range(0, 20)]
     public float velocity;
+    [Range(0, 10)]
+    public float maxBonusVelocity; 
+    [Range(0, 3), Tooltip("Time (in seconds) required to accelerate to maximum velocity")]
+    public float accelerationTime;
+    [Range(0, 3), Tooltip("Time (in seconds) required to decelerate from maximum velocity")]
+    public float decelerationTime;
+    [HideInInspector]
+    public float velocityIncrement;
+    [HideInInspector]
+    public float velocityDecrement;
 
     [Space, Range(0, 15)]
     public int visionDistance;
@@ -51,6 +61,8 @@ public class PredatorsParameters:EntityParameters
 {
     [Range(0, 10)]
     public float preyAttractionStrengh;
+    [Range(0, 500), Tooltip("Number of prey in predator FOV above which it accelerates")]
+    public int nbPreyForBonusVelocity;
 }
 
 public class EntitiesManagerScript : MonoBehaviour 
@@ -90,9 +102,25 @@ public class EntitiesManagerScript : MonoBehaviour
     void Start() {
         area = GameObject.FindGameObjectWithTag("Area").
             GetComponent<AreaScript>();
+    }
 
-        boidsParams.squaredSeparationRadius = boidsParams.separationRadius * boidsParams.separationRadius;
-        boidsParams.squaredCohesionRadius = boidsParams.cohesionRadius * boidsParams.cohesionRadius;
+    private void PreCalculateParameters() {
+        boidsParams.squaredSeparationRadius = Square(boidsParams.separationRadius);
+        boidsParams.squaredCohesionRadius = Square(boidsParams.cohesionRadius);
+
+        boidsParams.velocityIncrement = ComputeStep(boidsParams.maxBonusVelocity, boidsParams.accelerationTime); 
+        boidsParams.velocityDecrement = ComputeStep(boidsParams.maxBonusVelocity, boidsParams.decelerationTime); 
+        predatorsParams.velocityIncrement = ComputeStep(predatorsParams.maxBonusVelocity, predatorsParams.accelerationTime); 
+        predatorsParams.velocityDecrement = ComputeStep(predatorsParams.maxBonusVelocity, predatorsParams.decelerationTime); 
+    }
+
+    private float Square(float value) {
+        return value * value;
+    }
+
+    private float ComputeStep(float travelDistance, float totalDuration) {
+        float stepDuration = Time.fixedDeltaTime;
+        return travelDistance * stepDuration / totalDuration;
     }
 
     private void FixedUpdate() {
@@ -163,5 +191,9 @@ public class EntitiesManagerScript : MonoBehaviour
             UnityEngine.Random.Range(area.minPt.y, area.maxPt.y),
             UnityEngine.Random.Range(area.minPt.z, area.maxPt.z)
         );
+    }
+
+    private void OnValidate() {
+        PreCalculateParameters();
     }
 }
