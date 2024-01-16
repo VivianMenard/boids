@@ -26,6 +26,8 @@ public abstract class EntityParameters
     public int visionDistance;
     [Range(0, 180)]
     public int visionSemiAngle;
+    [HideInInspector]
+    public float cosVisionSemiAngle;
 
     [Space, Range(0, 10)]
     public float momentumStrengh;
@@ -112,6 +114,9 @@ public class EntitiesManagerScript : MonoBehaviour
         boidsParams.velocityDecrement = ComputeStep(boidsParams.maxBonusVelocity, boidsParams.decelerationTime); 
         predatorsParams.velocityIncrement = ComputeStep(predatorsParams.maxBonusVelocity, predatorsParams.accelerationTime); 
         predatorsParams.velocityDecrement = ComputeStep(predatorsParams.maxBonusVelocity, predatorsParams.decelerationTime); 
+
+        boidsParams.cosVisionSemiAngle = Mathf.Cos(boidsParams.visionSemiAngle * Mathf.Deg2Rad);
+        predatorsParams.cosVisionSemiAngle = Mathf.Cos(predatorsParams.visionSemiAngle * Mathf.Deg2Rad);
     }
 
     private float Square(float value) {

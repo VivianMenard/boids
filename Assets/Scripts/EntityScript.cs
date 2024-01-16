@@ -67,12 +67,12 @@ public abstract class EntityScript : MonoBehaviour
     }
 
     protected bool IsInMyFOV(Collider collider) {
-        float angle = Vector3.Angle(
+        float cosAngle = Vector3.Dot(
             (collider.transform.position - transform.position).normalized,
             Direction
         );
 
-        return angle <= parameters.visionSemiAngle;
+        return cosAngle >= parameters.cosVisionSemiAngle;
     }
 
     protected Vector3 GetRandomDirection() {

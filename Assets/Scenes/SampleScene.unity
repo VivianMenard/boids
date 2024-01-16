@@ -348,10 +348,11 @@ MonoBehaviour:
     maxBonusVelocity: 1.5
     accelerationTime: 0.25
     decelerationTime: 1
-    velocityIncrement: 0
-    velocityDecrement: 0
+    velocityIncrement: 0.12
+    velocityDecrement: 0.03
     visionDistance: 8
     visionSemiAngle: 60
+    cosVisionSemiAngle: 0.49999997
     momentumStrengh: 2
     separationStrengh: 1
     alignmentStrengh: 1
@@ -359,8 +360,8 @@ MonoBehaviour:
     fearStrengh: 5
     separationRadius: 2
     cohesionRadius: 5
-    squaredSeparationRadius: 0
-    squaredCohesionRadius: 0
+    squaredSeparationRadius: 4
+    squaredCohesionRadius: 25
     idealNbNeighbors: 6
   predatorsParams:
     prefab: {fileID: 6344359519432126883, guid: 4a99d52c6ca7350469280d5621b9d7ac, type: 3}
@@ -368,13 +369,14 @@ MonoBehaviour:
     maxBonusVelocity: 4
     accelerationTime: 0.75
     decelerationTime: 2
-    velocityIncrement: 0
-    velocityDecrement: 0
+    velocityIncrement: 0.10666666
+    velocityDecrement: 0.04
     visionDistance: 15
     visionSemiAngle: 60
+    cosVisionSemiAngle: 0.49999997
     momentumStrengh: 1
     preyAttractionStrengh: 1
-    nbPreyForBonusVelocity: 200
+    nbPreyForBonusVelocity: 250
 --- !u!4 &1119471559
 Transform:
   m_ObjectHideFlags: 0
