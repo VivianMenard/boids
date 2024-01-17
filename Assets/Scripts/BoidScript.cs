@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BoidScript: EntityScript
@@ -124,12 +122,9 @@ public class BoidScript: EntityScript
     }
 
     private void AdaptVisionDistance(int nbBoidsInFOV) {
-        if (nbBoidsInFOV > boidsParams.idealNbNeighbors 
-            && visionDistance > 1){
-            visionDistance--;
-        } else if (nbBoidsInFOV < boidsParams.idealNbNeighbors 
-            && visionDistance < boidsParams.visionDistance) {
-            visionDistance++;
-        }
+        if (nbBoidsInFOV > boidsParams.idealNbNeighbors)
+            visionDistance = Mathf.Max(1, visionDistance - 1);
+        else if (nbBoidsInFOV < boidsParams.idealNbNeighbors)
+            visionDistance = Mathf.Min(boidsParams.visionDistance, visionDistance + 1);
     }
 }

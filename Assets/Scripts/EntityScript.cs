@@ -1,28 +1,23 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public abstract class EntityScript : MonoBehaviour
 {
     private static int nextId=0;
 
+
     public Vector3 Direction;
 
-    protected int id;
-
-    protected AreaScript area;
     protected EntitiesManagerScript entitiesManager;
-
     protected EntityParameters parameters;
-
     protected int visionDistance;
-    protected float velocityBonusFactor=1;
     protected bool velocityBonusActivated=false;
-
-    protected Quaternion lastRotation;
-    protected Quaternion targetRotation;
-    protected int sinceLastCalculation;
+    
+    private int id;
+    private AreaScript area;
+    private float velocityBonusFactor=1;
+    private Quaternion lastRotation;
+    private Quaternion targetRotation;
+    private int sinceLastCalculation;
 
     void Start() {
         id = nextId++;
@@ -43,7 +38,7 @@ public abstract class EntityScript : MonoBehaviour
 
     protected abstract void ComputeNewDirection();
 
-    protected void FixedUpdate() {
+    private void FixedUpdate() {
         if (entitiesManager.clock == id % entitiesManager.calculationInterval)
             ComputeNewDirection();
 
@@ -75,14 +70,6 @@ public abstract class EntityScript : MonoBehaviour
         return cosAngle >= parameters.cosVisionSemiAngle;
     }
 
-    protected Vector3 GetRandomDirection() {
-        return new Vector3(
-            UnityEngine.Random.Range(-1f, 1f),
-            UnityEngine.Random.Range(-1f, 1f),
-            UnityEngine.Random.Range(-1f, 1f)
-        ).normalized;
-    }
-
     protected void SetDirection(Vector3 newDirection, bool initialization = false) {
         Direction = newDirection;
 
@@ -94,14 +81,33 @@ public abstract class EntityScript : MonoBehaviour
         sinceLastCalculation = 0;
     }
 
-    protected void UpdateRotation() {
+    protected Vector3 GetDirectionToPosition(Vector3 position) {
+        return (position - transform.position).normalized;
+    }
+
+    protected Collider[] GetNearbyColliders() {
+        return Physics.OverlapSphere(
+            transform.position, 
+            visionDistance
+        );
+    }
+
+    private Vector3 GetRandomDirection() {
+        return new Vector3(
+            Random.Range(-1f, 1f),
+            Random.Range(-1f, 1f),
+            Random.Range(-1f, 1f)
+        ).normalized;
+    }
+
+    private void UpdateRotation() {
         float rotationProgress = (float)sinceLastCalculation / (float)entitiesManager.calculationInterval;
         transform.rotation = Quaternion.Lerp(lastRotation, targetRotation, rotationProgress);
 
         sinceLastCalculation++;
     }
 
-    protected void Move() {
+    private void Move() {
         transform.position = transform.position + parameters.velocity * velocityBonusFactor * Direction * Time.deltaTime;
     }
 
@@ -114,11 +120,7 @@ public abstract class EntityScript : MonoBehaviour
         return position;
     }
 
-    protected Vector3 GetDirectionToPosition(Vector3 position) {
-        return (position - transform.position).normalized;
-    }
-
-    protected void TeleportIfOutOfBorders() {
+    private void TeleportIfOutOfBorders() {
         transform.position = new Vector3(
             ComputePositionAfterTP1D(transform.position.x, area.minPt.x, area.maxPt.x),
             ComputePositionAfterTP1D(transform.position.y, area.minPt.y, area.maxPt.y),
@@ -126,21 +128,14 @@ public abstract class EntityScript : MonoBehaviour
         );
     }
 
-    protected Collider[] GetNearbyColliders() {
-        return Physics.OverlapSphere(
-            transform.position, 
-            visionDistance
-        );
-    }
-
     private void AdaptVelocity() {
         if (velocityBonusActivated)
-            velocityBonusFactor = Math.Min(
+            velocityBonusFactor = Mathf.Min(
                 1 + parameters.maxBonusVelocity, 
                 velocityBonusFactor + parameters.velocityIncrement
             );
         else
-            velocityBonusFactor = Math.Max(
+            velocityBonusFactor = Mathf.Max(
                 1, velocityBonusFactor - parameters.velocityDecrement);
     }
 }

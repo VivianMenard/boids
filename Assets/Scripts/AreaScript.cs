@@ -1,39 +1,31 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class AreaScript : MonoBehaviour
 {
-    [Range(0, 5)] 
-    public float margin;
-
     [HideInInspector] 
     public Vector3 minPt;
     [HideInInspector] 
     public Vector3 maxPt;
-
-    private Vector3 previousPosition;
-    private Vector3 previousScale;
+    
+    [SerializeField, Range(0, 5)] 
+    private float margin;
     private float previousMargin;
 
     private void Awake() {
         ComputeBoundaries();
-        StoreProperties();
     }
 
     void Start() {
-        ResetRotation();
+        previousMargin = margin;
     }
 
-    void Update() {}
-
     private void FixedUpdate() {
-        if (HavePropertiesChanged()) {
+        if (transform.hasChanged || previousMargin != margin) {
             ComputeBoundaries();
-            StoreProperties();
+            previousMargin = margin;
+            transform.rotation = Quaternion.identity;
+            transform.hasChanged = false;
         }
-
-        ResetRotation();
     }
 
     private void ComputeBoundaries() {
@@ -41,23 +33,5 @@ public class AreaScript : MonoBehaviour
 
         minPt = transform.position - delta + margin * Vector3.one;
         maxPt = transform.position + delta - margin * Vector3.one;
-    }
-
-    private void ResetRotation() {
-        transform.rotation = Quaternion.identity;
-    }
-
-    private void StoreProperties() {
-        previousPosition = transform.position;
-        previousScale = transform.localScale;
-        previousMargin = margin;
-    }
-
-    private bool HavePropertiesChanged() {
-        return (
-            (transform.position != previousPosition) || 
-            (transform.localScale != previousScale) ||
-            (margin != previousMargin)
-        );
     }
 }

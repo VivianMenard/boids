@@ -1,7 +1,5 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Runtime.CompilerServices;
 using UnityEngine;
 
 [System.Serializable]
@@ -72,6 +70,9 @@ public class EntitiesManagerScript : MonoBehaviour
     [Range(1, 10), Space, Tooltip("Number of FixedUpdates between velocity calculations")]
     public int calculationInterval;
 
+    [HideInInspector] 
+    public int clock = 0;
+
     [Range(0, 3000), SerializeField]
     private int numberOfBoids;
     private int currentNbBoids = 0;
@@ -80,20 +81,15 @@ public class EntitiesManagerScript : MonoBehaviour
     private int numberOfPredators;
     private int currentNbPredators = 0;
 
-    [HideInInspector] 
-    public int clock = 0;
-
     private AreaScript area;
 
     private List<GameObject> boids = new List<GameObject>();
     private List<GameObject> predators = new List<GameObject>();
 
     [Space]
-
     public BoidsParameters boidsParams;
 
     [Space]
-
     public PredatorsParameters predatorsParams;
 
     private enum EntityType {
