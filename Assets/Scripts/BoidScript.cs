@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class BoidScript: EntityScript
 {
-    private enum Rule {
+    private enum Behavior {
         SEPARATION,
         ALIGNMENT,
         COHESION
@@ -63,47 +63,47 @@ public class BoidScript: EntityScript
         AdaptVisionDistance(nbBoidsSeparation + nbBoidsAlignment + nbBoidsCohesion);
         velocityBonusActivated = nbPredators != 0;
 
-        float separationCoeff = ComputeRuleCoeff(
-                nbBoidsSeparation, boidsParams.separationStrengh),
-            alignmentCoeff = ComputeRuleCoeff(
-                nbBoidsAlignment, boidsParams.alignmentStrengh),
-            cohesionCoeff = ComputeRuleCoeff(
-                nbBoidsCohesion, boidsParams.cohesionStrengh),
-            fearCoeff = ComputeRuleCoeff(nbPredators, boidsParams.fearStrengh);
+        float separationWeight = GetBehaviorWeight(
+                nbBoidsSeparation, boidsParams.separationWeight),
+            alignmentWeight = GetBehaviorWeight(
+                nbBoidsAlignment, boidsParams.alignmentWeight),
+            cohesionWeight = GetBehaviorWeight(
+                nbBoidsCohesion, boidsParams.cohesionWeight),
+            fearWeight = GetBehaviorWeight(nbPredators, boidsParams.fearWeight);
 
-        float coeffSum = boidsParams.momentumStrengh + separationCoeff +
-            alignmentCoeff + cohesionCoeff + fearCoeff;
+        float weightSum = boidsParams.momentumWeight + separationWeight +
+            alignmentWeight + cohesionWeight + fearWeight;
 
-        if (coeffSum == 0)
+        if (weightSum == 0)
             return;
 
-        Vector3 separationDirection = ComputeDirectionForRule(
-                Rule.SEPARATION, separationPositionSum, nbBoidsSeparation),
-            alignmentDirection = ComputeDirectionForRule(
-                Rule.ALIGNMENT, alignmentDirectionSum, nbBoidsAlignment),
-            cohesionDirection = ComputeDirectionForRule(
-                Rule.COHESION, cohesionPositionSum, nbBoidsCohesion),
-            fearDirection = ComputeDirectionForRule(
-                Rule.SEPARATION, predatorsPositionSum, nbPredators);
+        Vector3 separationDirection = GetIdealDirectionForBehavior(
+                Behavior.SEPARATION, separationPositionSum, nbBoidsSeparation),
+            alignmentDirection = GetIdealDirectionForBehavior(
+                Behavior.ALIGNMENT, alignmentDirectionSum, nbBoidsAlignment),
+            cohesionDirection = GetIdealDirectionForBehavior(
+                Behavior.COHESION, cohesionPositionSum, nbBoidsCohesion),
+            fearDirection = GetIdealDirectionForBehavior(
+                Behavior.SEPARATION, predatorsPositionSum, nbPredators);
 
         Vector3 newDirection = (
             (
-                boidsParams.momentumStrengh * Direction + 
-                separationCoeff * separationDirection +
-                alignmentCoeff * alignmentDirection + 
-                cohesionCoeff * cohesionDirection + 
-                fearCoeff * fearDirection
-            ) / coeffSum
+                boidsParams.momentumWeight * Direction + 
+                separationWeight * separationDirection +
+                alignmentWeight * alignmentDirection + 
+                cohesionWeight * cohesionDirection + 
+                fearWeight * fearDirection
+            ) / weightSum
         ).normalized;
 
         SetDirection(newDirection);
     }
 
-    private Vector3 ComputeDirectionForRule(Rule rule, Vector3 relevantSum, int nbInvolvedBoids) {
+    private Vector3 GetIdealDirectionForBehavior(Behavior behavior, Vector3 relevantSum, int nbInvolvedBoids) {
         if (nbInvolvedBoids == 0)
             return Vector3.zero;
         
-        if (rule == Rule.ALIGNMENT) {
+        if (behavior == Behavior.ALIGNMENT) {
             Vector3 averageDirection = relevantSum.normalized;
             return averageDirection;
         }
@@ -111,14 +111,14 @@ public class BoidScript: EntityScript
         Vector3 averagePosition = relevantSum / (float)nbInvolvedBoids;
         Vector3 directionToAveragePosition = GetDirectionToPosition(averagePosition);
 
-        if (rule == Rule.SEPARATION)
+        if (behavior == Behavior.SEPARATION)
             return -directionToAveragePosition;
         
         return directionToAveragePosition;
     }
 
-    private float ComputeRuleCoeff(int nbInvolvedEntities, float ruleStrengh) {
-        return (nbInvolvedEntities == 0) ? 0 : ruleStrengh;
+    private float GetBehaviorWeight(int nbInvolvedEntities, float baseWeight) {
+        return (nbInvolvedEntities == 0) ? 0 : baseWeight;
     }
 
     private void AdaptVisionDistance(int nbBoidsInFOV) {

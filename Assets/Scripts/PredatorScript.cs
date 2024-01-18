@@ -24,7 +24,7 @@ public class PredatorScript : EntityScript
             boidsPositionsSum += collider.transform.position;
         }
 
-        float coeffSum = predatorsParams.momentumStrengh + predatorsParams.preyAttractionStrengh;
+        float coeffSum = predatorsParams.momentumWeight + predatorsParams.preyAttractionWeight;
 
         if (nbBoidsInFOV == 0 || coeffSum == 0)
             return;
@@ -36,8 +36,8 @@ public class PredatorScript : EntityScript
 
         Vector3 newDirection = (
             (
-                predatorsParams.momentumStrengh * Direction + 
-                attractionDirection * predatorsParams.preyAttractionStrengh
+                predatorsParams.momentumWeight * Direction + 
+                attractionDirection * predatorsParams.preyAttractionWeight
             ) / coeffSum
         ).normalized;
 

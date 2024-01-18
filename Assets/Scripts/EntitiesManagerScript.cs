@@ -28,20 +28,20 @@ public abstract class EntityParameters
     public float cosVisionSemiAngle;
 
     [Space, Range(0, 10)]
-    public float momentumStrengh;
+    public float momentumWeight;
 }
 
 [System.Serializable]
 public class BoidsParameters: EntityParameters
 {
     [Range(0, 10)]
-    public float separationStrengh;
+    public float separationWeight;
     [Range(0, 10)]
-    public float alignmentStrengh;
+    public float alignmentWeight;
     [Range(0, 10)]
-    public float cohesionStrengh;
+    public float cohesionWeight;
     [Range(0, 10)]
-    public float fearStrengh;
+    public float fearWeight;
     
     [Space, Range(0, 15), Tooltip("Distance below which the boid will try to distance itself from others")]
     public float separationRadius;
@@ -60,7 +60,7 @@ public class BoidsParameters: EntityParameters
 public class PredatorsParameters:EntityParameters
 {
     [Range(0, 10)]
-    public float preyAttractionStrengh;
+    public float preyAttractionWeight;
     [Range(0, 500), Tooltip("Number of prey in predator FOV above which it accelerates")]
     public int nbPreyForBonusVelocity;
 }
