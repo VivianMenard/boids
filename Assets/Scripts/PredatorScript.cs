@@ -14,37 +14,56 @@ public class PredatorScript : EntityScript
         Collider[] nearbyColliders = GetNearbyColliders();
 
         Vector3 boidsPositionsSum = Vector3.zero;
+        Vector3 predatorsPositionsSum = Vector3.zero;
         int nbBoidsInFOV = 0;
+        int nbRelevantPredators = 0;
 
         foreach (Collider collider in nearbyColliders) {
-            if (!IsAVisibleBoid(collider))
+            if (IsMyCollider(collider))
                 continue;
 
-            nbBoidsInFOV++;
-            boidsPositionsSum += collider.transform.position;
+            if (IsBoidCollider(collider)) {
+                if (!IsInMyFOV(collider))
+                    continue;
+
+                nbBoidsInFOV++;
+                boidsPositionsSum += collider.transform.position;
+            } 
+            else if (IsPredatorCollider(collider)) {
+                float squaredDistance = (
+                    collider.transform.position - transform.position
+                ).sqrMagnitude;
+
+                if (squaredDistance < predatorsParams.squaredPeerRepulsionRadius) {
+                    nbRelevantPredators++;
+                    predatorsPositionsSum += collider.transform.position;
+                }
+            }
         }
-
-        float coeffSum = predatorsParams.momentumWeight + predatorsParams.preyAttractionWeight;
-
-        if (nbBoidsInFOV == 0 || coeffSum == 0)
-            return;
 
         velocityBonusActivated = nbBoidsInFOV > predatorsParams.nbPreyForBonusVelocity;
 
-        Vector3 averagePosition = boidsPositionsSum / (float)nbBoidsInFOV;
-        Vector3 attractionDirection = GetDirectionToPosition(averagePosition);
+        float preyAttractionWeight = GetBehaviorWeight(nbBoidsInFOV, predatorsParams.preyAttractionWeight),
+            peerRepulsionWeight = GetBehaviorWeight(nbRelevantPredators, predatorsParams.peerRepulsionWeight);
+
+        float weightSum = predatorsParams.momentumWeight + preyAttractionWeight + peerRepulsionWeight;
+
+        if (weightSum == 0)
+            return;
+
+        Vector3 preyAttractionDirection = GetIdealDirectionForBehavior(
+                Behavior.COHESION, boidsPositionsSum, nbBoidsInFOV),
+            peerRepulsionDirection = GetIdealDirectionForBehavior(
+                Behavior.SEPARATION, predatorsPositionsSum, nbRelevantPredators);
 
         Vector3 newDirection = (
             (
                 predatorsParams.momentumWeight * Direction + 
-                attractionDirection * predatorsParams.preyAttractionWeight
-            ) / coeffSum
+                preyAttractionDirection * preyAttractionWeight +
+                peerRepulsionDirection * peerRepulsionWeight
+            ) / weightSum
         ).normalized;
 
         SetDirection(newDirection);
-    }
-
-    private bool IsAVisibleBoid(Collider collider) {
-        return !IsMyCollider(collider) && IsInMyFOV(collider) && IsBoidCollider(collider);
     }
 }

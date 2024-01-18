@@ -11,6 +11,11 @@ public abstract class EntityScript : MonoBehaviour
     protected EntityParameters parameters;
     protected int visionDistance;
     protected bool velocityBonusActivated=false;
+    protected enum Behavior {
+        SEPARATION,
+        ALIGNMENT,
+        COHESION
+    }
     
     private int id;
     private AreaScript area;
@@ -90,6 +95,28 @@ public abstract class EntityScript : MonoBehaviour
             transform.position, 
             visionDistance
         );
+    }
+
+    protected Vector3 GetIdealDirectionForBehavior(Behavior behavior, Vector3 relevantSum, int nbInvolvedBoids) {
+        if (nbInvolvedBoids == 0)
+            return Vector3.zero;
+        
+        if (behavior == Behavior.ALIGNMENT) {
+            Vector3 averageDirection = relevantSum.normalized;
+            return averageDirection;
+        }
+
+        Vector3 averagePosition = relevantSum / (float)nbInvolvedBoids;
+        Vector3 directionToAveragePosition = GetDirectionToPosition(averagePosition);
+
+        if (behavior == Behavior.SEPARATION)
+            return -directionToAveragePosition;
+        
+        return directionToAveragePosition;
+    }
+
+    protected float GetBehaviorWeight(int nbInvolvedEntities, float baseWeight) {
+        return (nbInvolvedEntities == 0) ? 0 : baseWeight;
     }
 
     private Vector3 GetRandomDirection() {

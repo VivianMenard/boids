@@ -48,9 +48,9 @@ public class BoidsParameters: EntityParameters
     [Range(0, 15), Tooltip("Distance above which the boid will try to get closer to the others")]
     public float cohesionRadius;
     [HideInInspector] 
-    public float squaredSeparationRadius=0;
+    public float squaredSeparationRadius;
     [HideInInspector] 
-    public float squaredCohesionRadius=0;   
+    public float squaredCohesionRadius;   
 
     [Space, Range(0, 15)]
     public int idealNbNeighbors;
@@ -59,9 +59,17 @@ public class BoidsParameters: EntityParameters
 [System.Serializable]
 public class PredatorsParameters:EntityParameters
 {
-    [Range(0, 10)]
+    [Range(0, 10), Tooltip("How attracted the predator is to boids")]
     public float preyAttractionWeight;
-    [Range(0, 500), Tooltip("Number of prey in predator FOV above which it accelerates")]
+    [Range(0, 10), Tooltip("How repulsed the predator is to the other ones")]
+    public float peerRepulsionWeight;
+
+    [Space, Range(0, 15), Tooltip("Distance under which the predator will try to distance itself from others")]
+    public float peerRepulsionRadius;
+    [HideInInspector] 
+    public float squaredPeerRepulsionRadius;
+
+    [Space, Range(0, 500), Tooltip("Number of prey in predator FOV above which it accelerates")]
     public int nbPreyForBonusVelocity;
 }
 
@@ -105,6 +113,7 @@ public class EntitiesManagerScript : MonoBehaviour
     private void PreCalculateParameters() {
         boidsParams.squaredSeparationRadius = Square(boidsParams.separationRadius);
         boidsParams.squaredCohesionRadius = Square(boidsParams.cohesionRadius);
+        predatorsParams.squaredPeerRepulsionRadius = Square(predatorsParams.peerRepulsionRadius);
 
         boidsParams.velocityIncrement = ComputeStep(boidsParams.maxBonusVelocity, boidsParams.accelerationTime); 
         boidsParams.velocityDecrement = ComputeStep(boidsParams.maxBonusVelocity, boidsParams.decelerationTime); 

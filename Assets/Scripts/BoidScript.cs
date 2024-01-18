@@ -2,12 +2,6 @@ using UnityEngine;
 
 public class BoidScript: EntityScript
 {
-    private enum Behavior {
-        SEPARATION,
-        ALIGNMENT,
-        COHESION
-    }
-
     private BoidsParameters boidsParams;
 
     protected override void InitParams() {
@@ -97,28 +91,6 @@ public class BoidScript: EntityScript
         ).normalized;
 
         SetDirection(newDirection);
-    }
-
-    private Vector3 GetIdealDirectionForBehavior(Behavior behavior, Vector3 relevantSum, int nbInvolvedBoids) {
-        if (nbInvolvedBoids == 0)
-            return Vector3.zero;
-        
-        if (behavior == Behavior.ALIGNMENT) {
-            Vector3 averageDirection = relevantSum.normalized;
-            return averageDirection;
-        }
-
-        Vector3 averagePosition = relevantSum / (float)nbInvolvedBoids;
-        Vector3 directionToAveragePosition = GetDirectionToPosition(averagePosition);
-
-        if (behavior == Behavior.SEPARATION)
-            return -directionToAveragePosition;
-        
-        return directionToAveragePosition;
-    }
-
-    private float GetBehaviorWeight(int nbInvolvedEntities, float baseWeight) {
-        return (nbInvolvedEntities == 0) ? 0 : baseWeight;
     }
 
     private void AdaptVisionDistance(int nbBoidsInFOV) {

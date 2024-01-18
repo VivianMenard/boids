@@ -376,6 +376,9 @@ MonoBehaviour:
     cosVisionSemiAngle: 0.49999997
     momentumWeight: 1
     preyAttractionWeight: 1
+    peerRepulsionWeight: 0.4
+    peerRepulsionRadius: 10
+    squaredPeerRepulsionRadius: 100
     nbPreyForBonusVelocity: 250
 --- !u!4 &1119471559
 Transform:
