@@ -68,6 +68,8 @@ public class PredatorsParameters:EntityParameters
     public float peerRepulsionRadius;
     [HideInInspector] 
     public float squaredPeerRepulsionRadius;
+    [Range(0, 15)]
+    public float preyRepulsionRadius;
 
     [Space, Range(0, 500), Tooltip("Number of prey in predator FOV above which it accelerates")]
     public int nbPreyForBonusVelocity;
@@ -205,5 +207,18 @@ public class EntitiesManagerScript : MonoBehaviour
 
     private void OnValidate() {
         PreCalculateParameters();
+        AdjustPredatorsColliders();
+    }    
+
+    private void AdjustPredatorsColliders() {
+        AdjustPredatorCollider(predatorsParams.prefab);
+
+        foreach(GameObject predator in predators)
+            AdjustPredatorCollider(predator);
+    }
+         
+    private void AdjustPredatorCollider(GameObject predator) {
+        SphereCollider sphereCollider = predator.GetComponent<SphereCollider>();
+        sphereCollider.radius = predatorsParams.preyRepulsionRadius;
     }
 }

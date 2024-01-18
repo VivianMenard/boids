@@ -379,6 +379,7 @@ MonoBehaviour:
     peerRepulsionWeight: 0.4
     peerRepulsionRadius: 10
     squaredPeerRepulsionRadius: 100
+    preyRepulsionRadius: 8
     nbPreyForBonusVelocity: 250
 --- !u!4 &1119471559
 Transform:
