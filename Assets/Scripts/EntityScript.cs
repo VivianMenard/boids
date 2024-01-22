@@ -155,10 +155,11 @@ public abstract class EntityScript : MonoBehaviour
         return (position - transform.position).normalized;
     }
 
-    protected Collider[] GetNearbyColliders() {
+    protected Collider[] GetNearbyEntityColliders() {
         return Physics.OverlapSphere(
             transform.position, 
-            visionDistance
+            visionDistance,
+            entitiesManager.entitiesLayerMask
         );
     }
 

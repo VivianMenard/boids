@@ -11,32 +11,32 @@ public class PredatorScript : EntityScript
     }
 
     protected override Vector3 ComputeNewDirection() {
-        Collider[] nearbyColliders = GetNearbyColliders();
+        Collider[] nearbyEntityColliders = GetNearbyEntityColliders();
 
         Vector3 boidsPositionsSum = Vector3.zero;
         Vector3 predatorsPositionsSum = Vector3.zero;
         int nbBoidsInFOV = 0;
         int nbRelevantPredators = 0;
 
-        foreach (Collider collider in nearbyColliders) {
-            if (IsMyCollider(collider))
+        foreach (Collider entityCollider in nearbyEntityColliders) {
+            if (IsMyCollider(entityCollider))
                 continue;
 
-            if (IsBoidCollider(collider)) {
-                if (!IsInMyFOV(collider))
+            if (IsBoidCollider(entityCollider)) {
+                if (!IsInMyFOV(entityCollider))
                     continue;
 
                 nbBoidsInFOV++;
-                boidsPositionsSum += collider.transform.position;
+                boidsPositionsSum += entityCollider.transform.position;
             } 
-            else if (IsPredatorCollider(collider)) {
+            else if (IsPredatorCollider(entityCollider)) {
                 float squaredDistance = (
-                    collider.transform.position - transform.position
+                    entityCollider.transform.position - transform.position
                 ).sqrMagnitude;
 
                 if (squaredDistance < predatorsParams.squaredPeerRepulsionRadius) {
                     nbRelevantPredators++;
-                    predatorsPositionsSum += collider.transform.position;
+                    predatorsPositionsSum += entityCollider.transform.position;
                 }
             }
         }

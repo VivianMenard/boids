@@ -98,6 +98,9 @@ public class EntitiesManagerScript : MonoBehaviour
     [HideInInspector]
     public LayerMask obstacleLayerMask;
 
+    [HideInInspector]
+    public LayerMask entitiesLayerMask;
+
     private AreaScript area;
 
     private List<GameObject> boids = new List<GameObject>();
@@ -117,7 +120,8 @@ public class EntitiesManagerScript : MonoBehaviour
     void Start() {
         area = GameObject.FindGameObjectWithTag("Area").
             GetComponent<AreaScript>();
-        obstacleLayerMask = 1 << LayerMask.NameToLayer("Obstacles");
+        obstacleLayerMask = LayerMask.GetMask("Obstacles");
+        entitiesLayerMask = LayerMask.GetMask("Boids", "Predators");
     }
 
     private void PreCalculateParameters() {

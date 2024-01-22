@@ -10,7 +10,7 @@ public class BoidScript: EntityScript
     }
 
     protected override Vector3 ComputeNewDirection() {
-        Collider[] nearbyColliders = GetNearbyColliders();
+        Collider[] nearbyEntityColliders = GetNearbyEntityColliders();
 
         Vector3 separationPositionSum = Vector3.zero,
             alignmentDirectionSum = Vector3.zero,
@@ -22,35 +22,35 @@ public class BoidScript: EntityScript
             nbBoidsCohesion = 0,
             nbPredators = 0;
 
-        foreach (Collider collider in nearbyColliders) {
-            if (IsMyCollider(collider))
+        foreach (Collider entityCollider in nearbyEntityColliders) {
+            if (IsMyCollider(entityCollider))
                 continue;
 
-            if (IsBoidCollider(collider)) {
-                if (!IsInMyFOV(collider))
+            if (IsBoidCollider(entityCollider)) {
+                if (!IsInMyFOV(entityCollider))
                     continue;
 
                 float squaredDistance = (
-                    collider.transform.position - transform.position
+                    entityCollider.transform.position - transform.position
                 ).sqrMagnitude;
 
                 if (squaredDistance > boidsParams.squaredCohesionRadius) {
                     nbBoidsCohesion += 1;
-                    cohesionPositionSum += collider.transform.position;
+                    cohesionPositionSum += entityCollider.transform.position;
                 } 
                 else if (squaredDistance < boidsParams.squaredSeparationRadius) {
                     nbBoidsSeparation += 1;
-                    separationPositionSum += collider.transform.position;
+                    separationPositionSum += entityCollider.transform.position;
                 } 
                 else {
                     nbBoidsAlignment += 1;
-                    BoidScript boidScript = collider.GetComponent<BoidScript>();
+                    BoidScript boidScript = entityCollider.GetComponent<BoidScript>();
                     alignmentDirectionSum += boidScript.Direction;
                 }
             } 
-            else if (IsPredatorCollider(collider)) {
+            else if (IsPredatorCollider(entityCollider)) {
                 nbPredators++;
-                predatorsPositionSum += collider.transform.position;
+                predatorsPositionSum += entityCollider.transform.position;
             }
         }
 
