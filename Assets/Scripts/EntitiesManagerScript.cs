@@ -91,6 +91,13 @@ public class EntitiesManagerScript : MonoBehaviour
     private int numberOfPredators;
     private int currentNbPredators = 0;
 
+    [Space]
+    public bool ObstaclesAvoidance;
+    [Range(0, 15)]
+    public float raycastDistance;
+    [HideInInspector]
+    public LayerMask obstacleLayerMask;
+
     private AreaScript area;
 
     private List<GameObject> boids = new List<GameObject>();
@@ -110,6 +117,7 @@ public class EntitiesManagerScript : MonoBehaviour
     void Start() {
         area = GameObject.FindGameObjectWithTag("Area").
             GetComponent<AreaScript>();
+        obstacleLayerMask = 1 << LayerMask.NameToLayer("Obstacles");
     }
 
     private void PreCalculateParameters() {

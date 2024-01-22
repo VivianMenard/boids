@@ -9,7 +9,7 @@ public class BoidScript: EntityScript
         boidsParams = (BoidsParameters)parameters;
     }
 
-    protected override void ComputeNewDirection() {
+    protected override Vector3 ComputeNewDirection() {
         Collider[] nearbyColliders = GetNearbyColliders();
 
         Vector3 separationPositionSum = Vector3.zero,
@@ -69,7 +69,7 @@ public class BoidScript: EntityScript
             alignmentWeight + cohesionWeight + fearWeight;
 
         if (weightSum == 0)
-            return;
+            return Direction;
 
         Vector3 separationDirection = GetIdealDirectionForBehavior(
                 Behavior.SEPARATION, separationPositionSum, nbBoidsSeparation),
@@ -90,7 +90,7 @@ public class BoidScript: EntityScript
             ) / weightSum
         ).normalized;
 
-        SetDirection(newDirection);
+        return newDirection;
     }
 
     private void AdaptVisionDistance(int nbBoidsInFOV) {

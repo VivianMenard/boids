@@ -41,17 +41,82 @@ public abstract class EntityScript : MonoBehaviour
 
     protected abstract void InitParams();
 
-    protected abstract void ComputeNewDirection();
+    protected abstract Vector3 ComputeNewDirection();
 
     private void FixedUpdate() {
-        if (entitiesManager.clock == id % entitiesManager.calculationInterval)
-            ComputeNewDirection();
+        if (entitiesManager.clock == id % entitiesManager.calculationInterval) {
+            Vector3 optimalDirection = ComputeNewDirection();
+            Vector3 adjustedDirection = IterateOnDirectionToAvoidObstacles(optimalDirection);
+            SetDirection(adjustedDirection);
+        }
 
         UpdateRotation();
         AdaptVelocity();
 
         Move();
         TeleportIfOutOfBorders();
+    }
+
+    private Vector3 IterateOnDirectionToAvoidObstacles(Vector3 direction) {
+        if (!entitiesManager.ObstaclesAvoidance) 
+            return direction;
+
+        RaycastHit hitInfo;
+        if (PerformRaycastOnObstacles(direction, out hitInfo)) {
+            (Vector3 axis1, Vector3 axis2) = CreateCoordSystemAroundVector(direction);
+            float maxHitDistanceFound = 0;
+            Vector3 bestDirectionFound = direction;
+
+            int[] coords = {-1, 0, 1};
+            foreach (int x in coords) foreach (int y in coords) {
+                if (x == 0 && y == 0)
+                    continue;
+                
+                Vector3 avoidanceDirection = (x * axis1 + y * axis2).normalized;
+                Vector3 directionToTest = BlendAvoidanceDirectionWithDirection(
+                    avoidanceDirection, direction, hitInfo.distance);
+
+                RaycastHit testHitData;
+                if (PerformRaycastOnObstacles(directionToTest, out testHitData)) {
+                    if (testHitData.distance > maxHitDistanceFound) {
+                        maxHitDistanceFound = testHitData.distance;
+                        bestDirectionFound = directionToTest; 
+                    }
+                } else
+                    return directionToTest;
+            }
+                
+            return bestDirectionFound;
+        }
+
+        return direction;
+    }
+
+    private (Vector3, Vector3) CreateCoordSystemAroundVector(Vector3 axis3) {
+        // axis3 needs to be normalized
+        Vector3 nonColinearToAxis3 = (axis3 != Vector3.up) ? 
+            Vector3.up: Vector3.right;
+
+        Vector3 axis1 = Vector3.Cross(axis3, nonColinearToAxis3).normalized;
+        Vector3 axis2 = Vector3.Cross(axis3, axis1).normalized;
+
+        return (axis1, axis2);
+    } 
+
+    private Vector3 BlendAvoidanceDirectionWithDirection(Vector3 avoidanceDirection, Vector3 direction, float hitDistance) {
+        return ((
+            direction * hitDistance + 
+            avoidanceDirection * (entitiesManager.raycastDistance - hitDistance)
+        )/ entitiesManager.raycastDistance).normalized;
+    }
+
+    private bool PerformRaycastOnObstacles(Vector3 direction, out RaycastHit hitInfo) {
+        Ray ray = new Ray(transform.position, direction);
+        return Physics.Raycast(
+            ray, out hitInfo, 
+            entitiesManager.raycastDistance,
+            entitiesManager.obstacleLayerMask
+        );
     }
 
     protected bool IsMyCollider(Collider collider) {

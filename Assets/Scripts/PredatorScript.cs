@@ -10,7 +10,7 @@ public class PredatorScript : EntityScript
         predatorsParams = (PredatorsParameters)parameters;
     }
 
-    protected override void ComputeNewDirection() {
+    protected override Vector3 ComputeNewDirection() {
         Collider[] nearbyColliders = GetNearbyColliders();
 
         Vector3 boidsPositionsSum = Vector3.zero;
@@ -49,7 +49,7 @@ public class PredatorScript : EntityScript
         float weightSum = predatorsParams.momentumWeight + preyAttractionWeight + peerRepulsionWeight;
 
         if (weightSum == 0)
-            return;
+            return Direction;
 
         Vector3 preyAttractionDirection = GetIdealDirectionForBehavior(
                 Behavior.COHESION, boidsPositionsSum, nbBoidsInFOV),
@@ -64,6 +64,6 @@ public class PredatorScript : EntityScript
             ) / weightSum
         ).normalized;
 
-        SetDirection(newDirection);
+        return newDirection;
     }
 }
