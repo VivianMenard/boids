@@ -77,13 +77,16 @@ public class PredatorsParameters:EntityParameters
 
 public class EntitiesManagerScript : MonoBehaviour 
 {
+    [Range(0, 3)]
+    public float TimeScale;
+
     [Range(1, 10), Space, Tooltip("Number of FixedUpdates between velocity calculations")]
     public int calculationInterval;
 
     [HideInInspector] 
     public int clock = 0;
 
-    [Range(0, 3000), SerializeField]
+    [Space, Range(0, 3000), SerializeField]
     private int numberOfBoids;
     private int currentNbBoids = 0;
 
@@ -220,6 +223,7 @@ public class EntitiesManagerScript : MonoBehaviour
     }
 
     private void OnValidate() {
+        Time.timeScale = TimeScale;
         PreCalculateParameters();
         AdjustPredatorsColliders();
     }    

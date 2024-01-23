@@ -590,6 +590,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76656174a1e25294c84c4aebfa0ad7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  TimeScale: 1
   calculationInterval: 8
   clock: 0
   numberOfBoids: 1200
