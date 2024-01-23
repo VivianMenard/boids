@@ -93,11 +93,7 @@ public abstract class EntityScript : MonoBehaviour
     }
 
     private (Vector3, Vector3) CreateCoordSystemAroundVector(Vector3 axis3) {
-        // axis3 needs to be normalized
-        Vector3 nonColinearToAxis3 = (axis3 != Vector3.up) ? 
-            Vector3.up: Vector3.right;
-
-        Vector3 axis1 = Vector3.Cross(axis3, nonColinearToAxis3).normalized;
+        Vector3 axis1 = Vector3.Cross(axis3, GetRandomDirection()).normalized;
         Vector3 axis2 = Vector3.Cross(axis3, axis1).normalized;
 
         return (axis1, axis2);
