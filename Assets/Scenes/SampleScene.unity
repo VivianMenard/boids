@@ -596,7 +596,11 @@ MonoBehaviour:
   numberOfPredators: 1
   ObstaclesAvoidance: 1
   raycastDistance: 8
+  obstacleMargin: 1.5
   obstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  entitiesLayerMask:
     serializedVersion: 2
     m_Bits: 0
   boidsParams:
@@ -610,11 +614,11 @@ MonoBehaviour:
     visionDistance: 8
     visionSemiAngle: 60
     cosVisionSemiAngle: 0.49999997
-    momentumWeight: 2
+    momentumWeight: 2.5
     separationWeight: 1
     alignmentWeight: 1
     cohesionWeight: 1
-    fearWeight: 5
+    fearWeight: 4.5
     separationRadius: 2
     cohesionRadius: 5
     squaredSeparationRadius: 4
@@ -838,7 +842,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 25.1, y: 12.5, z: 25}
-  m_LocalScale: {x: 50, y: 30, z: 50}
+  m_LocalScale: {x: 50, y: 35, z: 50}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1313484084}

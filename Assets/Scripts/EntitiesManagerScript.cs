@@ -95,6 +95,8 @@ public class EntitiesManagerScript : MonoBehaviour
     public bool ObstaclesAvoidance;
     [Range(0, 15)]
     public float raycastDistance;
+    [Range(0, 5)]
+    public float obstacleMargin;
     [HideInInspector]
     public LayerMask obstacleLayerMask;
 

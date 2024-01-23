@@ -104,10 +104,20 @@ public abstract class EntityScript : MonoBehaviour
     } 
 
     private Vector3 BlendAvoidanceDirectionWithDirection(Vector3 avoidanceDirection, Vector3 direction, float hitDistance) {
+        float perceivedDistance = Remap(hitDistance, 
+            entitiesManager.obstacleMargin, entitiesManager.raycastDistance, 
+            0, entitiesManager.raycastDistance
+        );
+
         return ((
-            direction * hitDistance + 
-            avoidanceDirection * (entitiesManager.raycastDistance - hitDistance)
+            direction * perceivedDistance + 
+            avoidanceDirection * (entitiesManager.raycastDistance - perceivedDistance)
         )/ entitiesManager.raycastDistance).normalized;
+    }
+
+    private float Remap(float value, float fromMin, float fromMax, float toMin, float toMax) {
+        float clampedValue = Mathf.Clamp(value, fromMin, fromMax);
+        return toMin + (value - fromMin) * (toMax - toMin) / (fromMax - fromMin);
     }
 
     private bool PerformRaycastOnObstacles(Vector3 direction, out RaycastHit hitInfo) {
