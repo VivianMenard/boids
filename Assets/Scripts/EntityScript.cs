@@ -1,4 +1,12 @@
+using System.Collections.Generic;
 using UnityEngine;
+
+public enum State {
+    NORMAL,
+    AFRAID,
+    HUNTING,
+    ATTACKING
+}
 
 public abstract class EntityScript : MonoBehaviour
 {
@@ -10,19 +18,25 @@ public abstract class EntityScript : MonoBehaviour
     protected EntitiesManagerScript entitiesManager;
     protected EntityParameters parameters;
     protected int visionDistance;
-    protected bool velocityBonusActivated=false;
     protected enum Behavior {
         SEPARATION,
         ALIGNMENT,
         COHESION
     }
+    protected State state;
     
     private int id;
+    private float velocity;
     private AreaScript area;
-    private float velocityBonusFactor=1;
     private Quaternion lastRotation;
     private Quaternion targetRotation;
     private int sinceLastCalculation;
+    private Dictionary<State, bool> isItEmergencyState = new Dictionary<State, bool>{
+        {State.NORMAL, false},
+        {State.HUNTING, false},
+        {State.AFRAID, true},
+        {State.ATTACKING, true}
+    };
 
     void Start() {
         id = nextId++;
@@ -35,6 +49,7 @@ public abstract class EntityScript : MonoBehaviour
         InitParams();
 
         visionDistance = parameters.visionDistance;
+        velocity = parameters.velocities[state];
 
         SetDirection(GetRandomDirection(), initialization:true);
     }
@@ -207,7 +222,7 @@ public abstract class EntityScript : MonoBehaviour
     }
 
     private void Move() {
-        transform.position = transform.position + parameters.velocity * velocityBonusFactor * Direction * Time.deltaTime;
+        transform.position = transform.position + velocity * Direction * Time.deltaTime;
     }
 
     private float ComputePositionAfterTP1D(float position, float min, float max) {
@@ -228,13 +243,13 @@ public abstract class EntityScript : MonoBehaviour
     }
 
     private void AdaptVelocity() {
-        if (velocityBonusActivated)
-            velocityBonusFactor = Mathf.Min(
-                1 + parameters.maxBonusVelocity, 
-                velocityBonusFactor + parameters.velocityIncrement
-            );
-        else
-            velocityBonusFactor = Mathf.Max(
-                1, velocityBonusFactor - parameters.velocityDecrement);
+        float velocityGoal = parameters.velocities[state];
+        float acceleration = (isItEmergencyState[state]) ? parameters.emergencyAcceleration: parameters.acceleration;
+        float velocityStep = acceleration * Time.fixedDeltaTime;
+
+        if (velocity > velocityGoal)
+            velocity = Mathf.Max(velocity - velocityStep, velocityGoal);
+        else if (velocity < velocityGoal)
+            velocity = Mathf.Min(velocity + velocityStep, velocityGoal);
     }
 }

@@ -8,6 +8,7 @@ public class PredatorScript : EntityScript
     {
         parameters = entitiesManager.predatorsParams;
         predatorsParams = (PredatorsParameters)parameters;
+        state = State.HUNTING;
     }
 
     protected override Vector3 ComputeNewDirection() {
@@ -41,7 +42,7 @@ public class PredatorScript : EntityScript
             }
         }
 
-        velocityBonusActivated = nbBoidsInFOV > predatorsParams.nbPreyForBonusVelocity;
+        AdaptState(nbBoidsInFOV);
 
         float preyAttractionWeight = GetBehaviorWeight(nbBoidsInFOV, predatorsParams.preyAttractionWeight),
             peerRepulsionWeight = GetBehaviorWeight(nbRelevantPredators, predatorsParams.peerRepulsionWeight);
@@ -65,5 +66,9 @@ public class PredatorScript : EntityScript
         ).normalized;
 
         return newDirection;
+    }
+
+    private void AdaptState(int nbBoidsInFOV) {
+        state = (nbBoidsInFOV > predatorsParams.nbPreyForBonusVelocity) ? State.ATTACKING: state = State.HUNTING;
     }
 }

@@ -7,6 +7,7 @@ public class BoidScript: EntityScript
     protected override void InitParams() {
         parameters = entitiesManager.boidsParams;
         boidsParams = (BoidsParameters)parameters;
+        state = State.NORMAL;
     }
 
     protected override Vector3 ComputeNewDirection() {
@@ -55,7 +56,7 @@ public class BoidScript: EntityScript
         }
 
         AdaptVisionDistance(nbBoidsSeparation + nbBoidsAlignment + nbBoidsCohesion);
-        velocityBonusActivated = nbPredators != 0;
+        AdaptState(nbPredators);
 
         float separationWeight = GetBehaviorWeight(
                 nbBoidsSeparation, boidsParams.separationWeight),
@@ -91,6 +92,10 @@ public class BoidScript: EntityScript
         ).normalized;
 
         return newDirection;
+    }
+
+    private void AdaptState(int nbPredatorsNearby) {
+        state = (nbPredatorsNearby == 0) ? State.NORMAL: State.AFRAID;
     }
 
     private void AdaptVisionDistance(int nbBoidsInFOV) {

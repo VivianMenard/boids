@@ -7,18 +7,10 @@ public abstract class EntityParameters
 {
     public GameObject prefab;
 
-    [Space, Range(0, 20)]
-    public float velocity;
-    [Range(0, 10)]
-    public float maxBonusVelocity; 
-    [Range(0, 3), Tooltip("Time (in seconds) required to accelerate to maximum velocity")]
-    public float accelerationTime;
-    [Range(0, 3), Tooltip("Time (in seconds) required to decelerate from maximum velocity")]
-    public float decelerationTime;
-    [HideInInspector]
-    public float velocityIncrement;
-    [HideInInspector]
-    public float velocityDecrement;
+    [Range(0, 50), Tooltip("In u/s²")]
+    public float acceleration;
+    [Range(0, 50), Tooltip("In u/s²")]
+    public float emergencyAcceleration;
 
     [Space, Range(0, 15)]
     public int visionDistance;
@@ -29,6 +21,9 @@ public abstract class EntityParameters
 
     [Space, Range(0, 10)]
     public float momentumWeight;
+
+    [HideInInspector]
+    public Dictionary<State, float> velocities;
 }
 
 [System.Serializable]
@@ -54,6 +49,11 @@ public class BoidsParameters: EntityParameters
 
     [Space, Range(0, 15)]
     public int idealNbNeighbors;
+
+    [Space, Range(0, 50), Tooltip("In u/s")]
+    public float normalVelocity;
+    [Range(0, 50), Tooltip("In u/s")]
+    public float afraidVelocity;
 }
 
 [System.Serializable]
@@ -73,6 +73,11 @@ public class PredatorsParameters:EntityParameters
 
     [Space, Range(0, 500), Tooltip("Number of prey in predator FOV above which it accelerates")]
     public int nbPreyForBonusVelocity;
+
+    [Space, Range(0, 50), Tooltip("In u/s")]
+    public float huntingVelocity;
+    [Range(0, 50), Tooltip("In u/s")]
+    public float attackingVelocity;
 }
 
 public class EntitiesManagerScript : MonoBehaviour 
@@ -134,13 +139,18 @@ public class EntitiesManagerScript : MonoBehaviour
         boidsParams.squaredCohesionRadius = Square(boidsParams.cohesionRadius);
         predatorsParams.squaredPeerRepulsionRadius = Square(predatorsParams.peerRepulsionRadius);
 
-        boidsParams.velocityIncrement = ComputeStep(boidsParams.maxBonusVelocity, boidsParams.accelerationTime); 
-        boidsParams.velocityDecrement = ComputeStep(boidsParams.maxBonusVelocity, boidsParams.decelerationTime); 
-        predatorsParams.velocityIncrement = ComputeStep(predatorsParams.maxBonusVelocity, predatorsParams.accelerationTime); 
-        predatorsParams.velocityDecrement = ComputeStep(predatorsParams.maxBonusVelocity, predatorsParams.decelerationTime); 
-
         boidsParams.cosVisionSemiAngle = Mathf.Cos(boidsParams.visionSemiAngle * Mathf.Deg2Rad);
         predatorsParams.cosVisionSemiAngle = Mathf.Cos(predatorsParams.visionSemiAngle * Mathf.Deg2Rad);
+
+        boidsParams.velocities = new Dictionary<State, float>{
+            {State.NORMAL, boidsParams.normalVelocity},
+            {State.AFRAID, boidsParams.afraidVelocity},
+        };
+
+        predatorsParams.velocities = new Dictionary<State, float>{
+            {State.HUNTING, predatorsParams.huntingVelocity},
+            {State.ATTACKING, predatorsParams.attackingVelocity}
+        };
     }
 
     private float Square(float value) {
