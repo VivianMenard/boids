@@ -609,17 +609,17 @@ MonoBehaviour:
     acceleration: 7.5
     emergencyAcceleration: 30
     visionDistance: 8
-    visionSemiAngle: 60
-    cosVisionSemiAngle: 0.49999997
-    momentumWeight: 2.5
+    visionSemiAngle: 100
+    cosVisionSemiAngle: -0.1736482
+    momentumWeight: 1.7
     separationWeight: 1
     alignmentWeight: 1
     cohesionWeight: 1
     fearWeight: 4.5
-    separationRadius: 2
-    cohesionRadius: 5
-    squaredSeparationRadius: 4
-    squaredCohesionRadius: 25
+    separationRadius: 1.5
+    cohesionRadius: 3.5
+    squaredSeparationRadius: 2.25
+    squaredCohesionRadius: 12.25
     idealNbNeighbors: 6
     normalVelocity: 5
     afraidVelocity: 12.5
@@ -636,7 +636,7 @@ MonoBehaviour:
     peerRepulsionRadius: 10
     squaredPeerRepulsionRadius: 100
     preyRepulsionRadius: 8
-    nbPreyForBonusVelocity: 250
+    nbPreyForBonusVelocity: 180
     huntingVelocity: 6
     attackingVelocity: 30
 --- !u!4 &1119471559
