@@ -168,11 +168,6 @@ public class EntitiesManagerScript : MonoBehaviour
         return value * value;
     }
 
-    private float ComputeStep(float travelDistance, float totalDuration) {
-        float stepDuration = Time.fixedDeltaTime;
-        return travelDistance * stepDuration / totalDuration;
-    }
-
     private void FixedUpdate() {
         clock = (clock + 1) % calculationInterval;
 
@@ -250,14 +245,14 @@ public class EntitiesManagerScript : MonoBehaviour
     }    
 
     private void AdjustPredatorsColliders() {
-        AdjustPredatorCollider(predatorsParams.prefab);
+        void AdjustOnePredatorCollider(GameObject predator) {
+            SphereCollider sphereCollider = predator.GetComponent<SphereCollider>();
+            sphereCollider.radius = predatorsParams.preyRepulsionRadius;
+        }
+
+        AdjustOnePredatorCollider(predatorsParams.prefab);
 
         foreach(GameObject predator in predators)
-            AdjustPredatorCollider(predator);
-    }
-         
-    private void AdjustPredatorCollider(GameObject predator) {
-        SphereCollider sphereCollider = predator.GetComponent<SphereCollider>();
-        sphereCollider.radius = predatorsParams.preyRepulsionRadius;
+            AdjustOnePredatorCollider(predator);
     }
 }

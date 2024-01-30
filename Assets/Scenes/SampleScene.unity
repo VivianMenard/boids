@@ -638,8 +638,8 @@ MonoBehaviour:
     rwVerticalDirFactor: 0.3
     rwMaxNbAttemptsNewDir: 3
     visionDistance: 15
-    visionSemiAngle: 60
-    cosVisionSemiAngle: 0.49999997
+    visionSemiAngle: 80
+    cosVisionSemiAngle: 0.17364822
     momentumWeight: 1
     preyAttractionWeight: 1
     peerRepulsionWeight: 0.4
