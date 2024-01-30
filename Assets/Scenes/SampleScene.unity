@@ -608,7 +608,7 @@ MonoBehaviour:
     prefab: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
     acceleration: 7.5
     emergencyAcceleration: 30
-    rwStatePeriod: 10
+    rwStatePeriod: 5
     rwMomentumWeight: 1
     rwProbaStraightLine: 0.2
     rwVerticalDirFactor: 0.6
@@ -626,11 +626,13 @@ MonoBehaviour:
     squaredSeparationRadius: 2.25
     squaredCohesionRadius: 12.25
     idealNbNeighbors: 6
+    nbBoidsNearbyToBeAlone: 3
     normalVelocity: 5
+    aloneVelocity: 8
     afraidVelocity: 12.5
   predatorsParams:
     prefab: {fileID: 6344359519432126883, guid: 4a99d52c6ca7350469280d5621b9d7ac, type: 3}
-    acceleration: 12
+    acceleration: 6
     emergencyAcceleration: 32
     rwStatePeriod: 15
     rwMomentumWeight: 1
@@ -646,9 +648,15 @@ MonoBehaviour:
     peerRepulsionRadius: 10
     squaredPeerRepulsionRadius: 100
     preyRepulsionRadius: 8
-    nbPreyForBonusVelocity: 180
-    huntingVelocity: 6
-    attackingVelocity: 30
+    averageChillingTime: 12
+    probaHuntingAfterChilling: 0.013333333
+    averageHuntingTime: 6
+    probaChillingAfterHunting: 0.026666665
+    probaHuntingAfterAttacking: 0.8
+    nbPreyToAttack: 260
+    chillingVelocity: 4
+    huntingVelocity: 8
+    attackingVelocity: 25
 --- !u!4 &1119471559
 Transform:
   m_ObjectHideFlags: 0

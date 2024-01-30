@@ -56,7 +56,12 @@ public class BoidScript: EntityScript
         }
 
         AdaptVisionDistance(nbBoidsSeparation + nbBoidsAlignment + nbBoidsCohesion);
-        AdaptState(nbPredators);
+        AdaptState(nearbyEntityColliders.Length - nbPredators, nbPredators);
+
+        if (state == State.ALONE) 
+            return RandomWalk();
+        else
+            rwState = RwState.NOT_IN_RW;
 
         float separationWeight = GetBehaviorWeight(
                 nbBoidsSeparation, boidsParams.separationWeight),
@@ -94,8 +99,13 @@ public class BoidScript: EntityScript
         return newDirection;
     }
 
-    private void AdaptState(int nbPredatorsNearby) {
-        state = (nbPredatorsNearby == 0) ? State.NORMAL: State.AFRAID;
+    private void AdaptState(int nbBoidsNearby, int nbPredatorsNearby) {
+        if (nbPredatorsNearby > 0 ) 
+            state = State.AFRAID;
+        else if (nbBoidsNearby < boidsParams.nbBoidsNearbyToBeAlone)
+            state = State.ALONE;
+        else    
+            state = State.NORMAL;
     }
 
     private void AdaptVisionDistance(int nbBoidsInFOV) {

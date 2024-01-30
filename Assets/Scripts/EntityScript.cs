@@ -3,7 +3,9 @@ using UnityEngine;
 
 public enum State {
     NORMAL,
+    ALONE,
     AFRAID,
+    CHILLING,
     HUNTING,
     ATTACKING
 }
@@ -33,8 +35,10 @@ public abstract class EntityScript : MonoBehaviour
     private int sinceLastCalculation;
     private Dictionary<State, bool> isItEmergencyState = new Dictionary<State, bool>{
         {State.NORMAL, false},
-        {State.HUNTING, false},
+        {State.ALONE, false},
         {State.AFRAID, true},
+        {State.CHILLING, false},
+        {State.HUNTING, false},
         {State.ATTACKING, true}
     };
 
@@ -42,12 +46,12 @@ public abstract class EntityScript : MonoBehaviour
     private Vector3 rwLastDirection;
     private Vector3 rwTargetDirection;
     private int rwStateTimeRemaiming;
-    private enum RwState {
+    protected enum RwState {
         STRAIGHT_LINE,
         DIRECTION_CHANGE,
         NOT_IN_RW
     }
-    private RwState rwState= RwState.NOT_IN_RW;
+    protected RwState rwState= RwState.NOT_IN_RW;
 
     void Start() {
         id = nextId++;

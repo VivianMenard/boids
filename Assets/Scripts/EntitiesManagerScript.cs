@@ -58,11 +58,16 @@ public class BoidsParameters: EntityParameters
     [HideInInspector] 
     public float squaredCohesionRadius;   
 
-    [Space, Range(0, 15)]
+    [Space, Range(0, 15), Tooltip("Used to adapt vision distance to improve performances")]
     public int idealNbNeighbors;
+
+    [Space, Range(0, 10)]
+    public int nbBoidsNearbyToBeAlone;
 
     [Space, Range(0, 50), Tooltip("In u/s")]
     public float normalVelocity;
+    [Range(0, 50), Tooltip("In u/s")]
+    public float aloneVelocity;
     [Range(0, 50), Tooltip("In u/s")]
     public float afraidVelocity;
 }
@@ -82,10 +87,22 @@ public class PredatorsParameters:EntityParameters
     [Range(0, 15)]
     public float preyRepulsionRadius;
 
-    [Space, Range(0, 500), Tooltip("Number of prey in predator FOV above which it accelerates")]
-    public int nbPreyForBonusVelocity;
+    [Space, Range(0, 15), Tooltip("In seconds")]
+    public float averageChillingTime;
+    [HideInInspector]
+    public float probaHuntingAfterChilling;
+    [Range(0, 15), Tooltip("In seconds")]
+    public float averageHuntingTime;
+    [HideInInspector]
+    public float probaChillingAfterHunting;
+    [Range(0, 1), Tooltip("Probability for the predator to enter HUNTING state again after exiting ATTACKING state")]
+    public float probaHuntingAfterAttacking;
+    [Range(0, 500), Tooltip("Number of prey in predator FOV needed to switch from HUNTING state to ATTACKING state")]
+    public int nbPreyToAttack;
 
     [Space, Range(0, 50), Tooltip("In u/s")]
+    public float chillingVelocity;
+    [Range(0, 50), Tooltip("In u/s")]
     public float huntingVelocity;
     [Range(0, 50), Tooltip("In u/s")]
     public float attackingVelocity;
@@ -155,17 +172,26 @@ public class EntitiesManagerScript : MonoBehaviour
 
         boidsParams.velocities = new Dictionary<State, float>{
             {State.NORMAL, boidsParams.normalVelocity},
+            {State.ALONE, boidsParams.aloneVelocity},
             {State.AFRAID, boidsParams.afraidVelocity},
         };
 
         predatorsParams.velocities = new Dictionary<State, float>{
+            {State.CHILLING, predatorsParams.chillingVelocity},
             {State.HUNTING, predatorsParams.huntingVelocity},
             {State.ATTACKING, predatorsParams.attackingVelocity}
         };
+
+        predatorsParams.probaHuntingAfterChilling =  ComputeStateChangeProba(predatorsParams.averageChillingTime);
+        predatorsParams.probaChillingAfterHunting = ComputeStateChangeProba(predatorsParams.averageHuntingTime);
     }
 
     private float Square(float value) {
         return value * value;
+    }
+
+    private float ComputeStateChangeProba(float averageTimeInState) {
+        return (calculationInterval * Time.fixedDeltaTime) / averageTimeInState;
     }
 
     private void FixedUpdate() {

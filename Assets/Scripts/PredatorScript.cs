@@ -8,10 +8,15 @@ public class PredatorScript : EntityScript
     {
         parameters = entitiesManager.predatorsParams;
         predatorsParams = (PredatorsParameters)parameters;
-        state = State.HUNTING;
+        state = State.CHILLING;
     }
 
     protected override Vector3 ComputeNewDirection() {
+        if (state == State.CHILLING) {
+            AdaptState();
+            return RandomWalk();
+        }
+
         Collider[] nearbyEntityColliders = GetNearbyEntityColliders();
 
         Vector3 boidsPositionsSum = Vector3.zero;
@@ -44,6 +49,11 @@ public class PredatorScript : EntityScript
 
         AdaptState(nbBoidsInFOV);
 
+        if (nbBoidsInFOV == 0 && nbRelevantPredators == 0)
+            return RandomWalk();
+        else
+            rwState = RwState.NOT_IN_RW;
+
         float preyAttractionWeight = GetBehaviorWeight(nbBoidsInFOV, predatorsParams.preyAttractionWeight),
             peerRepulsionWeight = GetBehaviorWeight(nbRelevantPredators, predatorsParams.peerRepulsionWeight);
 
@@ -68,7 +78,28 @@ public class PredatorScript : EntityScript
         return newDirection;
     }
 
-    private void AdaptState(int nbBoidsInFOV) {
-        state = (nbBoidsInFOV > predatorsParams.nbPreyForBonusVelocity) ? State.ATTACKING: state = State.HUNTING;
+    private void AdaptState(int nbBoidsInFOV=0) {
+        switch (state) {
+            case State.CHILLING :
+                if (Bernoulli(predatorsParams.probaHuntingAfterChilling))
+                    state = State.HUNTING;
+                break;
+
+            case State.HUNTING:
+                if (nbBoidsInFOV > predatorsParams.nbPreyToAttack)
+                    state = State.ATTACKING;
+                else if (Bernoulli(predatorsParams.probaChillingAfterHunting))
+                    state = State.CHILLING;
+                break;
+
+            case State.ATTACKING:
+                if (nbBoidsInFOV < predatorsParams.nbPreyToAttack) {
+                    if (Bernoulli(predatorsParams.probaHuntingAfterAttacking))
+                        state = State.HUNTING;
+                    else 
+                        state = State.CHILLING;
+                }
+                break;
+        }
     }
 }
