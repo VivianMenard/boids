@@ -882,7 +882,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   minPt: {x: 0, y: 0, z: 0}
   maxPt: {x: 0, y: 0, z: 0}
-  margin: 0
 --- !u!1 &1959668802
 GameObject:
   m_ObjectHideFlags: 0
