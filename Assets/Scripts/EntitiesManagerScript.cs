@@ -12,6 +12,17 @@ public abstract class EntityParameters
     [Range(0, 50), Tooltip("In u/s²")]
     public float emergencyAcceleration;
 
+    [Space, Range(0, 50), Tooltip("In random walk: Number of fixed updates between state changes")]
+    public int rwStatePeriod;
+    [Range(0, 5), Tooltip("In random walk: Tendency to choose a new direction close to the old one")]
+    public float rwMomentumWeight;
+    [Range(0, 1), Tooltip("In random walk: probability to go straight")]
+    public float rwProbaStraightLine;
+    [Range(0, 1), Tooltip("In random walk: allows to avoid vertical directions")]
+    public float rwVerticalDirFactor;
+    [Range(0, 10), Tooltip("In random walk: Max number of attempts to find a new random direction without obstacles")]
+    public int rwMaxNbAttemptsNewDir;
+
     [Space, Range(0, 15)]
     public int visionDistance;
     [Range(0, 180)]

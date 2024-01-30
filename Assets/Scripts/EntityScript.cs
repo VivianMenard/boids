@@ -38,6 +38,17 @@ public abstract class EntityScript : MonoBehaviour
         {State.ATTACKING, true}
     };
 
+    // Random walk parameters
+    private Vector3 rwLastDirection;
+    private Vector3 rwTargetDirection;
+    private int rwStateTimeRemaiming;
+    private enum RwState {
+        STRAIGHT_LINE,
+        DIRECTION_CHANGE,
+        NOT_IN_RW
+    }
+    private RwState rwState= RwState.NOT_IN_RW;
+
     void Start() {
         id = nextId++;
 
@@ -72,12 +83,58 @@ public abstract class EntityScript : MonoBehaviour
         TeleportIfOutOfBorders();
     }
 
+    protected Vector3 RandomWalk() { // is abreviated by 'rw' in the rest of the code
+        if (rwState == RwState.NOT_IN_RW || rwStateTimeRemaiming == 0){
+            rwStateTimeRemaiming = parameters.rwStatePeriod;
+
+            if (Bernoulli(parameters.rwProbaStraightLine))
+                rwState = RwState.STRAIGHT_LINE;
+            else {
+                rwState = RwState.DIRECTION_CHANGE;
+
+                rwLastDirection = Direction;
+                rwTargetDirection = GetDirectionForRw();
+            }
+        }
+
+        Vector3 newDirection = Direction;
+
+        if (rwState == RwState.DIRECTION_CHANGE) {
+            float progress = (float)(parameters.rwStatePeriod - rwStateTimeRemaiming) / (float)parameters.rwStatePeriod;
+            newDirection = Vector3.Lerp(rwLastDirection, rwTargetDirection, progress).normalized;
+        }
+
+        rwStateTimeRemaiming--;
+        return newDirection;
+    }
+
+    private Vector3 GetDirectionForRw() {
+        Vector3 TryDirectionForRw() {
+            Vector3 newDirection = GetRandomDirection() + Direction * parameters.rwMomentumWeight;
+            newDirection.y = newDirection.y * parameters.rwVerticalDirFactor;
+            return newDirection.normalized;
+        }
+
+        Vector3 directionForRw = TryDirectionForRw();
+        int nbAttempts = 0;
+        RaycastHit hitInfo;
+
+        while (PerformRaycastOnObstacles(directionForRw, out hitInfo) && nbAttempts < parameters.rwMaxNbAttemptsNewDir) {
+            directionForRw = TryDirectionForRw();
+            nbAttempts++;
+        }
+
+        return directionForRw;
+    }
+
     private Vector3 IterateOnDirectionToAvoidObstacles(Vector3 direction) {
         if (!entitiesManager.ObstaclesAvoidance) 
             return direction;
 
         RaycastHit hitInfo;
         if (PerformRaycastOnObstacles(direction, out hitInfo)) {
+            rwState = RwState.NOT_IN_RW;
+
             (Vector3 axis1, Vector3 axis2) = CreateCoordSystemAroundVector(direction);
             float maxHitDistanceFound = 0;
             Vector3 bestDirectionFound = direction;
@@ -204,6 +261,11 @@ public abstract class EntityScript : MonoBehaviour
 
     protected float GetBehaviorWeight(int nbInvolvedEntities, float baseWeight) {
         return (nbInvolvedEntities == 0) ? 0 : baseWeight;
+    }
+
+    protected bool Bernoulli(float probaSuccess) {
+        float randomValue = Random.Range(0f,1f);
+        return randomValue < probaSuccess;
     }
 
     private Vector3 GetRandomDirection() {
