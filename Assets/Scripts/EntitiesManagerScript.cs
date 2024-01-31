@@ -142,10 +142,7 @@ public class EntitiesManagerScript : MonoBehaviour
             entitiesList.Add(entity);
         }
 
-        if (type == EntityType.BOID)
-            currentNbBoids += nbToSpawn;
-        else
-            currentNbPredators += nbToSpawn;
+        IncrCurrentNbEntities(nbToSpawn, type);
     }
 
     private void DespawnEntities(int nbToDespanw, EntityType type)
@@ -168,10 +165,20 @@ public class EntitiesManagerScript : MonoBehaviour
             Destroy(entity);
         }
 
-        if (type == EntityType.BOID)
-            currentNbBoids -= nbToDespanw;
-        else
-            currentNbPredators -= nbToDespanw;
+        IncrCurrentNbEntities(-nbToDespanw, type);
+    }
+
+    private void IncrCurrentNbEntities(int increment, EntityType type)
+    {
+        switch (type)
+        {
+            case EntityType.BOID:
+                currentNbBoids += increment;
+                break;
+            case EntityType.PREDATOR:
+                currentNbPredators += increment;
+                break;
+        }
     }
 
     private Vector3 GetRandomPositionInArea()
