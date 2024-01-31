@@ -612,7 +612,7 @@ MonoBehaviour:
     rwMomentumWeight: 1
     rwProbaStraightLine: 0.2
     rwVerticalDirFactor: 0.6
-    rwMaxNbAttemptsNewDir: 3
+    rwMaxAttempts: 3
     visionDistance: 8
     visionSemiAngle: 100
     cosVisionSemiAngle: -0.1736482
@@ -638,7 +638,7 @@ MonoBehaviour:
     rwMomentumWeight: 1
     rwProbaStraightLine: 0.2
     rwVerticalDirFactor: 0.3
-    rwMaxNbAttemptsNewDir: 3
+    rwMaxAttempts: 3
     visionDistance: 15
     visionSemiAngle: 80
     cosVisionSemiAngle: 0.17364822

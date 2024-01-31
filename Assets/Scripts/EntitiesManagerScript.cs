@@ -18,10 +18,10 @@ public abstract class EntityParameters
     public float rwMomentumWeight;
     [Range(0, 1), Tooltip("In random walk: probability to go straight")]
     public float rwProbaStraightLine;
-    [Range(0, 1), Tooltip("In random walk: allows to avoid vertical directions")]
+    [Range(0, 1), Tooltip("In random walk: allows to avoid vertical directions if close to 0")]
     public float rwVerticalDirFactor;
     [Range(0, 10), Tooltip("In random walk: Max number of attempts to find a new random direction without obstacles")]
-    public int rwMaxNbAttemptsNewDir;
+    public int rwMaxAttempts;
 
     [Space, Range(0, 15)]
     public int visionDistance;
@@ -30,7 +30,7 @@ public abstract class EntityParameters
     [HideInInspector]
     public float cosVisionSemiAngle;
 
-    [Space, Range(0, 10)]
+    [Space, Range(0, 10), Tooltip("Tendency to choose a new direction close to the old one")]
     public float momentumWeight;
 
     [HideInInspector]
@@ -40,13 +40,13 @@ public abstract class EntityParameters
 [System.Serializable]
 public class BoidsParameters: EntityParameters
 {
-    [Range(0, 10)]
+    [Range(0, 10), Tooltip("Tendency to distance itself from others")]
     public float separationWeight;
-    [Range(0, 10)]
+    [Range(0, 10), Tooltip("Tendency to align its direction with those of its neighbors")]
     public float alignmentWeight;
-    [Range(0, 10)]
+    [Range(0, 10), Tooltip("Tendency to try to get closer to the others")]
     public float cohesionWeight;
-    [Range(0, 10)]
+    [Range(0, 10), Tooltip("Tendency to distance itself from predators")]
     public float fearWeight;
     
     [Space, Range(0, 15), Tooltip("Distance below which the boid will try to distance itself from others")]
@@ -84,7 +84,7 @@ public class PredatorsParameters:EntityParameters
     public float peerRepulsionRadius;
     [HideInInspector] 
     public float squaredPeerRepulsionRadius;
-    [Range(0, 15)]
+    [Range(0, 15), Tooltip("Distance under which boids will try to distance themself from the predator")]
     public float preyRepulsionRadius;
 
     [Space, Range(0, 15), Tooltip("In seconds")]
@@ -123,7 +123,7 @@ public class EntitiesManagerScript : MonoBehaviour
     private int numberOfBoids;
     private int currentNbBoids = 0;
 
-    [Range(0, 5), SerializeField]
+    [Range(0, 10), SerializeField]
     private int numberOfPredators;
     private int currentNbPredators = 0;
 
@@ -131,7 +131,7 @@ public class EntitiesManagerScript : MonoBehaviour
     public bool ObstaclesAvoidance;
     [Range(0, 15)]
     public float raycastDistance;
-    [Range(0, 5)]
+    [Range(0, 5), Tooltip("The distance entities will try to keep between them and the obstacle")]
     public float obstacleMargin;
     [HideInInspector]
     public LayerMask obstacleLayerMask;

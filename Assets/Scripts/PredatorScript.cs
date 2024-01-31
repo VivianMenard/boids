@@ -67,15 +67,11 @@ public class PredatorScript : EntityScript
             peerRepulsionDirection = GetIdealDirectionForBehavior(
                 Behavior.SEPARATION, predatorsPositionsSum, nbRelevantPredators);
 
-        Vector3 newDirection = (
-            (
-                predatorsParams.momentumWeight * Direction + 
-                preyAttractionDirection * preyAttractionWeight +
-                peerRepulsionDirection * peerRepulsionWeight
-            ) / weightSum
+        return (
+            predatorsParams.momentumWeight * Direction + 
+            preyAttractionDirection * preyAttractionWeight +
+            peerRepulsionDirection * peerRepulsionWeight
         ).normalized;
-
-        return newDirection;
     }
 
     private void AdaptState(int nbBoidsInFOV=0) {

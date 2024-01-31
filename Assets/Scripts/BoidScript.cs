@@ -86,17 +86,13 @@ public class BoidScript: EntityScript
             fearDirection = GetIdealDirectionForBehavior(
                 Behavior.SEPARATION, predatorsPositionSum, nbPredators);
 
-        Vector3 newDirection = (
-            (
-                boidsParams.momentumWeight * Direction + 
-                separationWeight * separationDirection +
-                alignmentWeight * alignmentDirection + 
-                cohesionWeight * cohesionDirection + 
-                fearWeight * fearDirection
-            ) / weightSum
+        return (
+            boidsParams.momentumWeight * Direction + 
+            separationWeight * separationDirection +
+            alignmentWeight * alignmentDirection + 
+            cohesionWeight * cohesionDirection + 
+            fearWeight * fearDirection
         ).normalized;
-
-        return newDirection;
     }
 
     private void AdaptState(int nbBoidsNearby, int nbPredatorsNearby) {

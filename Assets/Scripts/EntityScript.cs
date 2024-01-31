@@ -123,7 +123,7 @@ public abstract class EntityScript : MonoBehaviour
         int nbAttempts = 0;
         RaycastHit hitInfo;
 
-        while (PerformRaycastOnObstacles(directionForRw, out hitInfo) && nbAttempts < parameters.rwMaxNbAttemptsNewDir) {
+        while (PerformRaycastOnObstacles(directionForRw, out hitInfo) && nbAttempts < parameters.rwMaxAttempts) {
             directionForRw = TryDirectionForRw();
             nbAttempts++;
         }
@@ -181,10 +181,10 @@ public abstract class EntityScript : MonoBehaviour
             0, entitiesManager.raycastDistance
         );
 
-        return ((
+        return (
             direction * perceivedDistance + 
             avoidanceDirection * (entitiesManager.raycastDistance - perceivedDistance)
-        )/ entitiesManager.raycastDistance).normalized;
+        ).normalized;
     }
 
     private float Remap(float value, float fromMin, float fromMax, float toMin, float toMax) {
