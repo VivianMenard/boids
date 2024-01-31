@@ -1,16 +1,18 @@
 using UnityEngine;
 
-public class BoidScript: EntityScript
+public class BoidScript : EntityScript
 {
     private BoidsParameters boidsParams;
 
-    protected override void InitParams() {
+    protected override void InitParams()
+    {
         parameters = entitiesManager.boidsParams;
         boidsParams = (BoidsParameters)parameters;
         state = State.NORMAL;
     }
 
-    protected override Vector3 ComputeNewDirection() {
+    protected override Vector3 ComputeNewDirection()
+    {
         Collider[] nearbyEntityColliders = GetNearbyEntityColliders();
 
         Vector3 separationPositionSum = Vector3.zero,
@@ -23,11 +25,13 @@ public class BoidScript: EntityScript
             nbBoidsCohesion = 0,
             nbPredators = 0;
 
-        foreach (Collider entityCollider in nearbyEntityColliders) {
+        foreach (Collider entityCollider in nearbyEntityColliders)
+        {
             if (IsMyCollider(entityCollider))
                 continue;
 
-            if (IsBoidCollider(entityCollider)) {
+            if (IsBoidCollider(entityCollider))
+            {
                 if (!IsInMyFOV(entityCollider))
                     continue;
 
@@ -35,21 +39,25 @@ public class BoidScript: EntityScript
                     entityCollider.transform.position - transform.position
                 ).sqrMagnitude;
 
-                if (squaredDistance > boidsParams.squaredCohesionRadius) {
+                if (squaredDistance > boidsParams.squaredCohesionRadius)
+                {
                     nbBoidsCohesion += 1;
                     cohesionPositionSum += entityCollider.transform.position;
-                } 
-                else if (squaredDistance < boidsParams.squaredSeparationRadius) {
+                }
+                else if (squaredDistance < boidsParams.squaredSeparationRadius)
+                {
                     nbBoidsSeparation += 1;
                     separationPositionSum += entityCollider.transform.position;
-                } 
-                else {
+                }
+                else
+                {
                     nbBoidsAlignment += 1;
                     BoidScript boidScript = entityCollider.GetComponent<BoidScript>();
                     alignmentDirectionSum += boidScript.Direction;
                 }
-            } 
-            else if (IsPredatorCollider(entityCollider)) {
+            }
+            else if (IsPredatorCollider(entityCollider))
+            {
                 nbPredators++;
                 predatorsPositionSum += entityCollider.transform.position;
             }
@@ -58,7 +66,7 @@ public class BoidScript: EntityScript
         AdaptVisionDistance(nbBoidsSeparation + nbBoidsAlignment + nbBoidsCohesion);
         AdaptState(nearbyEntityColliders.Length - nbPredators, nbPredators);
 
-        if (state == State.ALONE) 
+        if (state == State.ALONE)
             return RandomWalk();
         else
             rwState = RwState.NOT_IN_RW;
@@ -87,27 +95,30 @@ public class BoidScript: EntityScript
                 Behavior.SEPARATION, predatorsPositionSum, nbPredators);
 
         return (
-            boidsParams.momentumWeight * Direction + 
+            boidsParams.momentumWeight * Direction +
             separationWeight * separationDirection +
-            alignmentWeight * alignmentDirection + 
-            cohesionWeight * cohesionDirection + 
+            alignmentWeight * alignmentDirection +
+            cohesionWeight * cohesionDirection +
             fearWeight * fearDirection
         ).normalized;
     }
 
-    private void AdaptState(int nbBoidsNearby, int nbPredatorsNearby) {
-        if (nbPredatorsNearby > 0 ) 
+    private void AdaptState(int nbBoidsNearby, int nbPredatorsNearby)
+    {
+        if (nbPredatorsNearby > 0)
             state = State.AFRAID;
         else if (nbBoidsNearby < boidsParams.nbBoidsNearbyToBeAlone)
             state = State.ALONE;
-        else    
+        else
             state = State.NORMAL;
     }
 
-    private void AdaptVisionDistance(int nbBoidsInFOV) {
+    private void AdaptVisionDistance(int nbBoidsInFOV)
+    {
         if (nbBoidsInFOV > boidsParams.idealNbNeighbors)
             visionDistance = Mathf.Max(1, visionDistance - 1);
         else if (nbBoidsInFOV < boidsParams.idealNbNeighbors)
-            visionDistance = Mathf.Min(boidsParams.visionDistance, visionDistance + 1);
+            visionDistance = Mathf.Min(
+                boidsParams.visionDistance, visionDistance + 1);
     }
 }

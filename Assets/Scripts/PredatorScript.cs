@@ -11,8 +11,10 @@ public class PredatorScript : EntityScript
         state = State.CHILLING;
     }
 
-    protected override Vector3 ComputeNewDirection() {
-        if (state == State.CHILLING) {
+    protected override Vector3 ComputeNewDirection()
+    {
+        if (state == State.CHILLING)
+        {
             AdaptState();
             return RandomWalk();
         }
@@ -24,23 +26,27 @@ public class PredatorScript : EntityScript
         int nbBoidsInFOV = 0;
         int nbRelevantPredators = 0;
 
-        foreach (Collider entityCollider in nearbyEntityColliders) {
+        foreach (Collider entityCollider in nearbyEntityColliders)
+        {
             if (IsMyCollider(entityCollider))
                 continue;
 
-            if (IsBoidCollider(entityCollider)) {
+            if (IsBoidCollider(entityCollider))
+            {
                 if (!IsInMyFOV(entityCollider))
                     continue;
 
                 nbBoidsInFOV++;
                 boidsPositionsSum += entityCollider.transform.position;
-            } 
-            else if (IsPredatorCollider(entityCollider)) {
+            }
+            else if (IsPredatorCollider(entityCollider))
+            {
                 float squaredDistance = (
                     entityCollider.transform.position - transform.position
                 ).sqrMagnitude;
 
-                if (squaredDistance < predatorsParams.squaredPeerRepulsionRadius) {
+                if (squaredDistance < predatorsParams.squaredPeerRepulsionRadius)
+                {
                     nbRelevantPredators++;
                     predatorsPositionsSum += entityCollider.transform.position;
                 }
@@ -54,10 +60,13 @@ public class PredatorScript : EntityScript
         else
             rwState = RwState.NOT_IN_RW;
 
-        float preyAttractionWeight = GetBehaviorWeight(nbBoidsInFOV, predatorsParams.preyAttractionWeight),
-            peerRepulsionWeight = GetBehaviorWeight(nbRelevantPredators, predatorsParams.peerRepulsionWeight);
+        float preyAttractionWeight = GetBehaviorWeight(
+                nbBoidsInFOV, predatorsParams.preyAttractionWeight),
+            peerRepulsionWeight = GetBehaviorWeight(
+                nbRelevantPredators, predatorsParams.peerRepulsionWeight);
 
-        float weightSum = predatorsParams.momentumWeight + preyAttractionWeight + peerRepulsionWeight;
+        float weightSum = predatorsParams.momentumWeight +
+            preyAttractionWeight + peerRepulsionWeight;
 
         if (weightSum == 0)
             return Direction;
@@ -68,15 +77,17 @@ public class PredatorScript : EntityScript
                 Behavior.SEPARATION, predatorsPositionsSum, nbRelevantPredators);
 
         return (
-            predatorsParams.momentumWeight * Direction + 
+            predatorsParams.momentumWeight * Direction +
             preyAttractionDirection * preyAttractionWeight +
             peerRepulsionDirection * peerRepulsionWeight
         ).normalized;
     }
 
-    private void AdaptState(int nbBoidsInFOV=0) {
-        switch (state) {
-            case State.CHILLING :
+    private void AdaptState(int nbBoidsInFOV = 0)
+    {
+        switch (state)
+        {
+            case State.CHILLING:
                 if (Bernoulli(predatorsParams.probaHuntingAfterChilling))
                     state = State.HUNTING;
                 break;
@@ -89,10 +100,11 @@ public class PredatorScript : EntityScript
                 break;
 
             case State.ATTACKING:
-                if (nbBoidsInFOV < predatorsParams.nbPreyToAttack) {
+                if (nbBoidsInFOV < predatorsParams.nbPreyToAttack)
+                {
                     if (Bernoulli(predatorsParams.probaHuntingAfterAttacking))
                         state = State.HUNTING;
-                    else 
+                    else
                         state = State.CHILLING;
                 }
                 break;

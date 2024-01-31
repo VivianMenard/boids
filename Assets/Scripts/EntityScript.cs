@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum State {
+public enum State
+{
     NORMAL,
     ALONE,
     AFRAID,
@@ -12,7 +13,7 @@ public enum State {
 
 public abstract class EntityScript : MonoBehaviour
 {
-    private static int nextId=0;
+    private static int nextId = 0;
 
 
     public Vector3 Direction;
@@ -20,13 +21,14 @@ public abstract class EntityScript : MonoBehaviour
     protected EntitiesManagerScript entitiesManager;
     protected EntityParameters parameters;
     protected int visionDistance;
-    protected enum Behavior {
+    protected enum Behavior
+    {
         SEPARATION,
         ALIGNMENT,
         COHESION
     }
     protected State state;
-    
+
     private int id;
     private float velocity;
     private AreaScript area;
@@ -46,14 +48,16 @@ public abstract class EntityScript : MonoBehaviour
     private Vector3 rwLastDirection;
     private Vector3 rwTargetDirection;
     private int rwStateTimeRemaiming;
-    protected enum RwState {
+    protected enum RwState
+    {
         STRAIGHT_LINE,
         DIRECTION_CHANGE,
         NOT_IN_RW
     }
-    protected RwState rwState= RwState.NOT_IN_RW;
+    protected RwState rwState = RwState.NOT_IN_RW;
 
-    void Start() {
+    void Start()
+    {
         id = nextId++;
 
         area = GameObject.FindGameObjectWithTag("Area").
@@ -66,17 +70,20 @@ public abstract class EntityScript : MonoBehaviour
         visionDistance = parameters.visionDistance;
         velocity = parameters.velocities[state];
 
-        SetDirection(GetRandomDirection(), initialization:true);
+        SetDirection(GetRandomDirection(), initialization: true);
     }
 
     protected abstract void InitParams();
 
     protected abstract Vector3 ComputeNewDirection();
 
-    private void FixedUpdate() {
-        if (entitiesManager.clock == id % entitiesManager.calculationInterval) {
+    private void FixedUpdate()
+    {
+        if (entitiesManager.clock == id % entitiesManager.calculationInterval)
+        {
             Vector3 optimalDirection = ComputeNewDirection();
-            Vector3 adjustedDirection = IterateOnDirectionToAvoidObstacles(optimalDirection);
+            Vector3 adjustedDirection = IterateOnDirectionToAvoidObstacles(
+                optimalDirection);
             SetDirection(adjustedDirection);
         }
 
@@ -87,13 +94,16 @@ public abstract class EntityScript : MonoBehaviour
         TeleportIfOutOfBorders();
     }
 
-    protected Vector3 RandomWalk() { // is abreviated by 'rw' in the rest of the code
-        if (rwState == RwState.NOT_IN_RW || rwStateTimeRemaiming == 0){
+    protected Vector3 RandomWalk() // is abreviated by 'rw' in the rest of the code
+    {
+        if (rwState == RwState.NOT_IN_RW || rwStateTimeRemaiming == 0)
+        {
             rwStateTimeRemaiming = parameters.rwStatePeriod;
 
             if (Bernoulli(parameters.rwProbaStraightLine))
                 rwState = RwState.STRAIGHT_LINE;
-            else {
+            else
+            {
                 rwState = RwState.DIRECTION_CHANGE;
 
                 rwLastDirection = Direction;
@@ -103,18 +113,25 @@ public abstract class EntityScript : MonoBehaviour
 
         Vector3 newDirection = Direction;
 
-        if (rwState == RwState.DIRECTION_CHANGE) {
-            float progress = (float)(parameters.rwStatePeriod - rwStateTimeRemaiming) / (float)parameters.rwStatePeriod;
-            newDirection = Vector3.Lerp(rwLastDirection, rwTargetDirection, progress).normalized;
+        if (rwState == RwState.DIRECTION_CHANGE)
+        {
+            float progress = (float)(parameters.rwStatePeriod - rwStateTimeRemaiming) /
+                (float)parameters.rwStatePeriod;
+            newDirection = Vector3.Lerp(
+                rwLastDirection, rwTargetDirection, progress
+            ).normalized;
         }
 
         rwStateTimeRemaiming--;
         return newDirection;
     }
 
-    private Vector3 GetDirectionForRw() {
-        Vector3 TryDirectionForRw() {
-            Vector3 newDirection = GetRandomDirection() + Direction * parameters.rwMomentumWeight;
+    private Vector3 GetDirectionForRw()
+    {
+        Vector3 TryDirectionForRw()
+        {
+            Vector3 newDirection = GetRandomDirection() +
+                Direction * parameters.rwMomentumWeight;
             newDirection.y = newDirection.y * parameters.rwVerticalDirFactor;
             return newDirection.normalized;
         }
@@ -123,7 +140,11 @@ public abstract class EntityScript : MonoBehaviour
         int nbAttempts = 0;
         RaycastHit hitInfo;
 
-        while (PerformRaycastOnObstacles(directionForRw, out hitInfo) && nbAttempts < parameters.rwMaxAttempts) {
+        while (
+            PerformRaycastOnObstacles(directionForRw, out hitInfo) &&
+            nbAttempts < parameters.rwMaxAttempts
+        )
+        {
             directionForRw = TryDirectionForRw();
             nbAttempts++;
         }
@@ -131,89 +152,105 @@ public abstract class EntityScript : MonoBehaviour
         return directionForRw;
     }
 
-    private Vector3 IterateOnDirectionToAvoidObstacles(Vector3 direction) {
-        if (!entitiesManager.ObstaclesAvoidance) 
+    private Vector3 IterateOnDirectionToAvoidObstacles(Vector3 direction)
+    {
+        if (!entitiesManager.ObstaclesAvoidance)
             return direction;
 
         RaycastHit hitInfo;
-        if (PerformRaycastOnObstacles(direction, out hitInfo)) {
+        if (PerformRaycastOnObstacles(direction, out hitInfo))
+        {
             rwState = RwState.NOT_IN_RW;
 
             (Vector3 axis1, Vector3 axis2) = CreateCoordSystemAroundVector(direction);
             float maxHitDistanceFound = 0;
             Vector3 bestDirectionFound = direction;
 
-            int[] coords = {-1, 0, 1};
-            foreach (int x in coords) foreach (int y in coords) {
-                if (x == 0 && y == 0)
-                    continue;
-                
-                Vector3 avoidanceDirection = (x * axis1 + y * axis2).normalized;
-                Vector3 directionToTest = BlendAvoidanceDirectionWithDirection(
-                    avoidanceDirection, direction, hitInfo.distance);
+            int[] coords = { -1, 0, 1 };
+            foreach (int x in coords) foreach (int y in coords)
+                {
+                    if (x == 0 && y == 0)
+                        continue;
 
-                RaycastHit testHitData;
-                if (PerformRaycastOnObstacles(directionToTest, out testHitData)) {
-                    if (testHitData.distance > maxHitDistanceFound) {
-                        maxHitDistanceFound = testHitData.distance;
-                        bestDirectionFound = directionToTest; 
+                    Vector3 avoidanceDirection = (x * axis1 + y * axis2).normalized;
+                    Vector3 directionToTest = BlendAvoidanceDirectionWithDirection(
+                        avoidanceDirection, direction, hitInfo.distance);
+
+                    RaycastHit testHitData;
+                    if (PerformRaycastOnObstacles(directionToTest, out testHitData))
+                    {
+                        if (testHitData.distance > maxHitDistanceFound)
+                        {
+                            maxHitDistanceFound = testHitData.distance;
+                            bestDirectionFound = directionToTest;
+                        }
                     }
-                } else
-                    return directionToTest;
-            }
-                
+                    else
+                        return directionToTest;
+                }
+
             return bestDirectionFound;
         }
 
         return direction;
     }
 
-    private (Vector3, Vector3) CreateCoordSystemAroundVector(Vector3 axis3) {
+    private (Vector3, Vector3) CreateCoordSystemAroundVector(Vector3 axis3)
+    {
         Vector3 axis1 = Vector3.Cross(axis3, GetRandomDirection()).normalized;
         Vector3 axis2 = Vector3.Cross(axis3, axis1).normalized;
 
         return (axis1, axis2);
-    } 
+    }
 
-    private Vector3 BlendAvoidanceDirectionWithDirection(Vector3 avoidanceDirection, Vector3 direction, float hitDistance) {
-        float perceivedDistance = Remap(hitDistance, 
-            entitiesManager.obstacleMargin, entitiesManager.raycastDistance, 
+    private Vector3 BlendAvoidanceDirectionWithDirection(
+        Vector3 avoidanceDirection, Vector3 direction, float hitDistance
+    )
+    {
+        float perceivedDistance = Remap(hitDistance,
+            entitiesManager.obstacleMargin, entitiesManager.raycastDistance,
             0, entitiesManager.raycastDistance
         );
 
         return (
-            direction * perceivedDistance + 
+            direction * perceivedDistance +
             avoidanceDirection * (entitiesManager.raycastDistance - perceivedDistance)
         ).normalized;
     }
 
-    private float Remap(float value, float fromMin, float fromMax, float toMin, float toMax) {
+    private float Remap(float value, float fromMin, float fromMax, float toMin, float toMax)
+    {
         float clampedValue = Mathf.Clamp(value, fromMin, fromMax);
         return toMin + (value - fromMin) * (toMax - toMin) / (fromMax - fromMin);
     }
 
-    private bool PerformRaycastOnObstacles(Vector3 direction, out RaycastHit hitInfo) {
+    private bool PerformRaycastOnObstacles(Vector3 direction, out RaycastHit hitInfo)
+    {
         Ray ray = new Ray(transform.position, direction);
         return Physics.Raycast(
-            ray, out hitInfo, 
+            ray, out hitInfo,
             entitiesManager.raycastDistance,
             entitiesManager.obstacleLayerMask
         );
     }
 
-    protected bool IsMyCollider(Collider collider) {
+    protected bool IsMyCollider(Collider collider)
+    {
         return collider == this.GetComponent<Collider>();
     }
 
-    protected bool IsBoidCollider(Collider collider) {
+    protected bool IsBoidCollider(Collider collider)
+    {
         return collider.gameObject.layer == LayerMask.NameToLayer("Boids");
     }
 
-    protected bool IsPredatorCollider(Collider collider) {
+    protected bool IsPredatorCollider(Collider collider)
+    {
         return collider.gameObject.layer == LayerMask.NameToLayer("Predators");
     }
 
-    protected bool IsInMyFOV(Collider collider) {
+    protected bool IsInMyFOV(Collider collider)
+    {
         float cosAngle = Vector3.Dot(
             (collider.transform.position - transform.position).normalized,
             Direction
@@ -222,57 +259,68 @@ public abstract class EntityScript : MonoBehaviour
         return cosAngle >= parameters.cosVisionSemiAngle;
     }
 
-    protected void SetDirection(Vector3 newDirection, bool initialization = false) {
+    protected void SetDirection(Vector3 newDirection, bool initialization = false)
+    {
         Direction = newDirection;
 
         Quaternion newRotation = Quaternion.LookRotation(Direction);
-        
-        lastRotation = (initialization) ? newRotation: targetRotation;
+
+        lastRotation = (initialization) ? newRotation : targetRotation;
         targetRotation = newRotation;
 
         sinceLastCalculation = 0;
     }
 
-    protected Vector3 GetDirectionToPosition(Vector3 position) {
+    protected Vector3 GetDirectionToPosition(Vector3 position)
+    {
         return (position - transform.position).normalized;
     }
 
-    protected Collider[] GetNearbyEntityColliders() {
+    protected Collider[] GetNearbyEntityColliders()
+    {
         return Physics.OverlapSphere(
-            transform.position, 
+            transform.position,
             visionDistance,
             entitiesManager.entitiesLayerMask
         );
     }
 
-    protected Vector3 GetIdealDirectionForBehavior(Behavior behavior, Vector3 relevantSum, int nbInvolvedBoids) {
+    protected Vector3 GetIdealDirectionForBehavior(
+        Behavior behavior, Vector3 relevantSum, int nbInvolvedBoids
+    )
+    {
         if (nbInvolvedBoids == 0)
             return Vector3.zero;
-        
-        if (behavior == Behavior.ALIGNMENT) {
+
+        if (behavior == Behavior.ALIGNMENT)
+        {
             Vector3 averageDirection = relevantSum.normalized;
             return averageDirection;
         }
 
         Vector3 averagePosition = relevantSum / (float)nbInvolvedBoids;
-        Vector3 directionToAveragePosition = GetDirectionToPosition(averagePosition);
+        Vector3 directionToAveragePosition = GetDirectionToPosition(
+            averagePosition);
 
         if (behavior == Behavior.SEPARATION)
             return -directionToAveragePosition;
-        
+
         return directionToAveragePosition;
     }
 
-    protected float GetBehaviorWeight(int nbInvolvedEntities, float baseWeight) {
+    protected float GetBehaviorWeight(int nbInvolvedEntities, float baseWeight)
+    {
         return (nbInvolvedEntities == 0) ? 0 : baseWeight;
     }
 
-    protected bool Bernoulli(float probaSuccess) {
-        float randomValue = Random.Range(0f,1f);
+    protected bool Bernoulli(float probaSuccess)
+    {
+        float randomValue = Random.Range(0f, 1f);
         return randomValue < probaSuccess;
     }
 
-    private Vector3 GetRandomDirection() {
+    private Vector3 GetRandomDirection()
+    {
         return new Vector3(
             Random.Range(-1f, 1f),
             Random.Range(-1f, 1f),
@@ -280,27 +328,34 @@ public abstract class EntityScript : MonoBehaviour
         ).normalized;
     }
 
-    private void UpdateRotation() {
-        float rotationProgress = (float)sinceLastCalculation / (float)entitiesManager.calculationInterval;
-        transform.rotation = Quaternion.Lerp(lastRotation, targetRotation, rotationProgress);
+    private void UpdateRotation()
+    {
+        float rotationProgress = (float)sinceLastCalculation /
+            (float)entitiesManager.calculationInterval;
+        transform.rotation = Quaternion.Lerp(
+            lastRotation, targetRotation, rotationProgress);
 
         sinceLastCalculation++;
     }
 
-    private void Move() {
-        transform.position = transform.position + velocity * Direction * Time.deltaTime;
+    private void Move()
+    {
+        transform.position = transform.position +
+            velocity * Direction * Time.deltaTime;
     }
 
-    private float ComputePositionAfterTP1D(float position, float min, float max) {
+    private float ComputePositionAfterTP1D(float position, float min, float max)
+    {
         if (position < min)
             return max;
-        if (position > max) 
+        if (position > max)
             return min;
 
         return position;
     }
 
-    private void TeleportIfOutOfBorders() {
+    private void TeleportIfOutOfBorders()
+    {
         transform.position = new Vector3(
             ComputePositionAfterTP1D(transform.position.x, area.minPt.x, area.maxPt.x),
             ComputePositionAfterTP1D(transform.position.y, area.minPt.y, area.maxPt.y),
@@ -308,9 +363,11 @@ public abstract class EntityScript : MonoBehaviour
         );
     }
 
-    private void AdaptVelocity() {
+    private void AdaptVelocity()
+    {
         float velocityGoal = parameters.velocities[state];
-        float acceleration = (isItEmergencyState[state]) ? parameters.emergencyAcceleration: parameters.acceleration;
+        float acceleration = (isItEmergencyState[state]) ?
+            parameters.emergencyAcceleration : parameters.acceleration;
         float velocityStep = acceleration * Time.fixedDeltaTime;
 
         if (velocity > velocityGoal)

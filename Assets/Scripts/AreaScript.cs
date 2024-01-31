@@ -2,24 +2,28 @@ using UnityEngine;
 
 public class AreaScript : MonoBehaviour
 {
-    [HideInInspector] 
+    [HideInInspector]
     public Vector3 minPt;
-    [HideInInspector] 
+    [HideInInspector]
     public Vector3 maxPt;
 
-    private void Awake() {
+    private void Awake()
+    {
         ComputeBoundaries();
     }
 
-    private void FixedUpdate() {
-        if (transform.hasChanged) {
+    private void FixedUpdate()
+    {
+        if (transform.hasChanged)
+        {
             ComputeBoundaries();
             transform.rotation = Quaternion.identity;
             transform.hasChanged = false;
         }
     }
 
-    private void ComputeBoundaries() {
+    private void ComputeBoundaries()
+    {
         Vector3 delta = transform.localScale / 2;
 
         minPt = transform.position - delta;
