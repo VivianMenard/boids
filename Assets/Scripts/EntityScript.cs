@@ -321,11 +321,14 @@ public abstract class EntityScript : MonoBehaviour
 
     private Vector3 GetRandomDirection()
     {
+        float theta = Random.Range(0f, 2f * Mathf.PI);
+        float phi = Random.Range(0f, Mathf.PI);
+
         return new Vector3(
-            Random.Range(-1f, 1f),
-            Random.Range(-1f, 1f),
-            Random.Range(-1f, 1f)
-        ).normalized;
+            Mathf.Sin(phi) * Mathf.Cos(theta),
+            Mathf.Sin(phi) * Mathf.Sin(theta),
+            Mathf.Cos(phi)
+        );
     }
 
     private void UpdateRotation()
