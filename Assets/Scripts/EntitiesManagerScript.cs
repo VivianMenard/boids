@@ -193,6 +193,8 @@ public class EntitiesManagerScript : MonoBehaviour
     private void OnValidate()
     {
         Time.timeScale = TimeScale;
+
+        CheckBoundsForDynamicRangeParameters();
         PreCalculateParameters();
         AdjustPredatorsColliders();
     }
@@ -210,5 +212,11 @@ public class EntitiesManagerScript : MonoBehaviour
 
         foreach (GameObject predator in predators)
             AdjustOnePredatorCollider(predator);
+    }
+
+    private void CheckBoundsForDynamicRangeParameters()
+    {
+        if (boidsParams.cohesionRadius < boidsParams.separationRadius)
+            boidsParams.cohesionRadius = boidsParams.separationRadius;
     }
 }
