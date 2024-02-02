@@ -136,9 +136,10 @@ public class EntitiesManagerScript : MonoBehaviour
             GameObject entity = Instantiate(
                 entityPrefab,
                 GetRandomPositionInArea(),
-                Quaternion.identity
+                Quaternion.identity,
+                gameObject.transform
             );
-            entity.transform.SetParent(gameObject.transform);
+            SetEntityScale(entity, type);
             entitiesList.Add(entity);
         }
 
@@ -179,6 +180,16 @@ public class EntitiesManagerScript : MonoBehaviour
                 currentNbPredators += increment;
                 break;
         }
+    }
+
+    private void SetEntityScale(GameObject entity, EntityType type)
+    {
+        float minScale = (type == EntityType.BOID) ?
+            boidsParams.minScale : predatorsParams.minScale;
+        float maxScale = (type == EntityType.BOID) ?
+            boidsParams.maxScale : predatorsParams.maxScale;
+
+        entity.transform.localScale *= Random.Range(minScale, maxScale);
     }
 
     private Vector3 GetRandomPositionInArea()

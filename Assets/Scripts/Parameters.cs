@@ -7,7 +7,12 @@ public abstract class EntityParameters
 {
     public GameObject prefab;
 
-    [Range(0, 50), Tooltip("In u/s²")]
+    [Space, Range(0, 2)]
+    public float minScale;
+    [Range(0, 2)]
+    public float maxScale;
+
+    [Space, Range(0, 50), Tooltip("In u/s²")]
     public float acceleration;
     [Range(0, 50), Tooltip("In u/s²")]
     public float emergencyAcceleration;

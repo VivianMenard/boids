@@ -606,6 +606,8 @@ MonoBehaviour:
     m_Bits: 0
   boidsParams:
     prefab: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
+    minScale: 0.8
+    maxScale: 1.2
     acceleration: 7.5
     emergencyAcceleration: 30
     rwStatePeriod: 5
@@ -632,6 +634,8 @@ MonoBehaviour:
     afraidVelocity: 12.5
   predatorsParams:
     prefab: {fileID: 6344359519432126883, guid: 4a99d52c6ca7350469280d5621b9d7ac, type: 3}
+    minScale: 0.9
+    maxScale: 1.1
     acceleration: 6
     emergencyAcceleration: 32
     rwStatePeriod: 15
