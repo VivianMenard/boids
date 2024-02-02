@@ -593,7 +593,7 @@ MonoBehaviour:
   TimeScale: 1
   calculationInterval: 8
   clock: 0
-  numberOfBoids: 1200
+  numberOfBoids: 1500
   numberOfPredators: 1
   ObstaclesAvoidance: 1
   raycastDistance: 8

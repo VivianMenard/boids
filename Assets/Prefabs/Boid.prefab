@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 6240550308047002988}
   - component: {fileID: 2830639815527929236}
-  - component: {fileID: 8664226512334624341}
+  - component: {fileID: 529898481279035698}
   m_Layer: 3
   m_Name: Boid
   m_TagString: Untagged
@@ -46,9 +46,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f5ffb76842798b9479667375310229d1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Velocity: {x: 0, y: 0, z: 0}
---- !u!65 &8664226512334624341
-BoxCollider:
+  Direction: {x: 0, y: 0, z: 0}
+--- !u!135 &529898481279035698
+SphereCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
@@ -66,8 +66,8 @@ BoxCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 3
-  m_Size: {x: 1, y: 1, z: 1.6}
-  m_Center: {x: 0, y: 0, z: 0.28}
+  m_Radius: 0.00001
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1001 &326063588763927230
 PrefabInstance:
   m_ObjectHideFlags: 0
