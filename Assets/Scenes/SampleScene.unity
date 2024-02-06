@@ -660,9 +660,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   TimeScale: 1
-  calculationInterval: 8
+  calculationInterval: 10
   clock: 0
-  numberOfBoids: 1500
+  numberOfBoids: 1200
   numberOfPredators: 1
   ObstaclesAvoidance: 1
   raycastDistance: 8
@@ -675,6 +675,7 @@ MonoBehaviour:
     m_Bits: 0
   boidsParams:
     prefab: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
+    material: {fileID: 2100000, guid: 969353ed8cd67484888740f5af115ecd, type: 2}
     minScale: 0.8
     maxScale: 1.2
     acceleration: 7.5
@@ -688,10 +689,10 @@ MonoBehaviour:
     visionSemiAngle: 100
     cosVisionSemiAngle: -0.1736482
     momentumWeight: 1.7
-    separationWeight: 1
+    separationWeight: 0.7
     alignmentWeight: 1
     cohesionWeight: 1
-    fearWeight: 4.5
+    fearWeight: 3
     separationRadius: 1.5
     cohesionRadius: 3.5
     squaredSeparationRadius: 2.25
@@ -703,6 +704,7 @@ MonoBehaviour:
     afraidVelocity: 12.5
   predatorsParams:
     prefab: {fileID: 6344359519432126883, guid: 4a99d52c6ca7350469280d5621b9d7ac, type: 3}
+    material: {fileID: 2100000, guid: 70d4bdd79573ccd4ebc6a53e3ee413e4, type: 2}
     minScale: 0.9
     maxScale: 1.1
     acceleration: 6
@@ -722,9 +724,9 @@ MonoBehaviour:
     squaredPeerRepulsionRadius: 100
     preyRepulsionRadius: 8
     averageChillingTime: 12
-    probaHuntingAfterChilling: 0.013333333
+    probaHuntingAfterChilling: 0.016666666
     averageHuntingTime: 6
-    probaChillingAfterHunting: 0.026666665
+    probaChillingAfterHunting: 0.03333333
     probaHuntingAfterAttacking: 0.8
     nbPreyToAttack: 260
     chillingVelocity: 4

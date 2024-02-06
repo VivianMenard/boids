@@ -55,6 +55,9 @@ public abstract class EntityScript : MonoBehaviour
         NOT_IN_RW
     }
     protected RwState rwState = RwState.NOT_IN_RW;
+    private Material material;
+    private float lastTurnValue;
+    private float targetTurnValue;
 
     void Start()
     {
@@ -71,6 +74,9 @@ public abstract class EntityScript : MonoBehaviour
         velocity = parameters.velocities[state];
 
         SetDirection(GetRandomDirection(), initialization: true);
+
+        material = new Material(parameters.material);
+        GetComponentInChildren<Renderer>().material = material;
     }
 
     protected abstract void InitParams();
@@ -261,12 +267,17 @@ public abstract class EntityScript : MonoBehaviour
 
     protected void SetDirection(Vector3 newDirection, bool initialization = false)
     {
+        Vector3 leftVector = Vector3.Cross(Vector3.up, Direction);
+        float newTurnValue = Mathf.Clamp(Vector3.Dot(leftVector, newDirection), -1, 1);
+
         Direction = newDirection;
 
         Quaternion newRotation = Quaternion.LookRotation(Direction);
 
+        lastTurnValue = (initialization) ? newTurnValue : targetTurnValue;
         lastRotation = (initialization) ? newRotation : targetRotation;
         targetRotation = newRotation;
+        targetTurnValue = newTurnValue;
 
         sinceLastCalculation = 0;
     }
@@ -335,6 +346,12 @@ public abstract class EntityScript : MonoBehaviour
     {
         float rotationProgress = (float)sinceLastCalculation /
             (float)entitiesManager.calculationInterval;
+
+        material.SetFloat(
+            "_turnValue",
+            Mathf.Lerp(lastTurnValue, targetTurnValue, rotationProgress)
+        );
+
         transform.rotation = Quaternion.Lerp(
             lastRotation, targetRotation, rotationProgress);
 

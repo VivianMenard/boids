@@ -7,6 +7,8 @@ public abstract class EntityParameters
 {
     public GameObject prefab;
 
+    public Material material;
+
     [Space, Range(0, 2)]
     public float minScale;
     [Range(0, 2)]

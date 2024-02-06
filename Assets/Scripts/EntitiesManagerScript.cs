@@ -6,7 +6,7 @@ public class EntitiesManagerScript : MonoBehaviour
     [Range(0, 3)]
     public float TimeScale;
 
-    [Range(1, 10), Space, Tooltip("Number of FixedUpdates between velocity calculations")]
+    [Range(1, 15), Space, Tooltip("Number of FixedUpdates between velocity calculations")]
     public int calculationInterval;
 
     [HideInInspector]
