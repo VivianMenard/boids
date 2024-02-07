@@ -396,5 +396,7 @@ public abstract class EntityScript : MonoBehaviour
             velocity = Mathf.Max(velocity - velocityStep, velocityGoal);
         else if (velocity < velocityGoal)
             velocity = Mathf.Min(velocity + velocityStep, velocityGoal);
+
+        material.SetFloat("_velocityFactor", velocity / parameters.referenceVelocity);
     }
 }

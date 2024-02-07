@@ -42,6 +42,8 @@ public abstract class EntityParameters
 
     [HideInInspector]
     public Dictionary<State, float> velocities;
+    [HideInInspector]
+    public float referenceVelocity;
 }
 
 [System.Serializable]

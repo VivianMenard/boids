@@ -689,6 +689,7 @@ MonoBehaviour:
     visionSemiAngle: 100
     cosVisionSemiAngle: -0.1736482
     momentumWeight: 1.7
+    referenceVelocity: 5
     separationWeight: 0.7
     alignmentWeight: 1
     cohesionWeight: 1
@@ -701,7 +702,7 @@ MonoBehaviour:
     nbBoidsNearbyToBeAlone: 3
     normalVelocity: 5
     aloneVelocity: 8
-    afraidVelocity: 12.5
+    afraidVelocity: 11
   predatorsParams:
     prefab: {fileID: 6344359519432126883, guid: 4a99d52c6ca7350469280d5621b9d7ac, type: 3}
     material: {fileID: 2100000, guid: 70d4bdd79573ccd4ebc6a53e3ee413e4, type: 2}
@@ -718,6 +719,7 @@ MonoBehaviour:
     visionSemiAngle: 80
     cosVisionSemiAngle: 0.17364822
     momentumWeight: 1
+    referenceVelocity: 8
     preyAttractionWeight: 1
     peerRepulsionWeight: 0.4
     peerRepulsionRadius: 10
@@ -728,7 +730,7 @@ MonoBehaviour:
     averageHuntingTime: 6
     probaChillingAfterHunting: 0.03333333
     probaHuntingAfterAttacking: 0.8
-    nbPreyToAttack: 260
+    nbPreyToAttack: 220
     chillingVelocity: 4
     huntingVelocity: 8
     attackingVelocity: 25

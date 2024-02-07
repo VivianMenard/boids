@@ -76,12 +76,14 @@ public class EntitiesManagerScript : MonoBehaviour
             {State.ALONE, boidsParams.aloneVelocity},
             {State.AFRAID, boidsParams.afraidVelocity},
         };
+        boidsParams.referenceVelocity = boidsParams.normalVelocity;
 
         predatorsParams.velocities = new Dictionary<State, float>{
             {State.CHILLING, predatorsParams.chillingVelocity},
             {State.HUNTING, predatorsParams.huntingVelocity},
             {State.ATTACKING, predatorsParams.attackingVelocity}
         };
+        predatorsParams.referenceVelocity = predatorsParams.huntingVelocity;
 
         predatorsParams.probaHuntingAfterChilling = ComputeStateChangeProba(
             predatorsParams.averageChillingTime);
