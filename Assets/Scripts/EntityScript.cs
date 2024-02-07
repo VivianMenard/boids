@@ -55,6 +55,7 @@ public abstract class EntityScript : MonoBehaviour
         NOT_IN_RW
     }
     protected RwState rwState = RwState.NOT_IN_RW;
+
     private Material material;
     private float lastTurnValue;
     private float targetTurnValue;
@@ -76,6 +77,7 @@ public abstract class EntityScript : MonoBehaviour
         SetDirection(GetRandomDirection(), initialization: true);
 
         material = new Material(parameters.material);
+        material.SetFloat("_phase", Random.Range(0, 2 * Mathf.PI));
         GetComponentInChildren<Renderer>().material = material;
     }
 

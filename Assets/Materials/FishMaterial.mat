@@ -137,6 +137,7 @@ Material:
     - _magnitudeX: 0.0001
     - _magnitudeZ: 0.00025
     - _minRipplesTurnFactor: 0.2
+    - _phase: 0
     - _rippleSpeed: 12
     - _ripplesSpatialFrequency: 2000
     - _ripplesSpeed: 12
