@@ -229,7 +229,7 @@ public abstract class EntityScript : MonoBehaviour
     private float Remap(float value, float fromMin, float fromMax, float toMin, float toMax)
     {
         float clampedValue = Mathf.Clamp(value, fromMin, fromMax);
-        return toMin + (value - fromMin) * (toMax - toMin) / (fromMax - fromMin);
+        return toMin + (clampedValue - fromMin) * (toMax - toMin) / (fromMax - fromMin);
     }
 
     private bool PerformRaycastOnObstacles(Vector3 direction, out RaycastHit hitInfo)
