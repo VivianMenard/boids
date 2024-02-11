@@ -299,10 +299,10 @@ public abstract class EntityScript : MonoBehaviour
     }
 
     protected Vector3 GetIdealDirectionForBehavior(
-        Behavior behavior, Vector3 relevantSum, int nbInvolvedBoids
+        Behavior behavior, Vector3 relevantSum, float totalWeight
     )
     {
-        if (nbInvolvedBoids == 0)
+        if (totalWeight == 0f)
             return Vector3.zero;
 
         if (behavior == Behavior.ALIGNMENT)
@@ -311,7 +311,7 @@ public abstract class EntityScript : MonoBehaviour
             return averageDirection;
         }
 
-        Vector3 averagePosition = relevantSum / (float)nbInvolvedBoids;
+        Vector3 averagePosition = relevantSum / totalWeight;
         Vector3 directionToAveragePosition = GetDirectionToPosition(
             averagePosition);
 
@@ -321,9 +321,9 @@ public abstract class EntityScript : MonoBehaviour
         return directionToAveragePosition;
     }
 
-    protected float GetBehaviorWeight(int nbInvolvedEntities, float baseWeight)
+    protected float GetReelWeight(float nbInvolvedEntities, float baseWeight)
     {
-        return (nbInvolvedEntities == 0) ? 0 : baseWeight;
+        return Mathf.Min(nbInvolvedEntities, 1) * baseWeight;
     }
 
     protected bool Bernoulli(float probaSuccess)

@@ -661,6 +661,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   TimeScale: 1
   calculationInterval: 10
+  smoothnessRadiusOffset: 1
   clock: 0
   numberOfBoids: 1200
   numberOfPredators: 1
@@ -690,14 +691,19 @@ MonoBehaviour:
     cosVisionSemiAngle: -0.1736482
     momentumWeight: 1.7
     referenceVelocity: 5
-    separationWeight: 0.7
-    alignmentWeight: 1
-    cohesionWeight: 1
-    fearWeight: 3
+    separationBaseWeight: 1
+    alignmentBaseWeight: 1
+    cohesionBaseWeight: 1
+    fearBaseWeight: 3
     separationRadius: 1.5
     cohesionRadius: 3.5
+    fearRadius: 10
     squaredSeparationRadius: 2.25
     squaredCohesionRadius: 12.25
+    squaredFearRadius: 100
+    squaredFullSeparationRadius: 0.25
+    squaredFullCohesionRadius: 20.25
+    squaredFullFearRadius: 81
     idealNbNeighbors: 6
     nbBoidsNearbyToBeAlone: 3
     normalVelocity: 5
@@ -720,17 +726,17 @@ MonoBehaviour:
     cosVisionSemiAngle: 0.17364822
     momentumWeight: 1
     referenceVelocity: 8
-    preyAttractionWeight: 1
-    peerRepulsionWeight: 0.4
+    preyAttractionBaseWeight: 1
+    peerRepulsionBaseWeight: 0.4
     peerRepulsionRadius: 10
     squaredPeerRepulsionRadius: 100
-    preyRepulsionRadius: 8
+    squaredFullPeerRepulsionRadius: 81
     averageChillingTime: 12
     probaHuntingAfterChilling: 0.016666666
     averageHuntingTime: 6
     probaChillingAfterHunting: 0.03333333
     probaHuntingAfterAttacking: 0.8
-    nbPreyToAttack: 220
+    nbPreysToAttack: 220
     chillingVelocity: 4
     huntingVelocity: 8
     attackingVelocity: 25

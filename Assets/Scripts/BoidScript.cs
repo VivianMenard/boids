@@ -20,79 +20,114 @@ public class BoidScript : EntityScript
             cohesionPositionSum = Vector3.zero,
             predatorsPositionSum = Vector3.zero;
 
-        int nbBoidsSeparation = 0,
-            nbBoidsAlignment = 0,
-            nbBoidsCohesion = 0,
-            nbPredators = 0;
+        int nbBoidsNearby = 0;
+
+        float weightedNbBoidsSeparation = 0,
+            weightedNbBoidsAlignment = 0,
+            weightedNbBoidsCohesion = 0,
+            weightedNbPredators = 0;
 
         foreach (Collider entityCollider in nearbyEntityColliders)
         {
             if (IsMyCollider(entityCollider))
                 continue;
 
+            Vector3 entityPosition = entityCollider.transform.position;
+
+            float squaredDistance = (entityPosition - transform.position)
+                .sqrMagnitude;
+
             if (IsBoidCollider(entityCollider))
             {
+                nbBoidsNearby++;
+
                 if (!IsInMyFOV(entityCollider))
                     continue;
 
-                float squaredDistance = (
-                    entityCollider.transform.position - transform.position
-                ).sqrMagnitude;
+                float boidWeight = Mathf.InverseLerp(
+                    visionDistance * visionDistance,
+                    (visionDistance - 1) * (visionDistance - 1),
+                    squaredDistance
+                );
 
-                if (squaredDistance > boidsParams.squaredCohesionRadius)
-                {
-                    nbBoidsCohesion += 1;
-                    cohesionPositionSum += entityCollider.transform.position;
-                }
-                else if (squaredDistance < boidsParams.squaredSeparationRadius)
-                {
-                    nbBoidsSeparation += 1;
-                    separationPositionSum += entityCollider.transform.position;
-                }
-                else
-                {
-                    nbBoidsAlignment += 1;
-                    BoidScript boidScript = entityCollider.GetComponent<BoidScript>();
-                    alignmentDirectionSum += boidScript.Direction;
-                }
+                float cohesionPortion = Mathf.InverseLerp(
+                        boidsParams.squaredCohesionRadius,
+                        boidsParams.squaredFullCohesionRadius,
+                        squaredDistance
+                    ),
+                    separationPortion = Mathf.InverseLerp(
+                        boidsParams.squaredSeparationRadius,
+                        boidsParams.squaredFullSeparationRadius,
+                        squaredDistance
+                    );
+                float alignmentPortion = 1 - cohesionPortion - separationPortion;
+
+                float boidSeparationWeight = boidWeight * separationPortion,
+                    boidAlignmentWeight = boidWeight * alignmentPortion,
+                    boidCohesionWeight = boidWeight * cohesionPortion;
+
+                weightedNbBoidsSeparation += boidSeparationWeight;
+                weightedNbBoidsAlignment += boidAlignmentWeight;
+                weightedNbBoidsCohesion += boidCohesionWeight;
+
+                separationPositionSum += boidSeparationWeight * entityPosition;
+                cohesionPositionSum += boidCohesionWeight * entityPosition;
+
+                BoidScript boidScript = entityCollider.GetComponent<BoidScript>();
+                alignmentDirectionSum += boidAlignmentWeight * boidScript.Direction;
             }
             else if (IsPredatorCollider(entityCollider))
             {
-                nbPredators++;
-                predatorsPositionSum += entityCollider.transform.position;
+                float predatorWeight = Mathf.InverseLerp(
+                    boidsParams.squaredFearRadius,
+                    boidsParams.squaredFullFearRadius,
+                    squaredDistance
+                );
+
+                weightedNbPredators += predatorWeight;
+                predatorsPositionSum += predatorWeight * entityPosition;
             }
         }
 
-        AdaptVisionDistance(nbBoidsSeparation + nbBoidsAlignment + nbBoidsCohesion);
-        AdaptState(nearbyEntityColliders.Length - nbPredators, nbPredators);
+        AdaptVisionDistance(
+            (int)(
+                weightedNbBoidsSeparation +
+                weightedNbBoidsAlignment +
+                weightedNbBoidsCohesion
+            )
+        );
+        AdaptState(nbBoidsNearby, (int)Mathf.Ceil(weightedNbPredators));
 
         if (state == State.ALONE)
             return RandomWalk();
         else
             rwState = RwState.NOT_IN_RW;
 
-        float separationWeight = GetBehaviorWeight(
-                nbBoidsSeparation, boidsParams.separationWeight),
-            alignmentWeight = GetBehaviorWeight(
-                nbBoidsAlignment, boidsParams.alignmentWeight),
-            cohesionWeight = GetBehaviorWeight(
-                nbBoidsCohesion, boidsParams.cohesionWeight),
-            fearWeight = GetBehaviorWeight(nbPredators, boidsParams.fearWeight);
+        float weightSum = weightedNbBoidsSeparation +
+            weightedNbBoidsAlignment +
+            weightedNbBoidsCohesion +
+            weightedNbPredators;
 
-        float weightSum = boidsParams.momentumWeight + separationWeight +
-            alignmentWeight + cohesionWeight + fearWeight;
-
-        if (weightSum == 0)
+        if (weightSum == 0f)
             return Direction;
 
         Vector3 separationDirection = GetIdealDirectionForBehavior(
-                Behavior.SEPARATION, separationPositionSum, nbBoidsSeparation),
+                Behavior.SEPARATION, separationPositionSum, weightedNbBoidsSeparation),
             alignmentDirection = GetIdealDirectionForBehavior(
-                Behavior.ALIGNMENT, alignmentDirectionSum, nbBoidsAlignment),
+                Behavior.ALIGNMENT, alignmentDirectionSum, weightedNbBoidsAlignment),
             cohesionDirection = GetIdealDirectionForBehavior(
-                Behavior.COHESION, cohesionPositionSum, nbBoidsCohesion),
+                Behavior.COHESION, cohesionPositionSum, weightedNbBoidsCohesion),
             fearDirection = GetIdealDirectionForBehavior(
-                Behavior.SEPARATION, predatorsPositionSum, nbPredators);
+                Behavior.SEPARATION, predatorsPositionSum, weightedNbPredators);
+
+        float separationWeight = GetReelWeight(
+                weightedNbBoidsSeparation, boidsParams.separationBaseWeight),
+            alignmentWeight = GetReelWeight(
+                weightedNbBoidsAlignment, boidsParams.alignmentBaseWeight),
+            cohesionWeight = GetReelWeight(
+                weightedNbBoidsCohesion, boidsParams.cohesionBaseWeight),
+            fearWeight = GetReelWeight(
+                weightedNbPredators, boidsParams.fearBaseWeight);
 
         return (
             boidsParams.momentumWeight * Direction +

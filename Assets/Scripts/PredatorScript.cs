@@ -21,69 +21,72 @@ public class PredatorScript : EntityScript
 
         Collider[] nearbyEntityColliders = GetNearbyEntityColliders();
 
-        Vector3 boidsPositionsSum = Vector3.zero;
-        Vector3 predatorsPositionsSum = Vector3.zero;
-        int nbBoidsInFOV = 0;
-        int nbRelevantPredators = 0;
+        Vector3 preysPositionsSum = Vector3.zero,
+            peersPositionsSum = Vector3.zero;
+
+        float nbPreys = 0f, nbPeers = 0f;
 
         foreach (Collider entityCollider in nearbyEntityColliders)
         {
             if (IsMyCollider(entityCollider))
                 continue;
 
+            Vector3 entityPosition = entityCollider.transform.position;
+            float squaredDistance = (entityPosition - transform.position)
+                .sqrMagnitude;
+
             if (IsBoidCollider(entityCollider))
             {
                 if (!IsInMyFOV(entityCollider))
                     continue;
 
-                nbBoidsInFOV++;
-                boidsPositionsSum += entityCollider.transform.position;
+                float preyWeight = Mathf.InverseLerp(
+                    visionDistance * visionDistance,
+                    (visionDistance - 1) * (visionDistance - 1),
+                    squaredDistance
+                );
+
+                nbPreys += preyWeight;
+                preysPositionsSum += preyWeight * entityPosition;
             }
             else if (IsPredatorCollider(entityCollider))
             {
-                float squaredDistance = (
-                    entityCollider.transform.position - transform.position
-                ).sqrMagnitude;
+                float peerWeight = Mathf.InverseLerp(
+                    predatorsParams.squaredPeerRepulsionRadius,
+                    predatorsParams.squaredFullPeerRepulsionRadius,
+                    squaredDistance
+                );
 
-                if (squaredDistance < predatorsParams.squaredPeerRepulsionRadius)
-                {
-                    nbRelevantPredators++;
-                    predatorsPositionsSum += entityCollider.transform.position;
-                }
+                nbPeers += peerWeight;
+                peersPositionsSum += peerWeight * entityPosition;
             }
         }
 
-        AdaptState(nbBoidsInFOV);
+        AdaptState((int)nbPreys);
 
-        if (nbBoidsInFOV == 0 && nbRelevantPredators == 0)
+        if (nbPreys + nbPeers == 0f)
             return RandomWalk();
         else
             rwState = RwState.NOT_IN_RW;
 
-        float preyAttractionWeight = GetBehaviorWeight(
-                nbBoidsInFOV, predatorsParams.preyAttractionWeight),
-            peerRepulsionWeight = GetBehaviorWeight(
-                nbRelevantPredators, predatorsParams.peerRepulsionWeight);
-
-        float weightSum = predatorsParams.momentumWeight +
-            preyAttractionWeight + peerRepulsionWeight;
-
-        if (weightSum == 0)
-            return Direction;
-
         Vector3 preyAttractionDirection = GetIdealDirectionForBehavior(
-                Behavior.COHESION, boidsPositionsSum, nbBoidsInFOV),
+                Behavior.COHESION, preysPositionsSum, nbPreys),
             peerRepulsionDirection = GetIdealDirectionForBehavior(
-                Behavior.SEPARATION, predatorsPositionsSum, nbRelevantPredators);
+                Behavior.SEPARATION, peersPositionsSum, nbPeers);
+
+        float preyAttractionWeight = GetReelWeight(
+                nbPreys, predatorsParams.preyAttractionBaseWeight),
+            peerRepulsionWeight = GetReelWeight(
+                nbPeers, predatorsParams.peerRepulsionBaseWeight);
 
         return (
             predatorsParams.momentumWeight * Direction +
-            preyAttractionDirection * preyAttractionWeight +
-            peerRepulsionDirection * peerRepulsionWeight
+            preyAttractionWeight * preyAttractionDirection +
+            peerRepulsionWeight * peerRepulsionDirection
         ).normalized;
     }
 
-    private void AdaptState(int nbBoidsInFOV = 0)
+    private void AdaptState(int nbPreysInFOV = 0)
     {
         switch (state)
         {
@@ -93,14 +96,14 @@ public class PredatorScript : EntityScript
                 break;
 
             case State.HUNTING:
-                if (nbBoidsInFOV > predatorsParams.nbPreyToAttack)
+                if (nbPreysInFOV > predatorsParams.nbPreysToAttack)
                     state = State.ATTACKING;
                 else if (Bernoulli(predatorsParams.probaChillingAfterHunting))
                     state = State.CHILLING;
                 break;
 
             case State.ATTACKING:
-                if (nbBoidsInFOV < predatorsParams.nbPreyToAttack)
+                if (nbPreysInFOV < predatorsParams.nbPreysToAttack)
                 {
                     if (Bernoulli(predatorsParams.probaHuntingAfterAttacking))
                         state = State.HUNTING;

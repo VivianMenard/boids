@@ -8,6 +8,8 @@ public class EntitiesManagerScript : MonoBehaviour
 
     [Range(1, 15), Space, Tooltip("Number of FixedUpdates between velocity calculations")]
     public int calculationInterval;
+    [Range(0, 3), Tooltip("Size of the smoothing zone between two behaviors")]
+    public float smoothnessRadiusOffset;
 
     [HideInInspector]
     public int clock = 0;
@@ -61,10 +63,19 @@ public class EntitiesManagerScript : MonoBehaviour
     {
         boidsParams.squaredSeparationRadius = Square(
             boidsParams.separationRadius);
+        boidsParams.squaredFullSeparationRadius = Square(
+            boidsParams.separationRadius - smoothnessRadiusOffset);
         boidsParams.squaredCohesionRadius = Square(
             boidsParams.cohesionRadius);
+        boidsParams.squaredFullCohesionRadius = Square(
+            boidsParams.cohesionRadius + smoothnessRadiusOffset);
+        boidsParams.squaredFearRadius = Square(boidsParams.fearRadius);
+        boidsParams.squaredFullFearRadius = Square(
+            boidsParams.fearRadius - smoothnessRadiusOffset);
         predatorsParams.squaredPeerRepulsionRadius = Square(
             predatorsParams.peerRepulsionRadius);
+        predatorsParams.squaredFullPeerRepulsionRadius = Square(
+            predatorsParams.peerRepulsionRadius - smoothnessRadiusOffset);
 
         boidsParams.cosVisionSemiAngle = Mathf.Cos(
             boidsParams.visionSemiAngle * Mathf.Deg2Rad);
@@ -218,7 +229,7 @@ public class EntitiesManagerScript : MonoBehaviour
         {
             SphereCollider sphereCollider = predator
                 .GetComponent<SphereCollider>();
-            sphereCollider.radius = predatorsParams.preyRepulsionRadius;
+            sphereCollider.radius = boidsParams.fearRadius;
         }
 
         AdjustOnePredatorCollider(predatorsParams.prefab);

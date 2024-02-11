@@ -50,22 +50,32 @@ public abstract class EntityParameters
 public class BoidsParameters : EntityParameters
 {
     [Range(0, 10), Tooltip("Tendency to distance itself from others")]
-    public float separationWeight;
+    public float separationBaseWeight;
     [Range(0, 10), Tooltip("Tendency to align its direction with those of its neighbors")]
-    public float alignmentWeight;
+    public float alignmentBaseWeight;
     [Range(0, 10), Tooltip("Tendency to try to get closer to the others")]
-    public float cohesionWeight;
+    public float cohesionBaseWeight;
     [Range(0, 10), Tooltip("Tendency to distance itself from predators")]
-    public float fearWeight;
+    public float fearBaseWeight;
 
     [Space, Range(0, 15), Tooltip("Distance below which the boid will try to distance itself from others")]
     public float separationRadius;
     [Range(0, 15), Tooltip("Distance above which the boid will try to get closer to the others")]
     public float cohesionRadius;
+    [Range(0, 15), Tooltip("Distance under which the boid will try to distance itself from the predator")]
+    public float fearRadius;
     [HideInInspector]
     public float squaredSeparationRadius;
     [HideInInspector]
     public float squaredCohesionRadius;
+    [HideInInspector]
+    public float squaredFearRadius;
+    [HideInInspector]
+    public float squaredFullSeparationRadius;
+    [HideInInspector]
+    public float squaredFullCohesionRadius;
+    [HideInInspector]
+    public float squaredFullFearRadius;
 
     [Space, Range(0, 15), Tooltip("Used to adapt vision distance to improve performances")]
     public int idealNbNeighbors;
@@ -85,16 +95,16 @@ public class BoidsParameters : EntityParameters
 public class PredatorsParameters : EntityParameters
 {
     [Range(0, 10), Tooltip("How attracted the predator is to boids")]
-    public float preyAttractionWeight;
+    public float preyAttractionBaseWeight;
     [Range(0, 10), Tooltip("How repulsed the predator is to the other ones")]
-    public float peerRepulsionWeight;
+    public float peerRepulsionBaseWeight;
 
     [Space, Range(0, 15), Tooltip("Distance under which the predator will try to distance itself from others")]
     public float peerRepulsionRadius;
     [HideInInspector]
     public float squaredPeerRepulsionRadius;
-    [Range(0, 15), Tooltip("Distance under which boids will try to distance themself from the predator")]
-    public float preyRepulsionRadius;
+    [HideInInspector]
+    public float squaredFullPeerRepulsionRadius;
 
     [Space, Range(0, 15), Tooltip("In seconds")]
     public float averageChillingTime;
@@ -107,7 +117,7 @@ public class PredatorsParameters : EntityParameters
     [Range(0, 1), Tooltip("Probability for the predator to enter HUNTING state again after exiting ATTACKING state")]
     public float probaHuntingAfterAttacking;
     [Range(0, 500), Tooltip("Number of prey in predator FOV needed to switch from HUNTING state to ATTACKING state")]
-    public int nbPreyToAttack;
+    public int nbPreysToAttack;
 
     [Space, Range(0, 50), Tooltip("In u/s")]
     public float chillingVelocity;
