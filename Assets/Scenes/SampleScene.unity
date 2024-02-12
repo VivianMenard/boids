@@ -691,7 +691,7 @@ MonoBehaviour:
     cosVisionSemiAngle: -0.1736482
     momentumWeight: 1.7
     referenceVelocity: 5
-    separationBaseWeight: 1
+    separationBaseWeight: 0.7
     alignmentBaseWeight: 1
     cohesionBaseWeight: 1
     fearBaseWeight: 3
@@ -704,6 +704,9 @@ MonoBehaviour:
     squaredFullSeparationRadius: 0.25
     squaredFullCohesionRadius: 20.25
     squaredFullFearRadius: 81
+    separationSmoothRangeSizeInverse: -0.5
+    cohesionSmoothRangeSizeInverse: 0.125
+    fearSmoothRangeSizeInverse: -0.05263158
     idealNbNeighbors: 6
     nbBoidsNearbyToBeAlone: 3
     normalVelocity: 5
@@ -731,6 +734,7 @@ MonoBehaviour:
     peerRepulsionRadius: 10
     squaredPeerRepulsionRadius: 100
     squaredFullPeerRepulsionRadius: 81
+    peerRepulsionSmoothRangeSizeInverse: -0.05263158
     averageChillingTime: 12
     probaHuntingAfterChilling: 0.016666666
     averageHuntingTime: 6

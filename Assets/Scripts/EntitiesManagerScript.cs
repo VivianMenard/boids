@@ -8,7 +8,7 @@ public class EntitiesManagerScript : MonoBehaviour
 
     [Range(1, 15), Space, Tooltip("Number of FixedUpdates between velocity calculations")]
     public int calculationInterval;
-    [Range(0, 3), Tooltip("Size of the smoothing zone between two behaviors")]
+    [Range(0, 1), Tooltip("Size of the smoothing zone between two behaviors")]
     public float smoothnessRadiusOffset;
 
     [HideInInspector]
@@ -33,6 +33,9 @@ public class EntitiesManagerScript : MonoBehaviour
 
     [HideInInspector]
     public LayerMask entitiesLayerMask;
+
+    [HideInInspector]
+    public Dictionary<int, float> visionDistanceSmoothRangeSizeInverses = new Dictionary<int, float>();
 
     private AreaScript area;
 
@@ -65,17 +68,25 @@ public class EntitiesManagerScript : MonoBehaviour
             boidsParams.separationRadius);
         boidsParams.squaredFullSeparationRadius = Square(
             boidsParams.separationRadius - smoothnessRadiusOffset);
+        boidsParams.separationSmoothRangeSizeInverse = 1 /
+            (boidsParams.squaredFullSeparationRadius - boidsParams.squaredSeparationRadius);
         boidsParams.squaredCohesionRadius = Square(
             boidsParams.cohesionRadius);
         boidsParams.squaredFullCohesionRadius = Square(
             boidsParams.cohesionRadius + smoothnessRadiusOffset);
+        boidsParams.cohesionSmoothRangeSizeInverse = 1 /
+            (boidsParams.squaredFullCohesionRadius - boidsParams.squaredCohesionRadius);
         boidsParams.squaredFearRadius = Square(boidsParams.fearRadius);
         boidsParams.squaredFullFearRadius = Square(
             boidsParams.fearRadius - smoothnessRadiusOffset);
+        boidsParams.fearSmoothRangeSizeInverse = 1 /
+            (boidsParams.squaredFullFearRadius - boidsParams.squaredFearRadius);
         predatorsParams.squaredPeerRepulsionRadius = Square(
             predatorsParams.peerRepulsionRadius);
         predatorsParams.squaredFullPeerRepulsionRadius = Square(
             predatorsParams.peerRepulsionRadius - smoothnessRadiusOffset);
+        predatorsParams.peerRepulsionSmoothRangeSizeInverse = 1 /
+            (predatorsParams.squaredFullPeerRepulsionRadius - predatorsParams.squaredPeerRepulsionRadius);
 
         boidsParams.cosVisionSemiAngle = Mathf.Cos(
             boidsParams.visionSemiAngle * Mathf.Deg2Rad);
@@ -100,6 +111,16 @@ public class EntitiesManagerScript : MonoBehaviour
             predatorsParams.averageChillingTime);
         predatorsParams.probaChillingAfterHunting = ComputeStateChangeProba(
             predatorsParams.averageHuntingTime);
+
+        for (
+            int visionDistance = 1;
+            visionDistance <= Mathf.Max(boidsParams.visionDistance, predatorsParams.visionDistance);
+            visionDistance++
+        )
+        {
+            visionDistanceSmoothRangeSizeInverses[visionDistance] = 1 /
+                (Square(visionDistance - smoothnessRadiusOffset) - Square(visionDistance));
+        }
     }
 
     private float Square(float value)

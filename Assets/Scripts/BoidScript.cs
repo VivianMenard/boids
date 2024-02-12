@@ -44,22 +44,10 @@ public class BoidScript : EntityScript
                 if (!IsInMyFOV(entityCollider))
                     continue;
 
-                float boidWeight = Mathf.InverseLerp(
-                    visionDistance * visionDistance,
-                    (visionDistance - 1) * (visionDistance - 1),
-                    squaredDistance
-                );
+                float boidWeight = GetEntityWeightAccordingToVisionDistance(squaredDistance);
 
-                float cohesionPortion = Mathf.InverseLerp(
-                        boidsParams.squaredCohesionRadius,
-                        boidsParams.squaredFullCohesionRadius,
-                        squaredDistance
-                    ),
-                    separationPortion = Mathf.InverseLerp(
-                        boidsParams.squaredSeparationRadius,
-                        boidsParams.squaredFullSeparationRadius,
-                        squaredDistance
-                    );
+                float cohesionPortion = GetEntityCohesionWeight(squaredDistance),
+                    separationPortion = GetEntitySeparationWeight(squaredDistance);
                 float alignmentPortion = 1 - cohesionPortion - separationPortion;
 
                 float boidSeparationWeight = boidWeight * separationPortion,
@@ -78,11 +66,7 @@ public class BoidScript : EntityScript
             }
             else if (IsPredatorCollider(entityCollider))
             {
-                float predatorWeight = Mathf.InverseLerp(
-                    boidsParams.squaredFearRadius,
-                    boidsParams.squaredFullFearRadius,
-                    squaredDistance
-                );
+                float predatorWeight = GetEntityFearWeight(squaredDistance);
 
                 weightedNbPredators += predatorWeight;
                 predatorsPositionSum += predatorWeight * entityPosition;
@@ -136,6 +120,36 @@ public class BoidScript : EntityScript
             cohesionWeight * cohesionDirection +
             fearWeight * fearDirection
         ).normalized;
+    }
+
+    private float GetEntitySeparationWeight(float squaredDistance)
+    {
+        return InverseLerpOpti(
+            boidsParams.squaredSeparationRadius,
+            boidsParams.squaredFullSeparationRadius,
+            boidsParams.separationSmoothRangeSizeInverse,
+            squaredDistance
+        );
+    }
+
+    private float GetEntityCohesionWeight(float squaredDistance)
+    {
+        return InverseLerpOpti(
+            boidsParams.squaredCohesionRadius,
+            boidsParams.squaredFullCohesionRadius,
+            boidsParams.cohesionSmoothRangeSizeInverse,
+            squaredDistance
+        );
+    }
+
+    private float GetEntityFearWeight(float squaredDistance)
+    {
+        return InverseLerpOpti(
+            boidsParams.squaredFearRadius,
+            boidsParams.squaredFullFearRadius,
+            boidsParams.fearSmoothRangeSizeInverse,
+            squaredDistance
+        );
     }
 
     private void AdaptState(int nbBoidsNearby, int nbPredatorsNearby)

@@ -332,6 +332,29 @@ public abstract class EntityScript : MonoBehaviour
         return randomValue < probaSuccess;
     }
 
+    protected float InverseLerpOpti(float start, float end, float rangeSizeInverse, float value)
+    {
+        bool normalOrder = rangeSizeInverse > 0f;
+
+        if (value <= start)
+            return (normalOrder) ? 0f : 1f;
+
+        if (value >= end)
+            return (normalOrder) ? 1f : 0f;
+
+        return (value - start) * rangeSizeInverse;
+    }
+
+    protected float GetEntityWeightAccordingToVisionDistance(float squaredDistance)
+    {
+        return InverseLerpOpti(
+            visionDistance * visionDistance,
+            (visionDistance - 1) * (visionDistance - 1),
+            entitiesManager.visionDistanceSmoothRangeSizeInverses[visionDistance],
+            squaredDistance
+        );
+    }
+
     private Vector3 GetRandomDirection()
     {
         float theta = Random.Range(0f, 2f * Mathf.PI);

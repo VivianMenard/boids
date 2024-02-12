@@ -40,22 +40,15 @@ public class PredatorScript : EntityScript
                 if (!IsInMyFOV(entityCollider))
                     continue;
 
-                float preyWeight = Mathf.InverseLerp(
-                    visionDistance * visionDistance,
-                    (visionDistance - 1) * (visionDistance - 1),
-                    squaredDistance
-                );
+                float preyWeight = GetEntityWeightAccordingToVisionDistance(
+                    squaredDistance);
 
                 nbPreys += preyWeight;
                 preysPositionsSum += preyWeight * entityPosition;
             }
             else if (IsPredatorCollider(entityCollider))
             {
-                float peerWeight = Mathf.InverseLerp(
-                    predatorsParams.squaredPeerRepulsionRadius,
-                    predatorsParams.squaredFullPeerRepulsionRadius,
-                    squaredDistance
-                );
+                float peerWeight = GetEntityPeerRepulsionWeight(squaredDistance);
 
                 nbPeers += peerWeight;
                 peersPositionsSum += peerWeight * entityPosition;
@@ -84,6 +77,16 @@ public class PredatorScript : EntityScript
             preyAttractionWeight * preyAttractionDirection +
             peerRepulsionWeight * peerRepulsionDirection
         ).normalized;
+    }
+
+    private float GetEntityPeerRepulsionWeight(float squaredDistance)
+    {
+        return InverseLerpOpti(
+            predatorsParams.squaredPeerRepulsionRadius,
+            predatorsParams.squaredFullPeerRepulsionRadius,
+            predatorsParams.peerRepulsionSmoothRangeSizeInverse,
+            squaredDistance
+        );
     }
 
     private void AdaptState(int nbPreysInFOV = 0)

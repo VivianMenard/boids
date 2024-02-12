@@ -76,6 +76,12 @@ public class BoidsParameters : EntityParameters
     public float squaredFullCohesionRadius;
     [HideInInspector]
     public float squaredFullFearRadius;
+    [HideInInspector]
+    public float separationSmoothRangeSizeInverse;
+    [HideInInspector]
+    public float cohesionSmoothRangeSizeInverse;
+    [HideInInspector]
+    public float fearSmoothRangeSizeInverse;
 
     [Space, Range(0, 15), Tooltip("Used to adapt vision distance to improve performances")]
     public int idealNbNeighbors;
@@ -105,6 +111,8 @@ public class PredatorsParameters : EntityParameters
     public float squaredPeerRepulsionRadius;
     [HideInInspector]
     public float squaredFullPeerRepulsionRadius;
+    [HideInInspector]
+    public float peerRepulsionSmoothRangeSizeInverse;
 
     [Space, Range(0, 15), Tooltip("In seconds")]
     public float averageChillingTime;
