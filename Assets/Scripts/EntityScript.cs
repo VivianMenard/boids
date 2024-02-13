@@ -31,6 +31,8 @@ public abstract class EntityScript : MonoBehaviour
 
     private int id;
     private float velocity;
+    private float randomBonusVelocityFactor = 1;
+    private int sinceLastBonusChange = 0;
     private AreaScript area;
     private Quaternion lastRotation;
     private Quaternion targetRotation;
@@ -93,6 +95,7 @@ public abstract class EntityScript : MonoBehaviour
             Vector3 adjustedDirection = IterateOnDirectionToAvoidObstacles(
                 optimalDirection);
             SetDirection(adjustedDirection);
+            UpdateVelocityBonusFactor();
         }
 
         UpdateRotation();
@@ -132,6 +135,20 @@ public abstract class EntityScript : MonoBehaviour
 
         rwStateTimeRemaiming--;
         return newDirection;
+    }
+
+    private void UpdateVelocityBonusFactor()
+    {
+        if (sinceLastBonusChange == parameters.nbCalculationsBetweenVelocityBonusFactorChange)
+        {
+            randomBonusVelocityFactor = Random.Range(
+                parameters.minVelocityBonusFactor,
+                parameters.maxVelocityBonusFactor
+            );
+            sinceLastBonusChange = 0;
+        }
+        else
+            sinceLastBonusChange++;
     }
 
     private Vector3 GetDirectionForRw()
@@ -410,7 +427,7 @@ public abstract class EntityScript : MonoBehaviour
 
     private void AdaptVelocity()
     {
-        float velocityGoal = parameters.velocities[state];
+        float velocityGoal = parameters.velocities[state] * randomBonusVelocityFactor;
         float acceleration = (isItEmergencyState[state]) ?
             parameters.emergencyAcceleration : parameters.acceleration;
         float velocityStep = acceleration * Time.fixedDeltaTime;

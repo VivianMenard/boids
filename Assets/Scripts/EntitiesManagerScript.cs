@@ -93,6 +93,13 @@ public class EntitiesManagerScript : MonoBehaviour
         predatorsParams.cosVisionSemiAngle = Mathf.Cos(
             predatorsParams.visionSemiAngle * Mathf.Deg2Rad);
 
+        boidsParams.nbCalculationsBetweenVelocityBonusFactorChange = (int)(
+            boidsParams.velocityBonusFactorChangePeriod / (Time.fixedDeltaTime * calculationInterval)
+        );
+        predatorsParams.nbCalculationsBetweenVelocityBonusFactorChange = (int)(
+            predatorsParams.velocityBonusFactorChangePeriod / (Time.fixedDeltaTime * calculationInterval)
+        );
+
         boidsParams.velocities = new Dictionary<State, float>{
             {State.NORMAL, boidsParams.normalVelocity},
             {State.ALONE, boidsParams.aloneVelocity},

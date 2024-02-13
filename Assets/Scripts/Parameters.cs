@@ -18,6 +18,15 @@ public abstract class EntityParameters
     public float acceleration;
     [Range(0, 50), Tooltip("In u/s²")]
     public float emergencyAcceleration;
+    [Range(0, 10), Tooltip("In seconds")]
+    public float velocityBonusFactorChangePeriod;
+    [HideInInspector]
+    public int nbCalculationsBetweenVelocityBonusFactorChange;
+    [Range(0, 1)]
+    public float minVelocityBonusFactor;
+    [Range(1, 2)]
+    public float maxVelocityBonusFactor;
+
 
     [Space, Range(0, 50), Tooltip("In random walk: Number of fixed updates between state changes")]
     public int rwStatePeriod;

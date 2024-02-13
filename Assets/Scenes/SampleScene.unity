@@ -681,6 +681,10 @@ MonoBehaviour:
     maxScale: 1.2
     acceleration: 7.5
     emergencyAcceleration: 30
+    velocityBonusFactorChangePeriod: 5
+    nbCalculationsBetweenVelocityBonusFactorChange: 25
+    minVelocityBonusFactor: 0.8
+    maxVelocityBonusFactor: 1.2
     rwStatePeriod: 5
     rwMomentumWeight: 1
     rwProbaStraightLine: 0.2
@@ -719,6 +723,10 @@ MonoBehaviour:
     maxScale: 1.1
     acceleration: 6
     emergencyAcceleration: 32
+    velocityBonusFactorChangePeriod: 5
+    nbCalculationsBetweenVelocityBonusFactorChange: 25
+    minVelocityBonusFactor: 0.8
+    maxVelocityBonusFactor: 1.2
     rwStatePeriod: 15
     rwMomentumWeight: 1
     rwProbaStraightLine: 0.2
