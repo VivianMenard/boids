@@ -53,6 +53,15 @@ public abstract class EntityParameters
     public Dictionary<State, float> velocities;
     [HideInInspector]
     public float referenceVelocity;
+
+    public virtual void PreCalculateParameters(int calculationInterval, float smoothnessRadiusOffset)
+    {
+        cosVisionSemiAngle = Mathf.Cos(visionSemiAngle * Mathf.Deg2Rad);
+
+        nbCalculationsBetweenVelocityBonusFactorChange = (int)(
+            velocityBonusFactorChangePeriod / (Time.fixedDeltaTime * calculationInterval)
+        );
+    }
 }
 
 [System.Serializable]
@@ -104,6 +113,34 @@ public class BoidsParameters : EntityParameters
     public float aloneVelocity;
     [Range(0, 50), Tooltip("In u/s")]
     public float afraidVelocity;
+
+    public override void PreCalculateParameters(int calculationInterval, float smoothnessRadiusOffset)
+    {
+        base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
+
+        squaredSeparationRadius = MathHelpers.Square(separationRadius);
+        squaredFullSeparationRadius = MathHelpers.Square(
+            separationRadius - smoothnessRadiusOffset);
+        separationSmoothRangeSizeInverse = 1 /
+            (squaredFullSeparationRadius - squaredSeparationRadius);
+        squaredCohesionRadius = MathHelpers.Square(cohesionRadius);
+        squaredFullCohesionRadius = MathHelpers.Square(
+            cohesionRadius + smoothnessRadiusOffset);
+        cohesionSmoothRangeSizeInverse = 1 /
+            (squaredFullCohesionRadius - squaredCohesionRadius);
+        squaredFearRadius = MathHelpers.Square(fearRadius);
+        squaredFullFearRadius = MathHelpers.Square(
+            fearRadius - smoothnessRadiusOffset);
+        fearSmoothRangeSizeInverse = 1 /
+            (squaredFullFearRadius - squaredFearRadius);
+
+        velocities = new Dictionary<State, float>{
+            {State.NORMAL, normalVelocity},
+            {State.ALONE, aloneVelocity},
+            {State.AFRAID, afraidVelocity},
+        };
+        referenceVelocity = normalVelocity;
+    }
 }
 
 [System.Serializable]
@@ -142,4 +179,32 @@ public class PredatorsParameters : EntityParameters
     public float huntingVelocity;
     [Range(0, 50), Tooltip("In u/s")]
     public float attackingVelocity;
+
+    public override void PreCalculateParameters(int calculationInterval, float smoothnessRadiusOffset)
+    {
+        base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
+
+        squaredPeerRepulsionRadius = MathHelpers.Square(peerRepulsionRadius);
+        squaredFullPeerRepulsionRadius = MathHelpers.Square(
+            peerRepulsionRadius - smoothnessRadiusOffset);
+        peerRepulsionSmoothRangeSizeInverse = 1 /
+            (squaredFullPeerRepulsionRadius - squaredPeerRepulsionRadius);
+
+        velocities = new Dictionary<State, float>{
+            {State.CHILLING, chillingVelocity},
+            {State.HUNTING, huntingVelocity},
+            {State.ATTACKING, attackingVelocity}
+        };
+        referenceVelocity = huntingVelocity;
+
+        probaHuntingAfterChilling = ComputeStateChangeProba(
+            averageChillingTime, calculationInterval);
+        probaChillingAfterHunting = ComputeStateChangeProba(
+            averageHuntingTime, calculationInterval);
+    }
+
+    private float ComputeStateChangeProba(float averageTimeInState, int calculationInterval)
+    {
+        return (calculationInterval * Time.fixedDeltaTime) / averageTimeInState;
+    }
 }

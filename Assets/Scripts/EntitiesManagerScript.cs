@@ -64,60 +64,8 @@ public class EntitiesManagerScript : MonoBehaviour
 
     private void PreCalculateParameters()
     {
-        boidsParams.squaredSeparationRadius = Square(
-            boidsParams.separationRadius);
-        boidsParams.squaredFullSeparationRadius = Square(
-            boidsParams.separationRadius - smoothnessRadiusOffset);
-        boidsParams.separationSmoothRangeSizeInverse = 1 /
-            (boidsParams.squaredFullSeparationRadius - boidsParams.squaredSeparationRadius);
-        boidsParams.squaredCohesionRadius = Square(
-            boidsParams.cohesionRadius);
-        boidsParams.squaredFullCohesionRadius = Square(
-            boidsParams.cohesionRadius + smoothnessRadiusOffset);
-        boidsParams.cohesionSmoothRangeSizeInverse = 1 /
-            (boidsParams.squaredFullCohesionRadius - boidsParams.squaredCohesionRadius);
-        boidsParams.squaredFearRadius = Square(boidsParams.fearRadius);
-        boidsParams.squaredFullFearRadius = Square(
-            boidsParams.fearRadius - smoothnessRadiusOffset);
-        boidsParams.fearSmoothRangeSizeInverse = 1 /
-            (boidsParams.squaredFullFearRadius - boidsParams.squaredFearRadius);
-        predatorsParams.squaredPeerRepulsionRadius = Square(
-            predatorsParams.peerRepulsionRadius);
-        predatorsParams.squaredFullPeerRepulsionRadius = Square(
-            predatorsParams.peerRepulsionRadius - smoothnessRadiusOffset);
-        predatorsParams.peerRepulsionSmoothRangeSizeInverse = 1 /
-            (predatorsParams.squaredFullPeerRepulsionRadius - predatorsParams.squaredPeerRepulsionRadius);
-
-        boidsParams.cosVisionSemiAngle = Mathf.Cos(
-            boidsParams.visionSemiAngle * Mathf.Deg2Rad);
-        predatorsParams.cosVisionSemiAngle = Mathf.Cos(
-            predatorsParams.visionSemiAngle * Mathf.Deg2Rad);
-
-        boidsParams.nbCalculationsBetweenVelocityBonusFactorChange = (int)(
-            boidsParams.velocityBonusFactorChangePeriod / (Time.fixedDeltaTime * calculationInterval)
-        );
-        predatorsParams.nbCalculationsBetweenVelocityBonusFactorChange = (int)(
-            predatorsParams.velocityBonusFactorChangePeriod / (Time.fixedDeltaTime * calculationInterval)
-        );
-
-        boidsParams.velocities = new Dictionary<State, float>{
-            {State.NORMAL, boidsParams.normalVelocity},
-            {State.ALONE, boidsParams.aloneVelocity},
-            {State.AFRAID, boidsParams.afraidVelocity},
-        };
-        boidsParams.referenceVelocity = boidsParams.normalVelocity;
-
-        predatorsParams.velocities = new Dictionary<State, float>{
-            {State.CHILLING, predatorsParams.chillingVelocity},
-            {State.HUNTING, predatorsParams.huntingVelocity},
-            {State.ATTACKING, predatorsParams.attackingVelocity}
-        };
-        predatorsParams.referenceVelocity = predatorsParams.huntingVelocity;
-
-        predatorsParams.probaHuntingAfterChilling = ComputeStateChangeProba(
-            predatorsParams.averageChillingTime);
-        predatorsParams.probaChillingAfterHunting = ComputeStateChangeProba(
-            predatorsParams.averageHuntingTime);
+        boidsParams.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
+        predatorsParams.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
 
         for (
             int visionDistance = 1;
@@ -126,18 +74,8 @@ public class EntitiesManagerScript : MonoBehaviour
         )
         {
             visionDistanceSmoothRangeSizeInverses[visionDistance] = 1 /
-                (Square(visionDistance - smoothnessRadiusOffset) - Square(visionDistance));
+                (MathHelpers.Square(visionDistance - smoothnessRadiusOffset) - MathHelpers.Square(visionDistance));
         }
-    }
-
-    private float Square(float value)
-    {
-        return value * value;
-    }
-
-    private float ComputeStateChangeProba(float averageTimeInState)
-    {
-        return (calculationInterval * Time.fixedDeltaTime) / averageTimeInState;
     }
 
     private void FixedUpdate()

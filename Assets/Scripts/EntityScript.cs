@@ -365,8 +365,8 @@ public abstract class EntityScript : MonoBehaviour
     protected float GetEntityWeightAccordingToVisionDistance(float squaredDistance)
     {
         return InverseLerpOpti(
-            visionDistance * visionDistance,
-            (visionDistance - 1) * (visionDistance - 1),
+            MathHelpers.Square(visionDistance),
+            MathHelpers.Square(visionDistance - 1),
             entitiesManager.visionDistanceSmoothRangeSizeInverses[visionDistance],
             squaredDistance
         );
