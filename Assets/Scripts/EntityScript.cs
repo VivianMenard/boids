@@ -58,9 +58,8 @@ public abstract class EntityScript : MonoBehaviour
     }
     protected RwState rwState = RwState.NOT_IN_RW;
 
-    private Material material;
-    private float lastTurnValue;
-    private float targetTurnValue;
+    private Dictionary<long, Vector3> frameToPosition = new Dictionary<long, Vector3>();
+    Transform[] bones;
 
     void Start()
     {
@@ -78,9 +77,8 @@ public abstract class EntityScript : MonoBehaviour
 
         SetDirection(GetRandomDirection(), initialization: true);
 
-        material = new Material(parameters.material);
-        material.SetFloat("_phase", Random.Range(0, 2 * Mathf.PI));
-        GetComponentInChildren<Renderer>().material = material;
+        if (parameters.hasRig)
+            bones = GetComponentInChildren<SkinnedMeshRenderer>().bones;
     }
 
     protected abstract void InitParams();
@@ -89,7 +87,8 @@ public abstract class EntityScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (entitiesManager.clock == id % entitiesManager.calculationInterval)
+        if (entitiesManager.clock % entitiesManager.calculationInterval ==
+            id % entitiesManager.calculationInterval)
         {
             Vector3 optimalDirection = ComputeNewDirection();
             Vector3 adjustedDirection = IterateOnDirectionToAvoidObstacles(
@@ -103,6 +102,36 @@ public abstract class EntityScript : MonoBehaviour
 
         Move();
         TeleportIfOutOfBorders();
+        AdjustPositionOfBones();
+    }
+
+    private void AdjustPositionOfBones()
+    {
+        if (!parameters.hasRig)
+            return;
+
+        Vector3 positionToStore = transform.position;
+        frameToPosition[entitiesManager.clock] = positionToStore;
+
+        frameToPosition.Remove(entitiesManager.clock - parameters.nbPositionsToStore - 1);
+
+        if (!frameToPosition.ContainsKey(entitiesManager.clock - parameters.nbPositionsToStore))
+            return;
+
+        for (int i = 1; i < parameters.nbBones + 1; i++)
+        {
+            float nbFrameDelay = parameters.boneDistanceToHead[i] / (velocity * Time.fixedDeltaTime);
+            bones[i].position = FrameToPosition(entitiesManager.clock - nbFrameDelay);
+        }
+    }
+
+    private Vector3 FrameToPosition(float frame)
+    {
+        return Vector3.Lerp(
+            frameToPosition[(long)Mathf.Floor(frame)],
+            frameToPosition[(long)Mathf.Ceil(frame)],
+            frame % 1f
+        );
     }
 
     protected Vector3 RandomWalk() // is abreviated by 'rw' in the rest of the code
@@ -293,10 +322,8 @@ public abstract class EntityScript : MonoBehaviour
 
         Quaternion newRotation = Quaternion.LookRotation(Direction);
 
-        lastTurnValue = (initialization) ? newTurnValue : targetTurnValue;
         lastRotation = (initialization) ? newRotation : targetRotation;
         targetRotation = newRotation;
-        targetTurnValue = newTurnValue;
 
         sinceLastCalculation = 0;
     }
@@ -389,11 +416,6 @@ public abstract class EntityScript : MonoBehaviour
         float rotationProgress = (float)sinceLastCalculation /
             (float)entitiesManager.calculationInterval;
 
-        material.SetFloat(
-            "_turnValue",
-            Mathf.Lerp(lastTurnValue, targetTurnValue, rotationProgress)
-        );
-
         transform.rotation = Quaternion.Lerp(
             lastRotation, targetRotation, rotationProgress);
 
@@ -436,7 +458,5 @@ public abstract class EntityScript : MonoBehaviour
             velocity = Mathf.Max(velocity - velocityStep, velocityGoal);
         else if (velocity < velocityGoal)
             velocity = Mathf.Min(velocity + velocityStep, velocityGoal);
-
-        material.SetFloat("_velocityFactor", velocity / parameters.referenceVelocity);
     }
 }

@@ -676,7 +676,6 @@ MonoBehaviour:
     m_Bits: 0
   boidsParams:
     prefab: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
-    material: {fileID: 2100000, guid: 969353ed8cd67484888740f5af115ecd, type: 2}
     minScale: 0.8
     maxScale: 1.2
     acceleration: 7.5
@@ -695,6 +694,15 @@ MonoBehaviour:
     cosVisionSemiAngle: -0.1736482
     momentumWeight: 1.7
     referenceVelocity: 5
+    hasRig: 1
+    nbBones: 4
+    boneDistanceToHead:
+    - 0
+    - 0.49623042
+    - 0.9280419
+    - 1.3032807
+    - 1.5878624
+    nbPositionsToStore: 20
     separationBaseWeight: 0.7
     alignmentBaseWeight: 1
     cohesionBaseWeight: 1
@@ -718,7 +726,6 @@ MonoBehaviour:
     afraidVelocity: 11
   predatorsParams:
     prefab: {fileID: 6344359519432126883, guid: 4a99d52c6ca7350469280d5621b9d7ac, type: 3}
-    material: {fileID: 2100000, guid: 70d4bdd79573ccd4ebc6a53e3ee413e4, type: 2}
     minScale: 0.9
     maxScale: 1.1
     acceleration: 6
@@ -737,6 +744,10 @@ MonoBehaviour:
     cosVisionSemiAngle: 0.17364822
     momentumWeight: 1
     referenceVelocity: 8
+    hasRig: 0
+    nbBones: 0
+    boneDistanceToHead: []
+    nbPositionsToStore: 0
     preyAttractionBaseWeight: 1
     peerRepulsionBaseWeight: 0.4
     peerRepulsionRadius: 10

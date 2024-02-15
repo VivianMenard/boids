@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,8 +7,6 @@ using UnityEngine;
 public abstract class EntityParameters
 {
     public GameObject prefab;
-
-    public Material material;
 
     [Space, Range(0, 2)]
     public float minScale;
@@ -54,6 +53,15 @@ public abstract class EntityParameters
     [HideInInspector]
     public float referenceVelocity;
 
+    [HideInInspector]
+    public bool hasRig;
+    [HideInInspector]
+    public int nbBones;
+    [HideInInspector]
+    public float[] boneDistanceToHead;
+    [HideInInspector]
+    public int nbPositionsToStore;
+
     public virtual void PreCalculateParameters(int calculationInterval, float smoothnessRadiusOffset)
     {
         cosVisionSemiAngle = Mathf.Cos(visionSemiAngle * Mathf.Deg2Rad);
@@ -61,6 +69,28 @@ public abstract class EntityParameters
         nbCalculationsBetweenVelocityBonusFactorChange = (int)(
             velocityBonusFactorChangePeriod / (Time.fixedDeltaTime * calculationInterval)
         );
+
+        SkinnedMeshRenderer skinnedMeshRenderer = prefab.
+            GetComponentInChildren<SkinnedMeshRenderer>();
+        hasRig = skinnedMeshRenderer != null;
+
+        if (hasRig)
+        {
+            Transform[] bones = skinnedMeshRenderer.bones;
+            nbBones = bones.Length - 1;
+
+            boneDistanceToHead = new float[bones.Length];
+            Vector3 headPosition = bones[0].position;
+
+            for (int i = 0; i < bones.Length; i++)
+                boneDistanceToHead[i] = Vector3.Distance(headPosition, bones[i].position);
+
+            float minVelocity = velocities.Values.ToArray().Min();
+            nbPositionsToStore = (int)Mathf.Ceil(
+                boneDistanceToHead[nbBones] /
+                (minVelocityBonusFactor * minVelocity * Time.fixedDeltaTime)
+            );
+        }
     }
 }
 
@@ -116,8 +146,6 @@ public class BoidsParameters : EntityParameters
 
     public override void PreCalculateParameters(int calculationInterval, float smoothnessRadiusOffset)
     {
-        base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
-
         squaredSeparationRadius = MathHelpers.Square(separationRadius);
         squaredFullSeparationRadius = MathHelpers.Square(
             separationRadius - smoothnessRadiusOffset);
@@ -140,6 +168,8 @@ public class BoidsParameters : EntityParameters
             {State.AFRAID, afraidVelocity},
         };
         referenceVelocity = normalVelocity;
+
+        base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
     }
 }
 
@@ -182,8 +212,6 @@ public class PredatorsParameters : EntityParameters
 
     public override void PreCalculateParameters(int calculationInterval, float smoothnessRadiusOffset)
     {
-        base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
-
         squaredPeerRepulsionRadius = MathHelpers.Square(peerRepulsionRadius);
         squaredFullPeerRepulsionRadius = MathHelpers.Square(
             peerRepulsionRadius - smoothnessRadiusOffset);
@@ -201,6 +229,8 @@ public class PredatorsParameters : EntityParameters
             averageChillingTime, calculationInterval);
         probaChillingAfterHunting = ComputeStateChangeProba(
             averageHuntingTime, calculationInterval);
+
+        base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
     }
 
     private float ComputeStateChangeProba(float averageTimeInState, int calculationInterval)

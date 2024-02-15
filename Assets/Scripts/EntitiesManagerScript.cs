@@ -12,7 +12,7 @@ public class EntitiesManagerScript : MonoBehaviour
     public float smoothnessRadiusOffset;
 
     [HideInInspector]
-    public int clock = 0;
+    public long clock = 0;
 
     [Space, Range(0, 3000), SerializeField]
     private int numberOfBoids;
@@ -80,7 +80,7 @@ public class EntitiesManagerScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        clock = (clock + 1) % calculationInterval;
+        clock++;
 
         AdjustNbEntities(
             numberOfBoids - currentNbBoids,
