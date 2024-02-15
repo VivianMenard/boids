@@ -114,7 +114,7 @@ public class EntitiesManagerScript : MonoBehaviour
         {
             GameObject entity = Instantiate(
                 entityPrefab,
-                GetRandomPositionInArea(),
+                GetRandomSpawnablePositionInArea(),
                 Quaternion.identity,
                 gameObject.transform
             );
@@ -171,12 +171,15 @@ public class EntitiesManagerScript : MonoBehaviour
         entity.transform.localScale *= Random.Range(minScale, maxScale);
     }
 
-    private Vector3 GetRandomPositionInArea()
+    private Vector3 GetRandomSpawnablePositionInArea()
     {
+        Vector3 minPtToSpawn = area.minPt + obstacleMargin * Vector3.one;
+        Vector3 maxPtToSpawn = area.maxPt - obstacleMargin * Vector3.one;
+
         return new Vector3(
-            UnityEngine.Random.Range(area.minPt.x, area.maxPt.x),
-            UnityEngine.Random.Range(area.minPt.y, area.maxPt.y),
-            UnityEngine.Random.Range(area.minPt.z, area.maxPt.z)
+            UnityEngine.Random.Range(minPtToSpawn.x, maxPtToSpawn.x),
+            UnityEngine.Random.Range(minPtToSpawn.y, maxPtToSpawn.y),
+            UnityEngine.Random.Range(minPtToSpawn.z, maxPtToSpawn.z)
         );
     }
 

@@ -101,7 +101,6 @@ public abstract class EntityScript : MonoBehaviour
         AdaptVelocity();
 
         Move();
-        TeleportIfOutOfBorders();
         AdjustPositionOfBones();
     }
 
@@ -426,25 +425,6 @@ public abstract class EntityScript : MonoBehaviour
     {
         transform.position = transform.position +
             velocity * Direction * Time.deltaTime;
-    }
-
-    private float ComputePositionAfterTP1D(float position, float min, float max)
-    {
-        if (position < min)
-            return max;
-        if (position > max)
-            return min;
-
-        return position;
-    }
-
-    private void TeleportIfOutOfBorders()
-    {
-        transform.position = new Vector3(
-            ComputePositionAfterTP1D(transform.position.x, area.minPt.x, area.maxPt.x),
-            ComputePositionAfterTP1D(transform.position.y, area.minPt.y, area.maxPt.y),
-            ComputePositionAfterTP1D(transform.position.z, area.minPt.z, area.maxPt.z)
-        );
     }
 
     private void AdaptVelocity()
