@@ -56,11 +56,11 @@ public abstract class EntityParameters
     [HideInInspector]
     public bool hasRig;
     [HideInInspector]
-    public int nbBones;
-    [HideInInspector]
     public float[] boneDistanceToHead;
     [HideInInspector]
     public int nbPositionsToStore;
+    [HideInInspector]
+    public Quaternion[] boneBaseRotation;
 
     public virtual void PreCalculateParameters(int calculationInterval, float smoothnessRadiusOffset)
     {
@@ -77,17 +77,20 @@ public abstract class EntityParameters
         if (hasRig)
         {
             Transform[] bones = skinnedMeshRenderer.bones;
-            nbBones = bones.Length - 1;
 
             boneDistanceToHead = new float[bones.Length];
+            boneBaseRotation = new Quaternion[bones.Length];
             Vector3 headPosition = bones[0].position;
 
             for (int i = 0; i < bones.Length; i++)
+            {
                 boneDistanceToHead[i] = Vector3.Distance(headPosition, bones[i].position);
+                boneBaseRotation[i] = bones[i].rotation;
+            }
 
             float minVelocity = velocities.Values.ToArray().Min();
             nbPositionsToStore = (int)Mathf.Ceil(
-                boneDistanceToHead[nbBones] /
+                boneDistanceToHead[bones.Length - 1] * maxScale /
                 (minVelocityBonusFactor * minVelocity * Time.fixedDeltaTime)
             );
         }

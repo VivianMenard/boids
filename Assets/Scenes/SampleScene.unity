@@ -695,14 +695,19 @@ MonoBehaviour:
     momentumWeight: 1.7
     referenceVelocity: 5
     hasRig: 1
-    nbBones: 4
     boneDistanceToHead:
     - 0
-    - 0.49623042
-    - 0.9280419
-    - 1.3032807
-    - 1.5878624
-    nbPositionsToStore: 20
+    - 0.4962304
+    - 0.9280417
+    - 1.3032806
+    - 1.5878621
+    nbPositionsToStore: 24
+    boneBaseRotation:
+    - {x: -0.47799203, y: -0.5210796, z: 0.4779918, w: 0.52107924}
+    - {x: -0.47799188, y: -0.5210797, z: 0.47799194, w: 0.5210791}
+    - {x: -0.47799188, y: -0.5210797, z: 0.47799194, w: 0.5210791}
+    - {x: -0.47799188, y: -0.5210797, z: 0.47799194, w: 0.5210791}
+    - {x: -0.47799188, y: -0.5210797, z: 0.47799194, w: 0.5210791}
     separationBaseWeight: 0.7
     alignmentBaseWeight: 1
     cohesionBaseWeight: 1
@@ -745,9 +750,9 @@ MonoBehaviour:
     momentumWeight: 1
     referenceVelocity: 8
     hasRig: 0
-    nbBones: 0
     boneDistanceToHead: []
     nbPositionsToStore: 0
+    boneBaseRotation: []
     preyAttractionBaseWeight: 1
     peerRepulsionBaseWeight: 0.4
     peerRepulsionRadius: 10
