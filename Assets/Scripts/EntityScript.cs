@@ -58,8 +58,10 @@ public abstract class EntityScript : MonoBehaviour
     }
     protected RwState rwState = RwState.NOT_IN_RW;
 
-    private Dictionary<long, (Vector3, Quaternion)> frameToTransform =
-        new Dictionary<long, (Vector3, Quaternion)>();
+    // data format : (frame number) : (position at this frame, rotation at this frame, traveled distance since last frame)
+    private Dictionary<long, (Vector3, Quaternion, float)> frameToTransformInfo =
+        new Dictionary<long, (Vector3, Quaternion, float)>();
+    (Vector3, Quaternion)[] bonesPositionsAndRotations;
     private Transform[] bones;
     private float scale;
 
@@ -81,7 +83,10 @@ public abstract class EntityScript : MonoBehaviour
         SetDirection(GetRandomDirection(), initialization: true);
 
         if (parameters.hasRig)
+        {
             bones = GetComponentInChildren<SkinnedMeshRenderer>().bones;
+            bonesPositionsAndRotations = new (Vector3, Quaternion)[bones.Length];
+        }
     }
 
     protected abstract void InitParams();
@@ -104,40 +109,99 @@ public abstract class EntityScript : MonoBehaviour
         AdaptVelocity();
 
         Move();
-        AdjustPositionOfBones();
+        ManageBones();
     }
 
-    private void AdjustPositionOfBones()
+    private void ManageBones()
     {
         if (!parameters.hasRig)
             return;
 
-        frameToTransform[entitiesManager.clock] = (
-            transform.position,
-            transform.rotation
-        );
+        StoreTransformInfo();
 
-        frameToTransform.Remove(entitiesManager.clock - parameters.nbPositionsToStore - 1);
-
-        if (!frameToTransform.ContainsKey(entitiesManager.clock - parameters.nbPositionsToStore))
+        if (!frameToTransformInfo.ContainsKey(entitiesManager.clock - parameters.nbTransformsToStore))
             return;
 
+        ComputeBonesPositionsAndRotations();
+        ApplyBonesPositionsAndRotations();
+    }
+
+    private void StoreTransformInfo()
+    {
+        frameToTransformInfo[entitiesManager.clock] = (
+            transform.position,
+            transform.rotation,
+            velocity * Time.fixedDeltaTime
+        );
+
+        frameToTransformInfo.Remove(entitiesManager.clock - parameters.nbTransformsToStore - 1);
+    }
+
+    private void ApplyBonesPositionsAndRotations()
+    {
         for (int i = 1; i < bones.Length; i++)
         {
-            float nbFrameDelay = parameters.boneDistanceToHead[i] * scale /
-                (velocity * Time.fixedDeltaTime);
-            (Vector3 boneNewPosition, Quaternion boneNewRotation) = FrameToTransform(
-                entitiesManager.clock - nbFrameDelay);
+            (Vector3 boneNewPosition, Quaternion boneNewRotation) = bonesPositionsAndRotations[i];
 
             bones[i].rotation = boneNewRotation * parameters.boneBaseRotation[i];
             bones[i].position = boneNewPosition;
         }
     }
 
+    private void ComputeBonesPositionsAndRotations()
+    {
+        if (!parameters.accurateAnimation)
+        {
+            ComputeApproximateBonesPositionsAndRotations();
+            return;
+        }
+
+        float traveledDistance = 0f;
+        int currentBone = 1;
+        int currentFrameOffset = 0;
+
+        while (currentBone < bones.Length)
+        {
+            (Vector3 pastPosition, Quaternion pastRotation, float frameTraveledDistance) =
+                frameToTransformInfo[entitiesManager.clock - currentFrameOffset];
+
+            if (traveledDistance + frameTraveledDistance >= scale * parameters.boneDistanceToHead[currentBone])
+            {
+                (Vector3 pastPastPosition, Quaternion pastPastRotation, float _) =
+                    frameToTransformInfo[entitiesManager.clock - currentFrameOffset - 1];
+                float fraction = (parameters.boneDistanceToHead[currentBone] - traveledDistance) /
+                    frameTraveledDistance;
+                bonesPositionsAndRotations[currentBone] = (
+                    Vector3.Lerp(pastPosition, pastPastPosition, fraction),
+                    Quaternion.Slerp(pastRotation, pastPastRotation, fraction)
+                );
+                currentBone++;
+            }
+            else
+            {
+                traveledDistance += frameTraveledDistance;
+                currentFrameOffset++;
+            }
+        }
+    }
+
+    private void ComputeApproximateBonesPositionsAndRotations()
+    {
+        for (int i = 1; i < bones.Length; i++)
+        {
+            float nbFrameDelay = scale * parameters.boneDistanceToHead[i] /
+                (velocity * Time.fixedDeltaTime);
+            bonesPositionsAndRotations[i] = FrameToTransform(
+                entitiesManager.clock - nbFrameDelay);
+        }
+    }
+
     private (Vector3, Quaternion) FrameToTransform(float frame)
     {
-        (Vector3 firstPosition, Quaternion firstRotation) = frameToTransform[(long)Mathf.Floor(frame)];
-        (Vector3 secondPosition, Quaternion secondRotation) = frameToTransform[(long)Mathf.Ceil(frame)];
+        (Vector3 firstPosition, Quaternion firstRotation, float _) =
+            frameToTransformInfo[(long)Mathf.Floor(frame)];
+        (Vector3 secondPosition, Quaternion secondRotation, float _) =
+            frameToTransformInfo[(long)Mathf.Ceil(frame)];
 
         return (
             Vector3.Lerp(firstPosition, secondPosition, frame % 1f),

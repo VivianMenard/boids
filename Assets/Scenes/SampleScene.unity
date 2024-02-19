@@ -674,6 +674,7 @@ MonoBehaviour:
     m_Bits: 0
   boidsParams:
     prefab: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
+    accurateAnimation: 0
     minScale: 0.8
     maxScale: 1.2
     raycastDistance: 8
@@ -697,11 +698,11 @@ MonoBehaviour:
     hasRig: 1
     boneDistanceToHead:
     - 0
-    - 0.4962304
-    - 0.9280417
-    - 1.3032806
-    - 1.5878621
-    nbPositionsToStore: 24
+    - 0.6194598
+    - 1.1585033
+    - 1.6269256
+    - 1.9821776
+    nbTransformsToStore: 30
     boneBaseRotation:
     - {x: -0.47799203, y: -0.5210796, z: 0.4779918, w: 0.52107924}
     - {x: -0.47799188, y: -0.5210797, z: 0.47799194, w: 0.5210791}
@@ -731,6 +732,7 @@ MonoBehaviour:
     afraidVelocity: 11
   predatorsParams:
     prefab: {fileID: 6344359519432126883, guid: 4a99d52c6ca7350469280d5621b9d7ac, type: 3}
+    accurateAnimation: 1
     minScale: 0.9
     maxScale: 1.1
     raycastDistance: 15
@@ -751,10 +753,26 @@ MonoBehaviour:
     cosVisionSemiAngle: 0.17364822
     momentumWeight: 1
     referenceVelocity: 8
-    hasRig: 0
-    boneDistanceToHead: []
-    nbPositionsToStore: 0
-    boneBaseRotation: []
+    hasRig: 1
+    boneDistanceToHead:
+    - 0
+    - 2.224883
+    - 4.670131
+    - 5.7520013
+    - 6.7952337
+    - 7.6728754
+    - 8.351805
+    - 8.89826
+    nbTransformsToStore: 102
+    boneBaseRotation:
+    - {x: -0.49999994, y: 0.5000001, z: -0.49999988, w: 0.50000024}
+    - {x: -0.4999998, y: 0.5000002, z: -0.5000001, w: 0.4999999}
+    - {x: -0.4999998, y: 0.5000002, z: -0.5000001, w: 0.4999999}
+    - {x: -0.4999998, y: 0.5000002, z: -0.5000001, w: 0.4999999}
+    - {x: -0.4999998, y: 0.5000002, z: -0.5000001, w: 0.4999999}
+    - {x: -0.4999998, y: 0.5000002, z: -0.5000001, w: 0.4999999}
+    - {x: -0.4999998, y: 0.5000002, z: -0.5000001, w: 0.4999999}
+    - {x: -0.4999998, y: 0.5000002, z: -0.5000001, w: 0.4999999}
     preyAttractionBaseWeight: 1
     peerRepulsionBaseWeight: 0.4
     peerRepulsionRadius: 10
@@ -767,7 +785,7 @@ MonoBehaviour:
     probaChillingAfterHunting: 0.03333333
     probaHuntingAfterAttacking: 0.8
     nbPreysToAttack: 220
-    chillingVelocity: 4
+    chillingVelocity: 6
     huntingVelocity: 8
     attackingVelocity: 25
 --- !u!4 &1119471559

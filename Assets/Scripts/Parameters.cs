@@ -8,6 +8,9 @@ public abstract class EntityParameters
 {
     public GameObject prefab;
 
+    [Space]
+    public bool accurateAnimation;
+
     [Space, Range(0, 2)]
     public float minScale;
     [Range(0, 2)]
@@ -63,7 +66,7 @@ public abstract class EntityParameters
     [HideInInspector]
     public float[] boneDistanceToHead;
     [HideInInspector]
-    public int nbPositionsToStore;
+    public int nbTransformsToStore;
     [HideInInspector]
     public Quaternion[] boneBaseRotation;
 
@@ -94,7 +97,7 @@ public abstract class EntityParameters
             }
 
             float minVelocity = velocities.Values.ToArray().Min();
-            nbPositionsToStore = (int)Mathf.Ceil(
+            nbTransformsToStore = (int)Mathf.Ceil(
                 boneDistanceToHead[bones.Length - 1] * maxScale /
                 (minVelocityBonusFactor * minVelocity * Time.fixedDeltaTime)
             );
