@@ -436,7 +436,7 @@ public abstract class EntityScript : MonoBehaviour
     private void Move()
     {
         transform.position = transform.position +
-            velocity * Direction * Time.deltaTime;
+            velocity * Time.fixedDeltaTime * Direction;
     }
 
     private void AdaptVelocity()
