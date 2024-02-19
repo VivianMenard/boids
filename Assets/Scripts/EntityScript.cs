@@ -273,13 +273,13 @@ public abstract class EntityScript : MonoBehaviour
     )
     {
         float perceivedDistance = Remap(hitDistance,
-            entitiesManager.obstacleMargin, entitiesManager.raycastDistance,
-            0, entitiesManager.raycastDistance
+            parameters.obstacleMargin, parameters.raycastDistance,
+            0, parameters.raycastDistance
         );
 
         return (
             direction * perceivedDistance +
-            avoidanceDirection * (entitiesManager.raycastDistance - perceivedDistance)
+            avoidanceDirection * (parameters.raycastDistance - perceivedDistance)
         ).normalized;
     }
 
@@ -294,7 +294,7 @@ public abstract class EntityScript : MonoBehaviour
         Ray ray = new Ray(transform.position, direction);
         return Physics.Raycast(
             ray, out hitInfo,
-            entitiesManager.raycastDistance,
+            parameters.raycastDistance,
             entitiesManager.obstacleLayerMask
         );
     }

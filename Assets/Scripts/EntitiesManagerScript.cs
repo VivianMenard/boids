@@ -24,10 +24,6 @@ public class EntitiesManagerScript : MonoBehaviour
 
     [Space]
     public bool ObstaclesAvoidance;
-    [Range(0, 15)]
-    public float raycastDistance;
-    [Range(0, 5), Tooltip("The distance entities will try to keep between them and the obstacle")]
-    public float obstacleMargin;
     [HideInInspector]
     public LayerMask obstacleLayerMask;
 
@@ -114,7 +110,7 @@ public class EntitiesManagerScript : MonoBehaviour
         {
             GameObject entity = Instantiate(
                 entityPrefab,
-                GetRandomSpawnablePositionInArea(),
+                GetRandomSpawnablePositionInArea(type),
                 Quaternion.identity,
                 gameObject.transform
             );
@@ -171,8 +167,11 @@ public class EntitiesManagerScript : MonoBehaviour
         entity.transform.localScale *= Random.Range(minScale, maxScale);
     }
 
-    private Vector3 GetRandomSpawnablePositionInArea()
+    private Vector3 GetRandomSpawnablePositionInArea(EntityType type)
     {
+        float obstacleMargin = (type == EntityType.BOID) ?
+            boidsParams.obstacleMargin : predatorsParams.obstacleMargin;
+
         Vector3 minPtToSpawn = area.minPt + obstacleMargin * Vector3.one;
         Vector3 maxPtToSpawn = area.maxPt - obstacleMargin * Vector3.one;
 

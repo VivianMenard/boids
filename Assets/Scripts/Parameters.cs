@@ -13,6 +13,11 @@ public abstract class EntityParameters
     [Range(0, 2)]
     public float maxScale;
 
+    [Space, Range(0, 15)]
+    public float raycastDistance;
+    [Range(0, 5), Tooltip("The distance entities will try to keep between them and the obstacle")]
+    public float obstacleMargin;
+
     [Space, Range(0, 50), Tooltip("In u/s²")]
     public float acceleration;
     [Range(0, 50), Tooltip("In u/s²")]

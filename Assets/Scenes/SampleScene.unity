@@ -666,8 +666,6 @@ MonoBehaviour:
   numberOfBoids: 1200
   numberOfPredators: 1
   ObstaclesAvoidance: 1
-  raycastDistance: 8
-  obstacleMargin: 1.5
   obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -678,6 +676,8 @@ MonoBehaviour:
     prefab: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
     minScale: 0.8
     maxScale: 1.2
+    raycastDistance: 8
+    obstacleMargin: 1.5
     acceleration: 7.5
     emergencyAcceleration: 30
     velocityBonusFactorChangePeriod: 5
@@ -733,6 +733,8 @@ MonoBehaviour:
     prefab: {fileID: 6344359519432126883, guid: 4a99d52c6ca7350469280d5621b9d7ac, type: 3}
     minScale: 0.9
     maxScale: 1.1
+    raycastDistance: 15
+    obstacleMargin: 5
     acceleration: 6
     emergencyAcceleration: 32
     velocityBonusFactorChangePeriod: 5
