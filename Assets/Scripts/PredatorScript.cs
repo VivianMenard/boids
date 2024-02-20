@@ -8,7 +8,6 @@ public class PredatorScript : EntityScript
     {
         parameters = entitiesManager.predatorsParams;
         predatorsParams = (PredatorsParameters)parameters;
-        state = State.CHILLING;
     }
 
     protected override Vector3 ComputeNewDirection()

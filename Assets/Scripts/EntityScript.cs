@@ -77,6 +77,7 @@ public abstract class EntityScript : MonoBehaviour
         InitParams();
 
         visionDistance = parameters.visionDistance;
+        state = parameters.defaultState;
         velocity = parameters.velocities[state];
         scale = transform.localScale.x;
 

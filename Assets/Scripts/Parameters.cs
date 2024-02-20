@@ -58,6 +58,8 @@ public abstract class EntityParameters
 
     [HideInInspector]
     public Dictionary<State, float> velocities;
+    [HideInInspector]
+    public State defaultState;
 
     [HideInInspector]
     public bool hasRig;
@@ -177,6 +179,8 @@ public class BoidsParameters : EntityParameters
             {State.AFRAID, afraidVelocity},
         };
 
+        defaultState = State.NORMAL;
+
         base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
     }
 }
@@ -231,6 +235,8 @@ public class PredatorsParameters : EntityParameters
             {State.HUNTING, huntingVelocity},
             {State.ATTACKING, attackingVelocity}
         };
+
+        defaultState = State.CHILLING;
 
         probaHuntingAfterChilling = ComputeStateChangeProba(
             averageChillingTime, calculationInterval);

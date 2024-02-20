@@ -8,7 +8,6 @@ public class BoidScript : EntityScript
     {
         parameters = entitiesManager.boidsParams;
         boidsParams = (BoidsParameters)parameters;
-        state = State.NORMAL;
     }
 
     protected override Vector3 ComputeNewDirection()
