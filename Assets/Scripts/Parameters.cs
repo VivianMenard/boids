@@ -16,7 +16,7 @@ public abstract class EntityParameters
     [Range(0, 2)]
     public float maxScale;
 
-    [Space, Range(0, 15)]
+    [Space, Range(0, 30)]
     public float raycastDistance;
     [Range(0, 5), Tooltip("The distance entities will try to keep between them and the obstacle")]
     public float obstacleMargin;
@@ -64,11 +64,13 @@ public abstract class EntityParameters
     [HideInInspector]
     public bool hasRig;
     [HideInInspector]
-    public float[] boneDistanceToHead;
+    public float[] boneBaseDistanceToHead;
     [HideInInspector]
     public int nbTransformsToStore;
     [HideInInspector]
     public Quaternion[] boneBaseRotation;
+    [HideInInspector]
+    public int animationFirstBone;
 
     public virtual void PreCalculateParameters(int calculationInterval, float smoothnessRadiusOffset)
     {
@@ -86,19 +88,19 @@ public abstract class EntityParameters
         {
             Transform[] bones = skinnedMeshRenderer.bones;
 
-            boneDistanceToHead = new float[bones.Length];
+            boneBaseDistanceToHead = new float[bones.Length];
             boneBaseRotation = new Quaternion[bones.Length];
             Vector3 headPosition = bones[0].position;
 
-            for (int i = 0; i < bones.Length; i++)
+            for (int boneIndex = 0; boneIndex < bones.Length; boneIndex++)
             {
-                boneDistanceToHead[i] = Vector3.Distance(headPosition, bones[i].position);
-                boneBaseRotation[i] = bones[i].rotation;
+                boneBaseDistanceToHead[boneIndex] = Vector3.Distance(headPosition, bones[boneIndex].position);
+                boneBaseRotation[boneIndex] = bones[boneIndex].rotation;
             }
 
             float minVelocity = velocities.Values.ToArray().Min();
             nbTransformsToStore = (int)Mathf.Ceil(
-                boneDistanceToHead[bones.Length - 1] * maxScale /
+                boneBaseDistanceToHead[bones.Length - 1] * maxScale /
                 (minVelocityBonusFactor * minVelocity * Time.fixedDeltaTime)
             );
         }
@@ -181,6 +183,8 @@ public class BoidsParameters : EntityParameters
 
         defaultState = State.NORMAL;
 
+        animationFirstBone = 1;
+
         base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
     }
 }
@@ -222,6 +226,19 @@ public class PredatorsParameters : EntityParameters
     [Range(0, 50), Tooltip("In u/s")]
     public float attackingVelocity;
 
+    [Space, Range(0, 3)]
+    public float wavesBaseSpacialFrequency;
+    [Range(0, 0.2f)]
+    public float wavesBaseMagnitude;
+    [Range(0, 0.2f)]
+    public float wavesBaseSpeed;
+    [Range(0, 5)]
+    public float wavesEnveloppeMin;
+    [Range(0, 5)]
+    public float wavesEnveloppeGradient;
+    [Range(0, 1)]
+    public float velocityImpactOnWaves;
+
     public override void PreCalculateParameters(int calculationInterval, float smoothnessRadiusOffset)
     {
         squaredPeerRepulsionRadius = MathHelpers.Square(peerRepulsionRadius);
@@ -242,6 +259,8 @@ public class PredatorsParameters : EntityParameters
             averageChillingTime, calculationInterval);
         probaChillingAfterHunting = ComputeStateChangeProba(
             averageHuntingTime, calculationInterval);
+
+        animationFirstBone = 0;
 
         base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
     }

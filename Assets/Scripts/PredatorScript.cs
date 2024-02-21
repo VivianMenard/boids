@@ -3,11 +3,13 @@ using UnityEngine;
 public class PredatorScript : EntityScript
 {
     private PredatorsParameters predatorsParams;
+    private float currentAnimationPhase;
 
     protected override void InitParams()
     {
         parameters = entitiesManager.predatorsParams;
         predatorsParams = (PredatorsParameters)parameters;
+        currentAnimationPhase = Random.Range(0, 2 * Mathf.PI);
     }
 
     protected override Vector3 ComputeNewDirection()
@@ -113,6 +115,59 @@ public class PredatorScript : EntityScript
                         state = State.CHILLING;
                 }
                 break;
+        }
+    }
+
+    protected override void ComputeBonesPositionsAndRotations()
+    {
+        base.ComputeBonesPositionsAndRotations();
+
+        AddWaveMotion();
+        smoothBonesRotations();
+    }
+
+    private void AddWaveMotion()
+    {
+        Vector3 right = Vector3.Cross(Direction, Vector3.up);
+
+        float velocityFactor = 1 +
+            predatorsParams.velocityImpactOnWaves *
+            (velocity / parameters.velocities[parameters.defaultState] - 1);
+
+        float speed = velocityFactor * predatorsParams.wavesBaseSpeed;
+        float magnitude = velocityFactor * predatorsParams.wavesBaseMagnitude;
+
+        currentAnimationPhase += speed % (2 * Mathf.PI);
+
+        for (int boneIndex = parameters.animationFirstBone; boneIndex < bones.Length; boneIndex++)
+        {
+            (Vector3 position, Quaternion rotation) = bonesPositionsAndRotations[boneIndex];
+            float distanceToHead = BoneDistanceToHead(boneIndex);
+            Vector3 newPosition = position + magnitude * Enveloppe(distanceToHead) * Wave(
+                predatorsParams.wavesBaseSpacialFrequency * distanceToHead - currentAnimationPhase) * right;
+            bonesPositionsAndRotations[boneIndex] = (newPosition, rotation);
+        }
+    }
+
+    private float Enveloppe(float x)
+    {
+        return predatorsParams.wavesEnveloppeGradient * x + predatorsParams.wavesEnveloppeMin;
+    }
+
+    private float Wave(float x)
+    {
+        return Mathf.Sin(x);
+    }
+
+    private void smoothBonesRotations()
+    {
+        for (int boneIndex = parameters.animationFirstBone; boneIndex < bones.Length - 1; boneIndex++)
+        {
+            (Vector3 position, Quaternion _) = bonesPositionsAndRotations[boneIndex];
+            (Vector3 nextPosition, Quaternion _) = bonesPositionsAndRotations[boneIndex + 1];
+
+            Quaternion newRotation = Quaternion.LookRotation(position - nextPosition);
+            bonesPositionsAndRotations[boneIndex] = (position, newRotation);
         }
     }
 }

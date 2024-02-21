@@ -30,7 +30,7 @@ public abstract class EntityScript : MonoBehaviour
     protected State state;
 
     private int id;
-    private float velocity;
+    protected float velocity;
     private float randomBonusVelocityFactor = 1;
     private int sinceLastBonusChange = 0;
     private AreaScript area;
@@ -61,8 +61,8 @@ public abstract class EntityScript : MonoBehaviour
     // data format : (frame number) : (position at this frame, rotation at this frame, traveled distance since last frame)
     private Dictionary<long, (Vector3, Quaternion, float)> frameToTransformInfo =
         new Dictionary<long, (Vector3, Quaternion, float)>();
-    (Vector3, Quaternion)[] bonesPositionsAndRotations;
-    private Transform[] bones;
+    protected (Vector3, Quaternion)[] bonesPositionsAndRotations;
+    protected Transform[] bones;
     private float scale;
 
     void Start()
@@ -140,16 +140,16 @@ public abstract class EntityScript : MonoBehaviour
 
     private void ApplyBonesPositionsAndRotations()
     {
-        for (int i = 1; i < bones.Length; i++)
+        for (int boneIndex = parameters.animationFirstBone; boneIndex < bones.Length; boneIndex++)
         {
-            (Vector3 boneNewPosition, Quaternion boneNewRotation) = bonesPositionsAndRotations[i];
+            (Vector3 boneNewPosition, Quaternion boneNewRotation) = bonesPositionsAndRotations[boneIndex];
 
-            bones[i].rotation = boneNewRotation * parameters.boneBaseRotation[i];
-            bones[i].position = boneNewPosition;
+            bones[boneIndex].rotation = boneNewRotation * parameters.boneBaseRotation[boneIndex];
+            bones[boneIndex].position = boneNewPosition;
         }
     }
 
-    private void ComputeBonesPositionsAndRotations()
+    protected virtual void ComputeBonesPositionsAndRotations()
     {
         if (!parameters.accurateAnimation)
         {
@@ -158,7 +158,7 @@ public abstract class EntityScript : MonoBehaviour
         }
 
         float traveledDistance = 0f;
-        int currentBone = 1;
+        int currentBone = parameters.animationFirstBone;
         int currentFrameOffset = 0;
 
         while (currentBone < bones.Length)
@@ -166,15 +166,15 @@ public abstract class EntityScript : MonoBehaviour
             (Vector3 pastPosition, Quaternion pastRotation, float frameTraveledDistance) =
                 frameToTransformInfo[entitiesManager.clock - currentFrameOffset];
 
-            if (traveledDistance + frameTraveledDistance >= scale * parameters.boneDistanceToHead[currentBone])
+            if (traveledDistance + frameTraveledDistance >= BoneDistanceToHead(currentBone))
             {
                 (Vector3 pastPastPosition, Quaternion pastPastRotation, float _) =
                     frameToTransformInfo[entitiesManager.clock - currentFrameOffset - 1];
-                float fraction = (parameters.boneDistanceToHead[currentBone] - traveledDistance) /
+                float frameFraction = (BoneDistanceToHead(currentBone) - traveledDistance) /
                     frameTraveledDistance;
                 bonesPositionsAndRotations[currentBone] = (
-                    Vector3.Lerp(pastPosition, pastPastPosition, fraction),
-                    Quaternion.Slerp(pastRotation, pastPastRotation, fraction)
+                    Vector3.Lerp(pastPosition, pastPastPosition, frameFraction),
+                    Quaternion.Slerp(pastRotation, pastPastRotation, frameFraction)
                 );
                 currentBone++;
             }
@@ -186,13 +186,18 @@ public abstract class EntityScript : MonoBehaviour
         }
     }
 
+    protected float BoneDistanceToHead(int boneIndex)
+    {
+        return scale * parameters.boneBaseDistanceToHead[boneIndex];
+    }
+
     private void ComputeApproximateBonesPositionsAndRotations()
     {
-        for (int i = 1; i < bones.Length; i++)
+        for (int boneIndex = 1; boneIndex < bones.Length; boneIndex++)
         {
-            float nbFrameDelay = scale * parameters.boneDistanceToHead[i] /
+            float nbFrameDelay = BoneDistanceToHead(boneIndex) /
                 (velocity * Time.fixedDeltaTime);
-            bonesPositionsAndRotations[i] = FrameToTransform(
+            bonesPositionsAndRotations[boneIndex] = FrameToTransform(
                 entitiesManager.clock - nbFrameDelay);
         }
     }
@@ -391,9 +396,6 @@ public abstract class EntityScript : MonoBehaviour
 
     protected void SetDirection(Vector3 newDirection, bool initialization = false)
     {
-        Vector3 leftVector = Vector3.Cross(Vector3.up, Direction);
-        float newTurnValue = Mathf.Clamp(Vector3.Dot(leftVector, newDirection), -1, 1);
-
         Direction = newDirection;
 
         Quaternion newRotation = Quaternion.LookRotation(Direction);
