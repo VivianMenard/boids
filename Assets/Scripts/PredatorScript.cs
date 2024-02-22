@@ -128,7 +128,7 @@ public class PredatorScript : EntityScript
 
     private void AddWaveMotion()
     {
-        Vector3 right = Vector3.Cross(Direction, Vector3.up);
+        Vector3 right = Vector3.Cross(Direction, Vector3.up).normalized;
 
         float velocityFactor = 1 +
             predatorsParams.velocityImpactOnWaves *
