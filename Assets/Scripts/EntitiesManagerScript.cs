@@ -44,12 +44,6 @@ public class EntitiesManagerScript : MonoBehaviour
     [Space]
     public PredatorsParameters predatorsParams;
 
-    private enum EntityType
-    {
-        BOID,
-        PREDATOR
-    }
-
     void Start()
     {
         area = GameObject.FindGameObjectWithTag("Area").

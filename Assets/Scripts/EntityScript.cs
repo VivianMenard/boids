@@ -1,15 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public enum State
-{
-    NORMAL,
-    ALONE,
-    AFRAID,
-    CHILLING,
-    HUNTING,
-    ATTACKING
-}
 
 public abstract class EntityScript : MonoBehaviour
 {
@@ -21,12 +12,7 @@ public abstract class EntityScript : MonoBehaviour
     protected EntitiesManagerScript entitiesManager;
     protected EntityParameters parameters;
     protected int visionDistance;
-    protected enum Behavior
-    {
-        SEPARATION,
-        ALIGNMENT,
-        COHESION
-    }
+
     protected State state;
 
     private int id;
@@ -49,12 +35,6 @@ public abstract class EntityScript : MonoBehaviour
     private Vector3 rwLastDirection;
     private Vector3 rwTargetDirection;
     private int rwStateTimeRemaiming;
-    protected enum RwState
-    {
-        STRAIGHT_LINE,
-        DIRECTION_CHANGE,
-        NOT_IN_RW
-    }
     protected RwState rwState = RwState.NOT_IN_RW;
 
     // data format : (frame number) : (position at this frame, rotation at this frame, traveled distance since last frame)
