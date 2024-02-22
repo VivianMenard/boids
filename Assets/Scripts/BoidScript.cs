@@ -28,13 +28,14 @@ public class BoidScript : EntityScript
 
         foreach (Collider entityCollider in nearbyEntityColliders)
         {
-            if (IsMyCollider(entityCollider))
+            if (entityCollider == myCollider)
                 continue;
 
             Vector3 entityPosition = entityCollider.transform.position;
             float squaredDistance = (entityPosition - myPosition).sqrMagnitude;
+            int entityLayer = entityCollider.gameObject.layer;
 
-            if (IsBoidCollider(entityCollider))
+            if (entityLayer == entitiesManager.boidsLayer)
             {
                 nbBoidsNearby++;
 
@@ -61,7 +62,7 @@ public class BoidScript : EntityScript
                 BoidScript boidScript = entityCollider.GetComponent<BoidScript>();
                 alignmentDirectionSum += boidAlignmentWeight * boidScript.Direction;
             }
-            else if (IsPredatorCollider(entityCollider))
+            else if (entityLayer == entitiesManager.predatorsLayer)
             {
                 float predatorWeight = GetEntityFearWeight(squaredDistance);
 

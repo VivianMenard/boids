@@ -47,6 +47,8 @@ public abstract class EntityScript : MonoBehaviour
     protected Vector3 myPosition;
     private Quaternion myRotation;
 
+    protected Collider myCollider;
+
     void Start()
     {
         id = nextId++;
@@ -65,6 +67,8 @@ public abstract class EntityScript : MonoBehaviour
         myScale = transform.localScale.x;
         myPosition = transform.position;
         myRotation = Quaternion.LookRotation(Direction);
+
+        myCollider = GetComponent<Collider>();
 
         if (parameters.hasRig)
         {
@@ -365,21 +369,6 @@ public abstract class EntityScript : MonoBehaviour
             parameters.raycastDistance,
             entitiesManager.obstacleLayerMask
         );
-    }
-
-    protected bool IsMyCollider(Collider collider)
-    {
-        return collider == this.GetComponent<Collider>();
-    }
-
-    protected bool IsBoidCollider(Collider collider)
-    {
-        return collider.gameObject.layer == LayerMask.NameToLayer("Boids");
-    }
-
-    protected bool IsPredatorCollider(Collider collider)
-    {
-        return collider.gameObject.layer == LayerMask.NameToLayer("Predators");
     }
 
     protected bool IsInMyFOV(Vector3 entityPosition)

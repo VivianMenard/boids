@@ -26,9 +26,12 @@ public class EntitiesManagerScript : MonoBehaviour
     public bool ObstaclesAvoidance;
     [HideInInspector]
     public LayerMask obstacleLayerMask;
-
     [HideInInspector]
     public LayerMask entitiesLayerMask;
+    [HideInInspector]
+    public int boidsLayer;
+    [HideInInspector]
+    public int predatorsLayer;
 
     [HideInInspector]
     public Dictionary<int, float> visionDistanceSmoothRangeSizeInverses = new Dictionary<int, float>();
@@ -50,6 +53,8 @@ public class EntitiesManagerScript : MonoBehaviour
             GetComponent<AreaScript>();
         obstacleLayerMask = LayerMask.GetMask("Obstacles");
         entitiesLayerMask = LayerMask.GetMask("Boids", "Predators");
+        boidsLayer = LayerMask.NameToLayer("Boids");
+        predatorsLayer = LayerMask.NameToLayer("Predators");
     }
 
     private void PreCalculateParameters()

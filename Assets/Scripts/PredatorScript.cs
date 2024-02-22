@@ -29,13 +29,14 @@ public class PredatorScript : EntityScript
 
         foreach (Collider entityCollider in nearbyEntityColliders)
         {
-            if (IsMyCollider(entityCollider))
+            if (entityCollider == myCollider)
                 continue;
 
             Vector3 entityPosition = entityCollider.transform.position;
             float squaredDistance = (entityPosition - myPosition).sqrMagnitude;
+            int entityLayer = entityCollider.gameObject.layer;
 
-            if (IsBoidCollider(entityCollider))
+            if (entityLayer == entitiesManager.boidsLayer)
             {
                 if (!IsInMyFOV(entityPosition))
                     continue;
@@ -46,7 +47,7 @@ public class PredatorScript : EntityScript
                 nbPreys += preyWeight;
                 preysPositionsSum += preyWeight * entityPosition;
             }
-            else if (IsPredatorCollider(entityCollider))
+            else if (entityLayer == entitiesManager.predatorsLayer)
             {
                 float peerWeight = GetEntityPeerRepulsionWeight(squaredDistance);
 
