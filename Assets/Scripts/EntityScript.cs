@@ -87,12 +87,30 @@ public abstract class EntityScript : MonoBehaviour
         {
             bones = GetComponentInChildren<SkinnedMeshRenderer>().bones;
             bonesPositionsAndRotations = new (Vector3, Quaternion)[bones.Length];
+
+            if (parameters.accurateAnimation)
+                CreateFakeTransformHistory();
         }
     }
 
     protected abstract void InitParams();
 
     protected abstract Vector3 ComputeNewDirection();
+
+    private void CreateFakeTransformHistory()
+    {
+        Vector3 currentPosition = transform.position;
+        Quaternion currentRotation = Quaternion.LookRotation(Direction);
+
+        for (int fakeFrame = 0; fakeFrame < parameters.nbTransformsToStore; fakeFrame++)
+        {
+            frameToTransformInfo[entitiesManager.clock - fakeFrame] = (
+                currentPosition - velocity * fakeFrame * Time.fixedDeltaTime * Direction,
+                currentRotation,
+                velocity * Time.fixedDeltaTime
+            );
+        }
+    }
 
     private void FixedUpdate()
     {
