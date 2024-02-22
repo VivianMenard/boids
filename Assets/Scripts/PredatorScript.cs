@@ -33,12 +33,11 @@ public class PredatorScript : EntityScript
                 continue;
 
             Vector3 entityPosition = entityCollider.transform.position;
-            float squaredDistance = (entityPosition - transform.position)
-                .sqrMagnitude;
+            float squaredDistance = (entityPosition - myPosition).sqrMagnitude;
 
             if (IsBoidCollider(entityCollider))
             {
-                if (!IsInMyFOV(entityCollider))
+                if (!IsInMyFOV(entityPosition))
                     continue;
 
                 float preyWeight = GetEntityWeightAccordingToVisionDistance(

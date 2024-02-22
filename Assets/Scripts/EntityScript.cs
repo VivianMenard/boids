@@ -33,7 +33,6 @@ public abstract class EntityScript : MonoBehaviour
     protected float velocity;
     private float randomBonusVelocityFactor = 1;
     private int sinceLastBonusChange = 0;
-    private AreaScript area;
     private Quaternion lastRotation;
     private Quaternion targetRotation;
     private int sinceLastCalculation;
@@ -63,14 +62,15 @@ public abstract class EntityScript : MonoBehaviour
         new Dictionary<long, (Vector3, Quaternion, float)>();
     protected (Vector3, Quaternion)[] bonesPositionsAndRotations;
     protected Transform[] bones;
-    private float scale;
+
+    private float myScale;
+    protected Vector3 myPosition;
+    private Quaternion myRotation;
 
     void Start()
     {
         id = nextId++;
 
-        area = GameObject.FindGameObjectWithTag("Area").
-            GetComponent<AreaScript>();
         entitiesManager = GameObject.FindGameObjectWithTag("BoidsManager").
             GetComponent<EntitiesManagerScript>();
 
@@ -79,9 +79,12 @@ public abstract class EntityScript : MonoBehaviour
         visionDistance = parameters.visionDistance;
         state = parameters.defaultState;
         velocity = parameters.velocities[state];
-        scale = transform.localScale.x;
 
         SetDirection(GetRandomDirection(), initialization: true);
+
+        myScale = transform.localScale.x;
+        myPosition = transform.position;
+        myRotation = Quaternion.LookRotation(Direction);
 
         if (parameters.hasRig)
         {
@@ -99,14 +102,11 @@ public abstract class EntityScript : MonoBehaviour
 
     private void CreateFakeTransformHistory()
     {
-        Vector3 currentPosition = transform.position;
-        Quaternion currentRotation = Quaternion.LookRotation(Direction);
-
         for (int fakeFrame = 0; fakeFrame < parameters.nbTransformsToStore; fakeFrame++)
         {
             frameToTransformInfo[entitiesManager.clock - fakeFrame] = (
-                currentPosition - velocity * fakeFrame * Time.fixedDeltaTime * Direction,
-                currentRotation,
+                myPosition - velocity * fakeFrame * Time.fixedDeltaTime * Direction,
+                myRotation,
                 velocity * Time.fixedDeltaTime
             );
         }
@@ -148,8 +148,8 @@ public abstract class EntityScript : MonoBehaviour
     private void StoreTransformInfo()
     {
         frameToTransformInfo[entitiesManager.clock] = (
-            transform.position,
-            transform.rotation,
+            myPosition,
+            myRotation,
             velocity * Time.fixedDeltaTime
         );
 
@@ -206,7 +206,7 @@ public abstract class EntityScript : MonoBehaviour
 
     protected float BoneDistanceToHead(int boneIndex)
     {
-        return scale * parameters.boneBaseDistanceToHead[boneIndex];
+        return myScale * parameters.boneBaseDistanceToHead[boneIndex];
     }
 
     private void ComputeApproximateBonesPositionsAndRotations()
@@ -379,7 +379,7 @@ public abstract class EntityScript : MonoBehaviour
 
     private bool PerformRaycastOnObstacles(Vector3 direction, out RaycastHit hitInfo)
     {
-        Ray ray = new Ray(transform.position, direction);
+        Ray ray = new Ray(myPosition, direction);
         return Physics.Raycast(
             ray, out hitInfo,
             parameters.raycastDistance,
@@ -402,10 +402,10 @@ public abstract class EntityScript : MonoBehaviour
         return collider.gameObject.layer == LayerMask.NameToLayer("Predators");
     }
 
-    protected bool IsInMyFOV(Collider collider)
+    protected bool IsInMyFOV(Vector3 entityPosition)
     {
         float cosAngle = Vector3.Dot(
-            (collider.transform.position - transform.position).normalized,
+            (entityPosition - myPosition).normalized,
             Direction
         );
 
@@ -424,15 +424,15 @@ public abstract class EntityScript : MonoBehaviour
         sinceLastCalculation = 0;
     }
 
-    protected Vector3 GetDirectionToPosition(Vector3 position)
+    protected Vector3 GetDirectionToSpecificPosition(Vector3 specificPosition)
     {
-        return (position - transform.position).normalized;
+        return (specificPosition - myPosition).normalized;
     }
 
     protected Collider[] GetNearbyEntityColliders()
     {
         return Physics.OverlapSphere(
-            transform.position,
+            myPosition,
             visionDistance,
             entitiesManager.entitiesLayerMask
         );
@@ -452,7 +452,7 @@ public abstract class EntityScript : MonoBehaviour
         }
 
         Vector3 averagePosition = relevantSum / totalWeight;
-        Vector3 directionToAveragePosition = GetDirectionToPosition(
+        Vector3 directionToAveragePosition = GetDirectionToSpecificPosition(
             averagePosition);
 
         if (behavior == Behavior.SEPARATION)
@@ -512,16 +512,21 @@ public abstract class EntityScript : MonoBehaviour
         float rotationProgress = (float)sinceLastCalculation /
             (float)entitiesManager.calculationInterval;
 
-        transform.rotation = Quaternion.Slerp(
+        Quaternion newRotation = Quaternion.Slerp(
             lastRotation, targetRotation, rotationProgress);
+
+        transform.rotation = newRotation;
+        myRotation = newRotation;
 
         sinceLastCalculation++;
     }
 
     private void Move()
     {
-        transform.position = transform.position +
-            velocity * Time.fixedDeltaTime * Direction;
+        Vector3 newPosition = myPosition + velocity * Time.fixedDeltaTime * Direction;
+
+        transform.position = newPosition;
+        myPosition = newPosition;
     }
 
     private void AdaptVelocity()

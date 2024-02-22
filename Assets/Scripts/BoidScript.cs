@@ -32,15 +32,13 @@ public class BoidScript : EntityScript
                 continue;
 
             Vector3 entityPosition = entityCollider.transform.position;
-
-            float squaredDistance = (entityPosition - transform.position)
-                .sqrMagnitude;
+            float squaredDistance = (entityPosition - myPosition).sqrMagnitude;
 
             if (IsBoidCollider(entityCollider))
             {
                 nbBoidsNearby++;
 
-                if (!IsInMyFOV(entityCollider))
+                if (!IsInMyFOV(entityPosition))
                     continue;
 
                 float boidWeight = GetEntityWeightAccordingToVisionDistance(squaredDistance);
