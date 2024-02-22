@@ -16,20 +16,14 @@ public abstract class EntityScript : MonoBehaviour
     protected State state;
 
     private int id;
+
     protected float velocity;
     private float randomBonusVelocityFactor = 1;
     private int sinceLastBonusChange = 0;
+
     private Quaternion lastRotation;
     private Quaternion targetRotation;
     private int sinceLastCalculation;
-    private Dictionary<State, bool> isItEmergencyState = new Dictionary<State, bool>{
-        {State.NORMAL, false},
-        {State.ALONE, false},
-        {State.AFRAID, true},
-        {State.CHILLING, false},
-        {State.HUNTING, false},
-        {State.ATTACKING, true}
-    };
 
     // Random walk parameters
     private Vector3 rwLastDirection;
@@ -501,7 +495,7 @@ public abstract class EntityScript : MonoBehaviour
     private void AdaptVelocity()
     {
         float velocityGoal = parameters.velocities[state] * randomBonusVelocityFactor;
-        float acceleration = (isItEmergencyState[state]) ?
+        float acceleration = (entitiesManager.isItEmergencyState[state]) ?
             parameters.emergencyAcceleration : parameters.acceleration;
         float velocityStep = acceleration * Time.fixedDeltaTime;
 

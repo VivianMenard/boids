@@ -34,6 +34,16 @@ public class EntitiesManagerScript : MonoBehaviour
     public int predatorsLayer;
 
     [HideInInspector]
+    public Dictionary<State, bool> isItEmergencyState = new Dictionary<State, bool>{
+        {State.NORMAL, false},
+        {State.ALONE, false},
+        {State.AFRAID, true},
+        {State.CHILLING, false},
+        {State.HUNTING, false},
+        {State.ATTACKING, true}
+    };
+
+    [HideInInspector]
     public Dictionary<int, float> visionDistanceSmoothRangeSizeInverses = new Dictionary<int, float>();
 
     private AreaScript area;
