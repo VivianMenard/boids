@@ -25,7 +25,7 @@ public class PredatorScript : EntityScript
         Vector3 preysPositionsSum = Vector3.zero,
             peersPositionsSum = Vector3.zero;
 
-        float nbPreys = 0f, nbPeers = 0f;
+        float weightedNbPreys = 0f, weightedNbPeers = 0f;
 
         foreach (Collider entityCollider in nearbyEntityColliders)
         {
@@ -44,34 +44,34 @@ public class PredatorScript : EntityScript
                 float preyWeight = GetEntityWeightAccordingToVisionDistance(
                     squaredDistance);
 
-                nbPreys += preyWeight;
+                weightedNbPreys += preyWeight;
                 preysPositionsSum += preyWeight * entityPosition;
             }
             else if (entityLayer == entitiesManager.predatorsLayer)
             {
                 float peerWeight = GetEntityPeerRepulsionWeight(squaredDistance);
 
-                nbPeers += peerWeight;
+                weightedNbPeers += peerWeight;
                 peersPositionsSum += peerWeight * entityPosition;
             }
         }
 
-        AdaptState((int)nbPreys);
+        AdaptState((int)weightedNbPreys);
 
-        if (nbPreys + nbPeers == 0f)
+        if (weightedNbPreys + weightedNbPeers < Mathf.Epsilon)
             return RandomWalk();
         else
             rwState = RwState.NOT_IN_RW;
 
         Vector3 preyAttractionDirection = GetIdealDirectionForBehavior(
-                Behavior.COHESION, preysPositionsSum, nbPreys),
+                Behavior.COHESION, preysPositionsSum, weightedNbPreys),
             peerRepulsionDirection = GetIdealDirectionForBehavior(
-                Behavior.SEPARATION, peersPositionsSum, nbPeers);
+                Behavior.SEPARATION, peersPositionsSum, weightedNbPeers);
 
         float preyAttractionWeight = GetReelWeight(
-                nbPreys, predatorsParams.preyAttractionBaseWeight),
+                weightedNbPreys, predatorsParams.preyAttractionBaseWeight),
             peerRepulsionWeight = GetReelWeight(
-                nbPeers, predatorsParams.peerRepulsionBaseWeight);
+                weightedNbPeers, predatorsParams.peerRepulsionBaseWeight);
 
         return (
             predatorsParams.momentumWeight * Direction +

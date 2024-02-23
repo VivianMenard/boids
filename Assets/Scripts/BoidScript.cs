@@ -59,8 +59,11 @@ public class BoidScript : EntityScript
                 separationPositionSum += boidSeparationWeight * entityPosition;
                 cohesionPositionSum += boidCohesionWeight * entityPosition;
 
-                BoidScript boidScript = entityCollider.GetComponent<BoidScript>();
-                alignmentDirectionSum += boidAlignmentWeight * boidScript.Direction;
+                if (boidAlignmentWeight > Mathf.Epsilon)
+                {
+                    BoidScript boidScript = entityCollider.GetComponent<BoidScript>();
+                    alignmentDirectionSum += boidAlignmentWeight * boidScript.Direction;
+                }
             }
             else if (entityLayer == entitiesManager.predatorsLayer)
             {
@@ -90,7 +93,7 @@ public class BoidScript : EntityScript
             weightedNbBoidsCohesion +
             weightedNbPredators;
 
-        if (weightSum == 0f)
+        if (weightSum < Mathf.Epsilon)
             return Direction;
 
         Vector3 separationDirection = GetIdealDirectionForBehavior(
