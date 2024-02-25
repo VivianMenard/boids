@@ -128,8 +128,6 @@ public class PredatorScript : EntityScript
 
     private void AddWaveMotion()
     {
-        Vector3 right = Vector3.Cross(Direction, Vector3.up).normalized;
-
         float velocityFactor = 1 +
             predatorsParams.velocityImpactOnWaves *
             (velocity / parameters.velocities[parameters.defaultState] - 1);
@@ -141,11 +139,14 @@ public class PredatorScript : EntityScript
 
         for (int boneIndex = parameters.animationFirstBone; boneIndex < bones.Length; boneIndex++)
         {
-            (Vector3 position, Quaternion rotation) = bonesPositionsAndRotations[boneIndex];
+            (Vector3 bonePosition, Quaternion boneRotation) = bonesPositionsAndRotations[boneIndex];
+            Vector3 boneDirection = boneRotation * Vector3.forward;
+            Vector3 right = Vector3.Cross(boneDirection, Vector3.up).normalized;
+
             float distanceToHead = BoneDistanceToHead(boneIndex);
-            Vector3 newPosition = position + magnitude * Enveloppe(distanceToHead) * Wave(
+            Vector3 boneNewPosition = bonePosition + magnitude * Enveloppe(distanceToHead) * Wave(
                 predatorsParams.wavesBaseSpacialFrequency * distanceToHead - currentAnimationPhase) * right;
-            bonesPositionsAndRotations[boneIndex] = (newPosition, rotation);
+            bonesPositionsAndRotations[boneIndex] = (boneNewPosition, boneRotation);
         }
     }
 
