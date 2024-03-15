@@ -676,7 +676,7 @@ MonoBehaviour:
   predatorsLayer: 0
   boidsParams:
     prefab: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
-    accurateAnimation: 0
+    accurateAnimation: 1
     minScale: 0.8
     maxScale: 1.2
     raycastDistance: 8
@@ -700,17 +700,17 @@ MonoBehaviour:
     hasRig: 1
     boneBaseDistanceToHead:
     - 0
-    - 0.6194598
-    - 1.1585033
-    - 1.6269256
-    - 1.9821776
-    nbTransformsToStore: 30
+    - 0.6161258
+    - 1.2213886
+    - 1.7954344
+    - 2.303578
+    nbTransformsToStore: 35
     boneBaseRotation:
-    - {x: -0.47799203, y: -0.5210796, z: 0.4779918, w: 0.52107924}
-    - {x: -0.47799188, y: -0.5210797, z: 0.47799194, w: 0.5210791}
-    - {x: -0.47799188, y: -0.5210797, z: 0.47799194, w: 0.5210791}
-    - {x: -0.47799188, y: -0.5210797, z: 0.47799194, w: 0.5210791}
-    - {x: -0.47799188, y: -0.5210797, z: 0.47799194, w: 0.5210791}
+    - {x: -0.50000006, y: 0.50000006, z: -0.4999999, w: 0.50000006}
+    - {x: -0.50000006, y: 0.4999999, z: -0.50000006, w: 0.50000006}
+    - {x: -0.50000006, y: 0.4999999, z: -0.50000006, w: 0.50000006}
+    - {x: -0.50000006, y: 0.4999999, z: -0.50000006, w: 0.50000006}
+    - {x: -0.50000006, y: 0.4999999, z: -0.50000006, w: 0.50000006}
     animationFirstBone: 1
     separationBaseWeight: 0.7
     alignmentBaseWeight: 1
