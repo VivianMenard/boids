@@ -56,7 +56,7 @@ public abstract class EntityScript : MonoBehaviour
         state = parameters.defaultState;
         velocity = parameters.velocities[state];
 
-        SetDirection(GetRandomDirection(), initialization: true);
+        SetNewDirectionTarget(GetRandomDirection(), initialization: true);
 
         myScale = transform.localScale.x;
         myPosition = transform.position;
@@ -98,11 +98,11 @@ public abstract class EntityScript : MonoBehaviour
             Vector3 optimalDirection = ComputeNewDirection();
             Vector3 adjustedDirection = IterateOnDirectionToAvoidObstacles(
                 optimalDirection);
-            SetDirection(adjustedDirection);
+            SetNewDirectionTarget(adjustedDirection);
             UpdateVelocityBonusFactor();
         }
 
-        UpdateRotation();
+        UpdateDirectionAndRotation();
         AdaptVelocity();
 
         Move();
@@ -357,10 +357,12 @@ public abstract class EntityScript : MonoBehaviour
 
     private bool PerformRaycastOnObstacles(Vector3 direction, out RaycastHit hitInfo)
     {
+        float velocityFactor = velocity / parameters.velocities[parameters.defaultState];
         Ray ray = new Ray(myPosition, direction);
+
         return Physics.Raycast(
             ray, out hitInfo,
-            parameters.raycastDistance,
+            parameters.raycastDistance * velocityFactor,
             entitiesManager.obstacleLayerMask
         );
     }
@@ -375,11 +377,12 @@ public abstract class EntityScript : MonoBehaviour
         return cosAngle >= parameters.cosVisionSemiAngle;
     }
 
-    protected void SetDirection(Vector3 newDirection, bool initialization = false)
+    private void SetNewDirectionTarget(Vector3 newDirection, bool initialization = false)
     {
-        Direction = newDirection;
+        if (initialization)
+            Direction = newDirection;
 
-        Quaternion newRotation = Quaternion.LookRotation(Direction);
+        Quaternion newRotation = Quaternion.LookRotation(newDirection);
 
         lastRotation = (initialization) ? newRotation : targetRotation;
         targetRotation = newRotation;
@@ -470,7 +473,7 @@ public abstract class EntityScript : MonoBehaviour
         );
     }
 
-    private void UpdateRotation()
+    private void UpdateDirectionAndRotation()
     {
         float rotationProgress = (float)sinceLastCalculation /
             (float)entitiesManager.calculationInterval;
@@ -480,6 +483,11 @@ public abstract class EntityScript : MonoBehaviour
 
         transform.rotation = newRotation;
         myRotation = newRotation;
+
+        Direction = newRotation * Vector3.forward;
+        // the direction is based on the rotation and not the contrary, it's intentionnal.
+        // It allows the rotation twists to be smooth, what wouldn't be the case if the lerp
+        // was on the direction and the rotation was based on the result
 
         sinceLastCalculation++;
     }
