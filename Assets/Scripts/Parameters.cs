@@ -17,9 +17,11 @@ public abstract class EntityParameters
     public float maxScale;
 
     [Space, Range(0, 30)]
-    public float raycastDistance;
+    public float raycastBaseDistance;
     [Range(0, 5), Tooltip("The distance entities will try to keep between them and the obstacle")]
-    public float obstacleMargin;
+    public float obstacleBaseMargin;
+    [Tooltip("If yes, obstacle avoidance parameters will be proportional to entity velocity. Must not be switched during playmode")]
+    public bool applyVelocityFactor;
 
     [Space, Range(0, 50), Tooltip("In u/s²")]
     public float acceleration;

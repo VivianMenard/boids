@@ -43,6 +43,9 @@ public abstract class EntityScript : MonoBehaviour
 
     protected Collider myCollider;
 
+    protected float raycastDistance;
+    protected float obstacleMargin;
+
     void Start()
     {
         id = nextId++;
@@ -55,6 +58,8 @@ public abstract class EntityScript : MonoBehaviour
         visionDistance = parameters.visionDistance;
         state = parameters.defaultState;
         velocity = parameters.velocities[state];
+        raycastDistance = parameters.raycastBaseDistance;
+        obstacleMargin = parameters.obstacleBaseMargin;
 
         SetNewDirectionTarget(GetRandomDirection(), initialization: true);
 
@@ -143,6 +148,14 @@ public abstract class EntityScript : MonoBehaviour
             bones[boneIndex].rotation = boneNewRotation * parameters.boneBaseRotation[boneIndex];
             bones[boneIndex].position = boneNewPosition;
         }
+    }
+
+    private void AdaptObstacleAvoidanceParams()
+    {
+        float velocityFactor = velocity / parameters.velocities[parameters.defaultState];
+
+        obstacleMargin = velocityFactor * parameters.obstacleBaseMargin;
+        raycastDistance = velocityFactor * parameters.raycastBaseDistance;
     }
 
     protected virtual void ComputeBonesPositionsAndRotations()
@@ -338,14 +351,12 @@ public abstract class EntityScript : MonoBehaviour
         Vector3 avoidanceDirection, Vector3 direction, float hitDistance
     )
     {
-        float perceivedDistance = Remap(hitDistance,
-            parameters.obstacleMargin, parameters.raycastDistance,
-            0, parameters.raycastDistance
-        );
+        float perceivedDistance = Remap(
+            hitDistance, obstacleMargin, raycastDistance, 0, raycastDistance);
 
         return (
             direction * perceivedDistance +
-            avoidanceDirection * (parameters.raycastDistance - perceivedDistance)
+            avoidanceDirection * (raycastDistance - perceivedDistance)
         ).normalized;
     }
 
@@ -357,12 +368,11 @@ public abstract class EntityScript : MonoBehaviour
 
     private bool PerformRaycastOnObstacles(Vector3 direction, out RaycastHit hitInfo)
     {
-        float velocityFactor = velocity / parameters.velocities[parameters.defaultState];
         Ray ray = new Ray(myPosition, direction);
 
         return Physics.Raycast(
             ray, out hitInfo,
-            parameters.raycastDistance * velocityFactor,
+            raycastDistance,
             entitiesManager.obstacleLayerMask
         );
     }
@@ -511,5 +521,8 @@ public abstract class EntityScript : MonoBehaviour
             velocity = Mathf.Max(velocity - velocityStep, velocityGoal);
         else if (velocity < velocityGoal)
             velocity = Mathf.Min(velocity + velocityStep, velocityGoal);
+
+        if (parameters.applyVelocityFactor)
+            AdaptObstacleAvoidanceParams();
     }
 }

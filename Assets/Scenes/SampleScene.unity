@@ -679,8 +679,9 @@ MonoBehaviour:
     accurateAnimation: 1
     minScale: 0.8
     maxScale: 1.2
-    raycastDistance: 8
-    obstacleMargin: 1.5
+    raycastBaseDistance: 8
+    obstacleBaseMargin: 2
+    applyVelocityFactor: 1
     acceleration: 7.5
     emergencyAcceleration: 30
     velocityBonusFactorChangePeriod: 5
@@ -738,8 +739,9 @@ MonoBehaviour:
     accurateAnimation: 1
     minScale: 0.9
     maxScale: 1.1
-    raycastDistance: 25
-    obstacleMargin: 3
+    raycastBaseDistance: 25
+    obstacleBaseMargin: 3
+    applyVelocityFactor: 0
     acceleration: 6
     emergencyAcceleration: 32
     velocityBonusFactorChangePeriod: 5
