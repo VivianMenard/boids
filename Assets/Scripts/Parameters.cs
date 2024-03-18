@@ -8,10 +8,8 @@ public abstract class EntityParameters
 {
     public GameObject prefab;
 
-    [Space, Range(0, 2)]
-    public float minScale;
-    [Range(0, 2)]
-    public float maxScale;
+    [Space, Range(0, 1)]
+    public float scaleVariations;
 
     [Space, Range(0, 30)]
     public float raycastBaseDistance;
@@ -99,7 +97,7 @@ public abstract class EntityParameters
 
             float minVelocity = velocities.Values.ToArray().Min();
             nbTransformsToStore = (int)Mathf.Ceil(
-                boneBaseDistanceToHead[bones.Length - 1] * maxScale /
+                boneBaseDistanceToHead[bones.Length - 1] * (1 + scaleVariations) /
                 (minVelocityBonusFactor * minVelocity * Time.fixedDeltaTime)
             );
         }

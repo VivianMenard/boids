@@ -168,12 +168,10 @@ public class EntitiesManagerScript : MonoBehaviour
 
     private void SetEntityScale(GameObject entity, EntityType type)
     {
-        float minScale = (type == EntityType.BOID) ?
-            boidsParams.minScale : predatorsParams.minScale;
-        float maxScale = (type == EntityType.BOID) ?
-            boidsParams.maxScale : predatorsParams.maxScale;
+        float scaleVariations = (type == EntityType.BOID) ?
+            boidsParams.scaleVariations : predatorsParams.scaleVariations;
 
-        entity.transform.localScale *= Random.Range(minScale, maxScale);
+        entity.transform.localScale *= (1 + scaleVariations * Random.Range(-1, 1));
     }
 
     private Vector3 GetRandomSpawnablePositionInArea(EntityType type)
