@@ -8,9 +8,6 @@ public abstract class EntityParameters
 {
     public GameObject prefab;
 
-    [Space]
-    public bool accurateAnimation;
-
     [Space, Range(0, 2)]
     public float minScale;
     [Range(0, 2)]

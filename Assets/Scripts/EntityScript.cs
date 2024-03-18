@@ -74,8 +74,7 @@ public abstract class EntityScript : MonoBehaviour
             bones = GetComponentInChildren<SkinnedMeshRenderer>().bones;
             bonesPositionsAndRotations = new (Vector3, Quaternion)[bones.Length];
 
-            if (parameters.accurateAnimation)
-                CreateFakeTransformHistory();
+            CreateFakeTransformHistory();
         }
     }
 
@@ -160,12 +159,6 @@ public abstract class EntityScript : MonoBehaviour
 
     protected virtual void ComputeBonesPositionsAndRotations()
     {
-        if (!parameters.accurateAnimation)
-        {
-            ComputeApproximateBonesPositionsAndRotations();
-            return;
-        }
-
         float traveledDistance = 0f;
         int currentBone = parameters.animationFirstBone;
         int currentFrameOffset = 0;
@@ -198,17 +191,6 @@ public abstract class EntityScript : MonoBehaviour
     protected float BoneDistanceToHead(int boneIndex)
     {
         return myScale * parameters.boneBaseDistanceToHead[boneIndex];
-    }
-
-    private void ComputeApproximateBonesPositionsAndRotations()
-    {
-        for (int boneIndex = 1; boneIndex < bones.Length; boneIndex++)
-        {
-            float nbFrameDelay = BoneDistanceToHead(boneIndex) /
-                (velocity * Time.fixedDeltaTime);
-            bonesPositionsAndRotations[boneIndex] = FrameToTransform(
-                entitiesManager.clock - nbFrameDelay);
-        }
     }
 
     private (Vector3, Quaternion) FrameToTransform(float frame)
