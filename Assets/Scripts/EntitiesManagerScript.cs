@@ -22,8 +22,6 @@ public class EntitiesManagerScript : MonoBehaviour
     private int numberOfPredators;
     private int currentNbPredators = 0;
 
-    [Space]
-    public bool ObstaclesAvoidance;
     [HideInInspector]
     public LayerMask obstacleLayerMask;
     [HideInInspector]

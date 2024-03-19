@@ -280,9 +280,6 @@ public abstract class EntityScript : MonoBehaviour
 
     private Vector3 IterateOnDirectionToAvoidObstacles(Vector3 direction)
     {
-        if (!entitiesManager.ObstaclesAvoidance)
-            return direction;
-
         RaycastHit hitInfo;
         if (PerformRaycastOnObstacles(direction, out hitInfo))
         {
