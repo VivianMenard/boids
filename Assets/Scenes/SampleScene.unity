@@ -665,7 +665,6 @@ MonoBehaviour:
   clock: 0
   numberOfBoids: 1200
   numberOfPredators: 1
-  ObstaclesAvoidance: 1
   obstacleLayerMask:
     serializedVersion: 2
     m_Bits: 0
@@ -757,14 +756,14 @@ MonoBehaviour:
     hasRig: 1
     boneBaseDistanceToHead:
     - 0
-    - 2.224883
-    - 4.670131
-    - 5.7520013
-    - 6.7952337
-    - 7.6728754
-    - 8.351805
-    - 8.89826
-    nbTransformsToStore: 102
+    - 3.1148365
+    - 6.538184
+    - 8.052802
+    - 9.513327
+    - 10.742025
+    - 11.692527
+    - 12.457565
+    nbTransformsToStore: 143
     boneBaseRotation:
     - {x: -0.49999994, y: 0.5000001, z: -0.49999988, w: 0.50000024}
     - {x: -0.4999998, y: 0.5000002, z: -0.5000001, w: 0.4999999}
