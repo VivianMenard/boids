@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: beecb1808148dde49858ccfa1e9841bd
+guid: c41570de7ace91543a3d2c1ce1e8f920
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,8 +7,8 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: base_material.001
-    second: {fileID: 2100000, guid: 70d4bdd79573ccd4ebc6a53e3ee413e4, type: 2}
+      name: skark_material
+    second: {fileID: 2100000, guid: 9736c8ac723cd7749be58f6edd8c9c20, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
