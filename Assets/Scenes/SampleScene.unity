@@ -676,8 +676,8 @@ MonoBehaviour:
   boidsParams:
     prefab: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
     scaleVariations: 0.2
-    raycastBaseDistance: 8
-    obstacleBaseMargin: 2
+    raycastBaseDistance: 10
+    obstacleBaseMargin: 3
     applyVelocityFactor: 1
     acceleration: 7.5
     emergencyAcceleration: 30
@@ -733,7 +733,7 @@ MonoBehaviour:
     afraidVelocity: 11
   predatorsParams:
     prefab: {fileID: 6344359519432126883, guid: 4a99d52c6ca7350469280d5621b9d7ac, type: 3}
-    scaleVariations: 0.1
+    scaleVariations: 0.2
     raycastBaseDistance: 25
     obstacleBaseMargin: 3
     applyVelocityFactor: 0
@@ -764,7 +764,7 @@ MonoBehaviour:
     - 10.781644
     - 11.688427
     - 12.544172
-    nbTransformsToStore: 144
+    nbTransformsToStore: 157
     boneBaseRotation:
     - {x: 0.50000006, y: -0.49999997, z: 0.50000006, w: -0.5}
     - {x: 0.49999997, y: -0.5, z: 0.50000006, w: -0.49999994}
