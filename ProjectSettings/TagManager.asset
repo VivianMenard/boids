@@ -5,7 +5,7 @@ TagManager:
   serializedVersion: 2
   tags:
   - Area
-  - BoidsManager
+  - EntitiesManager
   layers:
   - Default
   - TransparentFX
