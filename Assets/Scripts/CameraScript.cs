@@ -2,8 +2,11 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
+    public Vector3 initialOffset;
     [Range(0, 0.05f)]
     public float dragSpeed;
+    [Range(0, 0.1f)]
+    public float centerDragSpeed;
     [Range(0, 30)]
     public float scrollSpeed;
     [Range(0, 200)]
@@ -11,11 +14,13 @@ public class CameraScript : MonoBehaviour
 
     private AreaScript area;
 
+    private Vector3 center;
     private float distance;
     private float theta;
     private float phi;
 
     private Vector3 dragOrigin;
+    private Vector3 centerDragOrigin;
 
     private bool needUpdate = false;
 
@@ -24,13 +29,15 @@ public class CameraScript : MonoBehaviour
         area = GameObject.FindGameObjectWithTag("Area").
             GetComponent<AreaScript>();
 
-        Vector3 areaToCamera = transform.position - area.transform.position;
+        center = area.transform.position + initialOffset;
 
-        distance = areaToCamera.magnitude;
-        theta = Mathf.Sign(transform.position.z) * Vector3.Angle(areaToCamera, Vector3.right) * Mathf.Deg2Rad;
-        phi = Vector3.Angle(Vector3.up, areaToCamera) * Mathf.Deg2Rad;
+        Vector3 centerToCamera = transform.position - center;
 
-        transform.rotation = Quaternion.LookRotation(-areaToCamera);
+        distance = centerToCamera.magnitude;
+        theta = Mathf.Sign(transform.position.z) * Vector3.Angle(centerToCamera, Vector3.right) * Mathf.Deg2Rad;
+        phi = Vector3.Angle(Vector3.up, centerToCamera) * Mathf.Deg2Rad;
+
+        transform.rotation = Quaternion.LookRotation(-centerToCamera);
     }
 
     void Update()
@@ -43,17 +50,37 @@ public class CameraScript : MonoBehaviour
             needUpdate = true;
         }
 
-        if (!Input.GetMouseButton(0))
-            return;
-
-        if (!Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0))
         {
-            theta -= dragSpeed * (Input.mousePosition.x - dragOrigin.x);
-            phi += dragSpeed * (Input.mousePosition.y - dragOrigin.y);
-            needUpdate = true;
+            if (!Input.GetMouseButtonDown(0))
+            {
+                theta -= dragSpeed * (Input.mousePosition.x - dragOrigin.x);
+                phi += dragSpeed * (Input.mousePosition.y - dragOrigin.y);
+                needUpdate = true;
+            }
+
+            dragOrigin = Input.mousePosition;
         }
 
-        dragOrigin = Input.mousePosition;
+        if (Input.GetMouseButton(2))
+        {
+            if (!Input.GetMouseButtonDown(2))
+            {
+                Vector3 cameraToCenter = center - transform.position;
+
+                Vector3 axis1 = Vector3.Cross(cameraToCenter, Vector3.up).normalized;
+                Vector3 axis2 = Vector3.Cross(cameraToCenter, axis1).normalized;
+
+                center += centerDragSpeed * (
+                    (Input.mousePosition.x - centerDragOrigin.x) * axis1 +
+                    (Input.mousePosition.y - centerDragOrigin.y) * axis2
+                );
+
+                needUpdate = true;
+            }
+
+            centerDragOrigin = Input.mousePosition;
+        }
     }
 
     void FixedUpdate()
@@ -69,7 +96,8 @@ public class CameraScript : MonoBehaviour
     {
         float epsilon = 0.0001f;
         phi = Mathf.Clamp(phi, epsilon, Mathf.PI - epsilon);
-        distance = Mathf.Clamp(distance, 0, maxDistance);
+        distance = Mathf.Clamp(distance, epsilon, maxDistance);
+        center = Clamp3D(center, area.minPt, area.maxPt);
 
         Vector3 direction = new Vector3(
             Mathf.Sin(phi) * Mathf.Cos(theta),
@@ -77,7 +105,16 @@ public class CameraScript : MonoBehaviour
             Mathf.Sin(phi) * Mathf.Sin(theta)
         );
 
-        transform.position = area.transform.position + distance * direction;
+        transform.position = center + distance * direction;
         transform.rotation = Quaternion.LookRotation(-direction);
+    }
+
+    private Vector3 Clamp3D(Vector3 value, Vector3 min, Vector3 max)
+    {
+        return new Vector3(
+            Mathf.Clamp(value.x, min.x, max.x),
+            Mathf.Clamp(value.y, min.y, max.y),
+            Mathf.Clamp(value.z, min.z, max.z)
+        );
     }
 }
