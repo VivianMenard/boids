@@ -710,6 +710,15 @@ MonoBehaviour:
     - {x: -0.50000006, y: 0.4999999, z: -0.50000006, w: 0.50000006}
     - {x: -0.50000006, y: 0.4999999, z: -0.50000006, w: 0.50000006}
     animationFirstBone: 1
+    avoidanceDirectionPreferences:
+    - 1
+    - 1
+    - 1
+    - 1
+    - 1
+    - 1
+    - 1
+    - 1
     separationBaseWeight: 0.7
     alignmentBaseWeight: 1
     cohesionBaseWeight: 1
@@ -776,8 +785,19 @@ MonoBehaviour:
     - {x: 0.49999997, y: -0.5, z: 0.50000006, w: -0.49999994}
     - {x: 0.49999997, y: -0.5, z: 0.50000006, w: -0.49999994}
     animationFirstBone: 0
+    avoidanceDirectionPreferences:
+    - 1.5
+    - 1.5
+    - 1.25
+    - 1.25
+    - 1.25
+    - 1.25
+    - 1
+    - 1
     preyAttractionBaseWeight: 1
     peerRepulsionBaseWeight: 0.4
+    maxVerticalDirection: 0.4
+    preferenceForHorizontalAvoidance: 0.5
     peerRepulsionRadius: 10
     squaredPeerRepulsionRadius: 100
     squaredFullPeerRepulsionRadius: 81

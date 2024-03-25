@@ -69,6 +69,9 @@ public abstract class EntityParameters
     [HideInInspector]
     public int animationFirstBone;
 
+    [HideInInspector]
+    public float[] avoidanceDirectionPreferences;
+
     public virtual void PreCalculateParameters(int calculationInterval, float smoothnessRadiusOffset)
     {
         cosVisionSemiAngle = Mathf.Cos(visionSemiAngle * Mathf.Deg2Rad);
@@ -182,6 +185,8 @@ public class BoidsParameters : EntityParameters
 
         animationFirstBone = 1;
 
+        avoidanceDirectionPreferences = new float[8] { 1, 1, 1, 1, 1, 1, 1, 1 };
+
         base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
     }
 }
@@ -193,6 +198,11 @@ public class PredatorsParameters : EntityParameters
     public float preyAttractionBaseWeight;
     [Range(0, 10), Tooltip("How repulsed the predator is to the other ones")]
     public float peerRepulsionBaseWeight;
+
+    [Space, Range(0, 1)]
+    public float maxVerticalDirection;
+    [Range(0, 1)]
+    public float preferenceForHorizontalAvoidance;
 
     [Space, Range(0, 15), Tooltip("Distance under which the predator will try to distance itself from others")]
     public float peerRepulsionRadius;
@@ -258,6 +268,21 @@ public class PredatorsParameters : EntityParameters
             averageHuntingTime, calculationInterval);
 
         animationFirstBone = 0;
+
+        float horizontalPreference = 1 + preferenceForHorizontalAvoidance,
+            semiHorizontalPreference = 1 + 0.5f * preferenceForHorizontalAvoidance,
+            verticalPreference = 1;
+
+        avoidanceDirectionPreferences = new float[8] {
+            horizontalPreference, // right preference
+            horizontalPreference, // left preference
+            semiHorizontalPreference, // down right preference
+            semiHorizontalPreference, // up right preference
+            semiHorizontalPreference, // down left preference
+            semiHorizontalPreference, // up left preference
+            verticalPreference, // down preference
+            verticalPreference // up preference
+        };
 
         base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
     }

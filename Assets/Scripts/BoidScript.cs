@@ -123,6 +123,11 @@ public class BoidScript : EntityScript
         ).normalized;
     }
 
+    protected override Vector3 GetObstacleAvoidanceReference()
+    {
+        return GetRandomDirection();
+    }
+
     private float GetEntitySeparationWeight(float squaredDistance)
     {
         return InverseLerpOpti(

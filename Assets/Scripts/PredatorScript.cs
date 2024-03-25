@@ -73,11 +73,26 @@ public class PredatorScript : EntityScript
             peerRepulsionWeight = GetReelWeight(
                 weightedNbPeers, predatorsParams.peerRepulsionBaseWeight);
 
-        return (
+        return ClampDirectionVertically((
             predatorsParams.momentumWeight * Direction +
             preyAttractionWeight * preyAttractionDirection +
             peerRepulsionWeight * peerRepulsionDirection
+        ).normalized);
+    }
+
+    private Vector3 ClampDirectionVertically(Vector3 initialDirection)
+    {
+        float yValue = Mathf.Min(
+            predatorsParams.maxVerticalDirection, initialDirection.y);
+
+        return (
+            new Vector3(initialDirection.x, yValue, initialDirection.z)
         ).normalized;
+    }
+
+    protected override Vector3 GetObstacleAvoidanceReference()
+    {
+        return Vector3.up;
     }
 
     private float GetEntityPeerRepulsionWeight(float squaredDistance)

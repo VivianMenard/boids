@@ -43,8 +43,9 @@ public abstract class EntityScript : MonoBehaviour
 
     protected Collider myCollider;
 
-    protected float raycastDistance;
-    protected float obstacleMargin;
+    private float raycastDistance;
+    private float obstacleMargin;
+    private Vector3[] avoidanceDirections;
 
     void Start()
     {
@@ -60,6 +61,7 @@ public abstract class EntityScript : MonoBehaviour
         velocity = parameters.velocities[state];
         raycastDistance = parameters.raycastBaseDistance;
         obstacleMargin = parameters.obstacleBaseMargin;
+        avoidanceDirections = new Vector3[8];
 
         SetNewDirectionTarget(GetRandomDirection(), initialization: true);
 
@@ -278,63 +280,78 @@ public abstract class EntityScript : MonoBehaviour
         return directionForRw;
     }
 
-    private Vector3 IterateOnDirectionToAvoidObstacles(Vector3 direction)
+    private Vector3 IterateOnDirectionToAvoidObstacles(Vector3 initialDirection)
     {
         RaycastHit hitInfo;
-        if (PerformRaycastOnObstacles(direction, out hitInfo))
+        if (PerformRaycastOnObstacles(initialDirection, out hitInfo))
         {
             rwState = RwState.NOT_IN_RW;
 
-            (Vector3 axis1, Vector3 axis2) = CreateCoordSystemAroundVector(direction);
             float maxHitDistanceFound = 0;
-            Vector3 bestDirectionFound = direction;
+            Vector3 bestDirectionFound = initialDirection;
+            ComputeAvoidanceDirections(initialDirection);
 
-            int[] coords = { -1, 0, 1 };
-            foreach (int x in coords) foreach (int y in coords)
+            for (int directionIndex = 0; directionIndex < avoidanceDirections.Length; directionIndex++)
+            {
+                Vector3 avoidanceDirection = avoidanceDirections[directionIndex];
+                float preference = parameters.avoidanceDirectionPreferences[directionIndex];
+
+                Vector3 directionToTest = BlendAvoidanceDirectionWithDirection(
+                    avoidanceDirection, initialDirection, hitInfo.distance);
+
+                RaycastHit testHitData;
+                if (PerformRaycastOnObstacles(directionToTest, out testHitData))
                 {
-                    if (x == 0 && y == 0)
-                        continue;
-
-                    Vector3 avoidanceDirection = (x * axis1 + y * axis2).normalized;
-                    Vector3 directionToTest = BlendAvoidanceDirectionWithDirection(
-                        avoidanceDirection, direction, hitInfo.distance);
-
-                    RaycastHit testHitData;
-                    if (PerformRaycastOnObstacles(directionToTest, out testHitData))
+                    float weightedDistance = testHitData.distance * preference;
+                    if (weightedDistance > maxHitDistanceFound)
                     {
-                        if (testHitData.distance > maxHitDistanceFound)
-                        {
-                            maxHitDistanceFound = testHitData.distance;
-                            bestDirectionFound = directionToTest;
-                        }
+                        maxHitDistanceFound = weightedDistance;
+                        bestDirectionFound = directionToTest;
                     }
-                    else
-                        return directionToTest;
                 }
+                else
+                    return directionToTest;
+            }
 
             return bestDirectionFound;
         }
 
-        return direction;
+        return initialDirection;
     }
 
-    private (Vector3, Vector3) CreateCoordSystemAroundVector(Vector3 axis3)
+    private void ComputeAvoidanceDirections(Vector3 initialDirection)
     {
-        Vector3 axis1 = Vector3.Cross(axis3, GetRandomDirection()).normalized;
+        (Vector3 axis1, Vector3 axis2) = CreateCoordSystemForAbstacleAvoidance(initialDirection);
+
+        avoidanceDirections[0] = axis1;
+        avoidanceDirections[1] = -axis1;
+        avoidanceDirections[2] = MathHelpers.OneOverSquareRootOfTwo * (axis1 + axis2);
+        avoidanceDirections[3] = MathHelpers.OneOverSquareRootOfTwo * (axis1 - axis2);
+        avoidanceDirections[4] = MathHelpers.OneOverSquareRootOfTwo * (-axis1 + axis2);
+        avoidanceDirections[5] = MathHelpers.OneOverSquareRootOfTwo * (-axis1 - axis2);
+        avoidanceDirections[6] = axis2;
+        avoidanceDirections[7] = -axis2;
+    }
+
+    private (Vector3, Vector3) CreateCoordSystemForAbstacleAvoidance(Vector3 axis3)
+    {
+        Vector3 axis1 = Vector3.Cross(axis3, GetObstacleAvoidanceReference()).normalized;
         Vector3 axis2 = Vector3.Cross(axis3, axis1).normalized;
 
         return (axis1, axis2);
     }
 
+    protected abstract Vector3 GetObstacleAvoidanceReference();
+
     private Vector3 BlendAvoidanceDirectionWithDirection(
-        Vector3 avoidanceDirection, Vector3 direction, float hitDistance
+        Vector3 avoidanceDirection, Vector3 initialDirection, float hitDistance
     )
     {
         float perceivedDistance = Remap(
             hitDistance, obstacleMargin, raycastDistance, 0, raycastDistance);
 
         return (
-            direction * perceivedDistance +
+            initialDirection * perceivedDistance +
             avoidanceDirection * (raycastDistance - perceivedDistance)
         ).normalized;
     }
@@ -450,7 +467,7 @@ public abstract class EntityScript : MonoBehaviour
         );
     }
 
-    private Vector3 GetRandomDirection()
+    protected Vector3 GetRandomDirection()
     {
         float theta = Random.Range(0f, 2f * Mathf.PI);
         float phi = Random.Range(0f, Mathf.PI);
