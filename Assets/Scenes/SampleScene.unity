@@ -644,10 +644,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   initialOffset: {x: 0, y: -8, z: 0}
-  dragSpeed: 0.01
+  dragSpeed: 0.005
   centerDragSpeed: 0.05
   scrollSpeed: 20
   maxDistance: 90
+  centerMargin: 1
 --- !u!1 &1119471557
 GameObject:
   m_ObjectHideFlags: 0

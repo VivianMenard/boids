@@ -11,6 +11,8 @@ public class CameraScript : MonoBehaviour
     public float scrollSpeed;
     [Range(0, 200)]
     public float maxDistance;
+    [Range(0, 5)]
+    public float centerMargin;
 
     private AreaScript area;
 
@@ -81,6 +83,12 @@ public class CameraScript : MonoBehaviour
 
             centerDragOrigin = Input.mousePosition;
         }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            center = area.transform.position + initialOffset;
+            needUpdate = true;
+        }
     }
 
     void FixedUpdate()
@@ -96,8 +104,23 @@ public class CameraScript : MonoBehaviour
     {
         float epsilon = 0.0001f;
         phi = Mathf.Clamp(phi, epsilon, Mathf.PI - epsilon);
-        distance = Mathf.Clamp(distance, epsilon, maxDistance);
-        center = Clamp3D(center, area.minPt, area.maxPt);
+
+        if (distance > maxDistance)
+            distance = maxDistance;
+
+        else if (distance < epsilon)
+        {
+            float offsetToApply = epsilon - distance;
+            Vector3 cameraDirection = (center - transform.position).normalized;
+            center += cameraDirection * offsetToApply;
+            distance = epsilon;
+        }
+
+        center = Clamp3D(
+            center,
+            area.minPt + centerMargin * Vector3.one,
+            area.maxPt - centerMargin * Vector3.one
+        );
 
         Vector3 direction = new Vector3(
             Mathf.Sin(phi) * Mathf.Cos(theta),
