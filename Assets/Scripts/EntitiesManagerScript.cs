@@ -55,6 +55,12 @@ public class EntitiesManagerScript : MonoBehaviour
     [Space]
     public PredatorsParameters predatorsParams;
 
+    private void Awake()
+    {
+        PreCalculateParameters();
+        AdjustPredatorsColliders();
+    }
+
     void Start()
     {
         area = GameObject.FindGameObjectWithTag("Area").
