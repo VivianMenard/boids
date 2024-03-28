@@ -112,13 +112,18 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
+    - _absportionStrengh: 1
     - _faddingDistance: 80
+    - _faddingStrengh: 0.7
+    - _maxDistance: 80
     m_Colors:
+    - _AbsportionColor: {r: 0.4823529, g: 0.8196079, b: 1, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
     - _Color: {r: 1, g: 1, b: 1, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _faddingColor: {r: 0.022961771, g: 0.5361681, b: 0.8113208, a: 0}
+    - _absportionColor: {r: 0.4823529, g: 0.8196079, b: 1, a: 0}
+    - _faddingColor: {r: 0.023529412, g: 0.5372549, b: 0.8117647, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &8373201907044947778
 MonoBehaviour:
