@@ -113,9 +113,17 @@ Material:
     - _WorkflowMode: 1
     - _ZWrite: 1
     - _absportionStrengh: 1
-    - _faddingDistance: 80
+        - _faddingDistance: 80
     - _faddingStrengh: 0.7
     - _maxDistance: 80
+    - _refractionSpeed: 0.05
+    - _smoothness: 0.5
+    - _speed: 0.02
+    - _waveScales: 5
+    - _wavesAmplitude: 0.05
+    - _wavesScale: 5
+    - _wavesScales: 5
+    - _wavesSpeed: 0.1
     m_Colors:
     - _AbsportionColor: {r: 0.4823529, g: 0.8196079, b: 1, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
