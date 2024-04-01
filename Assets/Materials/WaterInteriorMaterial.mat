@@ -1,5 +1,18 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-6692487437813204049
+MonoBehaviour:
+  m_ObjectHideFlags: 11
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  version: 7
 --- !u!21 &2100000
 Material:
   serializedVersion: 8
@@ -7,8 +20,8 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WaterMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: 07edab7837da55242aae44e3efeb1250, type: 3}
+  m_Name: WaterInteriorMaterial
+  m_Shader: {fileID: -6465566751694194690, guid: 8b6dfc718a134cd4e9bb630a240173fa, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -16,7 +29,7 @@ Material:
   m_LightmapFlags: 4
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
-  m_CustomRenderQueue: -1
+  m_CustomRenderQueue: 2000
   stringTagMap: {}
   disabledShaderPasses: []
   m_LockedProperties: 
@@ -112,38 +125,14 @@ Material:
     - _Surface: 0
     - _WorkflowMode: 1
     - _ZWrite: 1
-    - _absportionStrengh: 1
-    - _alpha: 1
-    - _faddingStrengh: 0.7
-    - _maxDistance: 80
-    - _minDepth: 0.1
-    - _refractionSpeed: 0.05
-    - _smoothness: 0.5
-    - _speed: 0.02
-    - _waveScales: 5
+    - _smoothness: 0.9
     - _wavesAmplitude: 0.05
     - _wavesScale: 5
-    - _wavesScales: 5
     - _wavesSpeed: 0.1
     m_Colors:
-    - _AbsportionColor: {r: 0.4823529, g: 0.8196079, b: 1, a: 0}
     - _BaseColor: {r: 1, g: 1, b: 1, a: 1}
-    - _Color: {r: 1, g: 1, b: 1, a: 1}
+    - _Color: {r: 0.07924521, g: 0.07159673, b: 0.06504088, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _absportionColor: {r: 0.4823529, g: 0.8196079, b: 1, a: 0}
-    - _faddingColor: {r: 0.023529412, g: 0.5372549, b: 0.8117647, a: 0}
+    - _mainColor: {r: 0.07843138, g: 0.07058824, b: 0.06666667, a: 0}
   m_BuildTextureStacks: []
---- !u!114 &8373201907044947778
-MonoBehaviour:
-  m_ObjectHideFlags: 11
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d0353a89b1f911e48b9e16bdc9f2e058, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  version: 7

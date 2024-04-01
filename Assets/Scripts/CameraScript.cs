@@ -103,7 +103,7 @@ public class CameraScript : MonoBehaviour
     private void UpdatePosition()
     {
         float epsilon = 0.0001f;
-        phi = Mathf.Clamp(phi, epsilon, Mathf.PI - epsilon);
+        phi = Mathf.Clamp(phi, epsilon, Mathf.PI / 2);
 
         if (distance > maxDistance)
             distance = maxDistance;
