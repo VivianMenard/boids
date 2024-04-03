@@ -20,7 +20,7 @@ Material:
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
-  m_Name: WaterInteriorMaterial
+  m_Name: UnderSurfaceMaterial
   m_Shader: {fileID: -6465566751694194690, guid: 8b6dfc718a134cd4e9bb630a240173fa, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
@@ -30,8 +30,10 @@ Material:
   m_EnableInstancingVariants: 0
   m_DoubleSidedGI: 0
   m_CustomRenderQueue: 2000
-  stringTagMap: {}
-  disabledShaderPasses: []
+  stringTagMap:
+    RenderType: Opaque
+  disabledShaderPasses:
+  - SHADOWCASTER
   m_LockedProperties: 
   m_SavedProperties:
     serializedVersion: 3
@@ -99,6 +101,7 @@ Material:
     - _Blend: 0
     - _BlendModePreserveSpecular: 1
     - _BumpScale: 1
+    - _CastShadows: 0
     - _ClearCoatMask: 0
     - _ClearCoatSmoothness: 0
     - _Cull: 2
@@ -124,8 +127,17 @@ Material:
     - _SrcBlendAlpha: 1
     - _Surface: 0
     - _WorkflowMode: 1
+    - _ZTest: 4
     - _ZWrite: 1
-    - _smoothness: 0.9
+    - _ZWriteControl: 0
+    - _amplitudeFactor: 0.75
+    - _baseAmplitude: 0.02
+    - _baseSpacialFrequency: 7
+    - _baseSpeed: 0.9
+    - _lateralMovementsStrengh: 0.08
+    - _smoothness: 1
+    - _spacialFrequencyFactor: 1.16
+    - _speedFactor: 1.11
     - _wavesAmplitude: 0.05
     - _wavesScale: 5
     - _wavesSpeed: 0.1
@@ -134,5 +146,5 @@ Material:
     - _Color: {r: 0.07924521, g: 0.07159673, b: 0.06504088, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
-    - _mainColor: {r: 0.07843138, g: 0.07058824, b: 0.06666667, a: 0}
+    - _mainColor: {r: 0.7059096, g: 0.91933733, b: 0.94716984, a: 0}
   m_BuildTextureStacks: []

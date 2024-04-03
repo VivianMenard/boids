@@ -114,12 +114,19 @@ Material:
     - _ZWrite: 1
     - _absportionStrengh: 1
     - _alpha: 1
+    - _amplitudeFactor: 0.75
+    - _baseAmplitude: 0.02
+    - _baseSpacialFrequency: 7
+    - _baseSpeed: 0.9
     - _faddingStrengh: 0.7
+    - _lateralMovementsStrengh: 0.08
     - _maxDistance: 80
     - _minDepth: 0.1
     - _refractionSpeed: 0.05
-    - _smoothness: 0.5
+    - _smoothness: 1
+    - _spacialFrequencyFactor: 1.16
     - _speed: 0.02
+    - _speedFactor: 1.11
     - _waveScales: 5
     - _wavesAmplitude: 0.05
     - _wavesScale: 5
