@@ -122,8 +122,10 @@ Material:
     - _SrcBlend: 1
     - _SrcBlendAlpha: 1
     - _Surface: 0
+    - _SurfaceSmoothness: 1
     - _WorkflowMode: 1
     - _ZWrite: 1
+    - _absorptionStrengh: 1
     - _absportionStrengh: 1
     - _alpha: 1
     - _amplitudeFactor: 0.75
@@ -131,10 +133,12 @@ Material:
     - _baseSpacialFrequency: 7
     - _baseSpeed: 0.9
     - _faddingStrengh: 0.7
+    - _fogStrengh: 1
     - _lateralMovementsStrengh: 0.08
     - _maxDistance: 80
     - _minDepth: 0.1
     - _refractionSpeed: 0.05
+    - _sideSmoothness: 0.5
     - _smoothness: 1
     - _spacialFrequencyFactor: 1.16
     - _speed: 0.02
@@ -151,7 +155,9 @@ Material:
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
     - _absportionColor: {r: 0.4823529, g: 0.8196079, b: 1, a: 0}
+    - _absportionComplementaryColor: {r: 0.4823529, g: 0.8196079, b: 1, a: 0}
     - _faddingColor: {r: 0.023529412, g: 0.5372549, b: 0.8117647, a: 0}
+    - _fogColor: {r: 0.02352941, g: 0.5372549, b: 0.8117647, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &8373201907044947778
 MonoBehaviour:
