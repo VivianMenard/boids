@@ -138,6 +138,7 @@ Material:
     - _maxDistance: 80
     - _minDepth: 0.1
     - _refractionSpeed: 0.05
+    - _refractionStrengh: 0.08
     - _sideSmoothness: 0.5
     - _smoothness: 1
     - _spacialFrequencyFactor: 1.16
