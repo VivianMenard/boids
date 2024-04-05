@@ -67,8 +67,16 @@ Material:
         m_Texture: {fileID: 2800000, guid: aa3582647f497b44b93ed2d5f0d6f2c7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_2f7fe5d940e8401f83f698f0e9261582_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7925d21741e1c3446b01d0e83174072d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_57f4db8441474b848b26b5533d6c0c94_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: aa3582647f497b44b93ed2d5f0d6f2c7, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_ce8ef5e2e81d443393099afe258549f6_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 7925d21741e1c3446b01d0e83174072d, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_e6a165c020bd4038a1b7d682be38f37d_Texture_1_Texture2D:
@@ -133,13 +141,17 @@ Material:
     - _baseSpacialFrequency: 7
     - _baseSpeed: 0.9
     - _faddingStrengh: 0.7
+    - _foamGradientSize: 0.15
+    - _foamMinHeight: 0.68
+    - _foamNoiseStrengh: 0.08
+    - _foamSmoothness: 0
     - _fogStrengh: 1
     - _lateralMovementsStrengh: 0.08
     - _maxDistance: 80
     - _minDepth: 0.1
     - _refractionSpeed: 0.05
     - _refractionStrengh: 0.08
-    - _sideSmoothness: 0.5
+    - _sideSmoothness: 1
     - _smoothness: 1
     - _spacialFrequencyFactor: 1.16
     - _speed: 0.02
@@ -158,6 +170,7 @@ Material:
     - _absportionColor: {r: 0.4823529, g: 0.8196079, b: 1, a: 0}
     - _absportionComplementaryColor: {r: 0.4823529, g: 0.8196079, b: 1, a: 0}
     - _faddingColor: {r: 0.023529412, g: 0.5372549, b: 0.8117647, a: 0}
+    - _foamColor: {r: 0.79864, g: 0.83371496, b: 0.8415094, a: 1}
     - _fogColor: {r: 0.02352941, g: 0.5372549, b: 0.8117647, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &8373201907044947778
