@@ -142,7 +142,7 @@ Material:
     - _baseSpeed: 0.9
     - _faddingStrengh: 0.7
     - _foamGradientSize: 0.15
-    - _foamMinHeight: 0.68
+    - _foamMinHeight: 0.65
     - _foamNoiseStrengh: 0.08
     - _foamSmoothness: 0
     - _fogStrengh: 1
