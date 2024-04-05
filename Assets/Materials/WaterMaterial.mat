@@ -136,17 +136,17 @@ Material:
     - _absorptionStrengh: 1
     - _absportionStrengh: 1
     - _alpha: 1
-    - _amplitudeFactor: 0.75
-    - _baseAmplitude: 0.02
+    - _amplitudeFactor: 0.78
+    - _baseAmplitude: 0.021
     - _baseSpacialFrequency: 7
     - _baseSpeed: 0.9
     - _faddingStrengh: 0.7
-    - _foamGradientSize: 0.15
-    - _foamMinHeight: 0.65
+    - _foamGradientSize: 0.13
+    - _foamMinHeight: 0.67
     - _foamNoiseStrengh: 0.08
-    - _foamSmoothness: 0
+    - _foamSmoothness: 0.5
     - _fogStrengh: 1
-    - _lateralMovementsStrengh: 0.08
+    - _lateralMovementsStrengh: 0.05
     - _maxDistance: 80
     - _minDepth: 0.1
     - _refractionSpeed: 0.05
