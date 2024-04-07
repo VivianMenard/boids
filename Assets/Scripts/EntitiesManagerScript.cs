@@ -14,12 +14,12 @@ public class EntitiesManagerScript : MonoBehaviour
     [HideInInspector]
     public long clock = 0;
 
-    [Space, Range(0, 3000), SerializeField]
-    private int numberOfBoids;
+    [Space, Range(0, 3000)]
+    public int numberOfBoids;
     private int currentNbBoids = 0;
 
-    [Range(0, 10), SerializeField]
-    private int numberOfPredators;
+    [Range(0, 10)]
+    public int numberOfPredators;
     private int currentNbPredators = 0;
 
     [HideInInspector]
