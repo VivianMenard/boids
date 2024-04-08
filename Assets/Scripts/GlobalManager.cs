@@ -7,6 +7,9 @@ public class GlobalManager : MonoBehaviour
     private GameObject entitiesManager;
     [SerializeField]
     private GameObject Ui;
+
+    [Space, SerializeField]
+    private Toggle fpsToggle;
     [SerializeField]
     private Text fpsDisplay;
     [SerializeField, Range(0.01f, 1f), Tooltip("Time in seconds between fps display refreshing")]
@@ -160,5 +163,10 @@ public class GlobalManager : MonoBehaviour
     {
         displayUi = !displayUi;
         Ui.SetActive(displayUi);
+    }
+
+    public void ToggleFpsDisplay()
+    {
+        fpsDisplay.gameObject.SetActive(fpsToggle.isOn);
     }
 }
