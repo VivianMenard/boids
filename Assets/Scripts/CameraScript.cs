@@ -33,13 +33,12 @@ public class CameraScript : MonoBehaviour
 
         center = area.transform.position + initialOffset;
 
-        Vector3 centerToCamera = transform.position - center;
+        (distance, theta, phi) = MathHelpers.CartesianToSpherical(
+            center,
+            transform.position
+        );
 
-        distance = centerToCamera.magnitude;
-        theta = Mathf.Sign(transform.position.z) * Vector3.Angle(centerToCamera, Vector3.right) * Mathf.Deg2Rad;
-        phi = Vector3.Angle(Vector3.up, centerToCamera) * Mathf.Deg2Rad;
-
-        transform.rotation = Quaternion.LookRotation(-centerToCamera);
+        UpdateRotation();
     }
 
     void Update()
@@ -100,6 +99,12 @@ public class CameraScript : MonoBehaviour
         }
     }
 
+    private void UpdateRotation()
+    {
+        Vector3 cameraToCenter = center - transform.position;
+        transform.rotation = Quaternion.LookRotation(cameraToCenter);
+    }
+
     private void UpdatePosition()
     {
         float epsilon = 0.0001f;
@@ -122,14 +127,10 @@ public class CameraScript : MonoBehaviour
             area.maxPt - centerMargin * Vector3.one
         );
 
-        Vector3 direction = new Vector3(
-            Mathf.Sin(phi) * Mathf.Cos(theta),
-            Mathf.Cos(phi),
-            Mathf.Sin(phi) * Mathf.Sin(theta)
-        );
+        transform.position = MathHelpers.SphericalToCartesian(
+            center, distance, theta, phi);
 
-        transform.position = center + distance * direction;
-        transform.rotation = Quaternion.LookRotation(-direction);
+        UpdateRotation();
     }
 
     private Vector3 Clamp3D(Vector3 value, Vector3 min, Vector3 max)
