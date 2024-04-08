@@ -7,6 +7,8 @@ public class GlobalManager : MonoBehaviour
     private GameObject entitiesManager;
     [SerializeField]
     private GameObject Ui;
+    [SerializeField]
+    private GameObject paramsUi;
 
     [Space, SerializeField]
     private Toggle fpsToggle;
@@ -41,8 +43,6 @@ public class GlobalManager : MonoBehaviour
 
     private float fpsTimer;
     private int nbFrameSinceLastFpsUpdate;
-
-    private bool displayUi = true;
 
     void Start()
     {
@@ -161,8 +161,12 @@ public class GlobalManager : MonoBehaviour
 
     private void ToggleUiDisplay()
     {
-        displayUi = !displayUi;
-        Ui.SetActive(displayUi);
+        Ui.SetActive(!Ui.activeInHierarchy);
+    }
+
+    public void ToggleParamsDisplay()
+    {
+        paramsUi.SetActive(!paramsUi.activeInHierarchy);
     }
 
     public void ToggleFpsDisplay()
