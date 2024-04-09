@@ -117,31 +117,26 @@ public class CameraScript : MonoBehaviour
     {
         float epsilon = 0.0001f;
         phi = Mathf.Clamp(phi, epsilon, Mathf.PI - epsilon);
+        distance = Mathf.Clamp(distance, epsilon, maxDistance);
 
-        if (distance > maxDistance)
-            distance = maxDistance;
-
-        else if (distance < epsilon)
+        if (!MathHelpers.IsInBox(
+                center,
+                area.minPt + margin * Vector3.one,
+                area.maxPt - margin * Vector3.one
+            )
+        )
         {
-            float offsetToApply = epsilon - distance;
-            Vector3 cameraDirection = (center - transform.position).normalized;
-            center += cameraDirection * offsetToApply;
-            distance = epsilon;
+            RestoreOldValues();
+            return;
         }
-
-        center = Clamp3D(
-            center,
-            area.minPt + margin * Vector3.one,
-            area.maxPt - margin * Vector3.one
-        );
 
         Vector3 newPosition = MathHelpers.SphericalToCartesian(
             center, distance, theta, phi);
 
         if (MathHelpers.IsInBox(
-            newPosition,
-            area.minPt - margin * Vector3.one,
-            area.maxPt + new Vector3(margin, topMargin, margin)
+                newPosition,
+                area.minPt - margin * Vector3.one,
+                area.maxPt + new Vector3(margin, topMargin, margin)
             )
         )
         {
