@@ -1083,7 +1083,7 @@ GameObject:
   - component: {fileID: 705507994}
   - component: {fileID: 705507996}
   m_Layer: 0
-  m_Name: Directional Light
+  m_Name: Light
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1672,7 +1672,7 @@ GameObject:
   - component: {fileID: 963194229}
   - component: {fileID: 963194230}
   m_Layer: 0
-  m_Name: Main Camera
+  m_Name: Camera
   m_TagString: MainCamera
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -1813,7 +1813,8 @@ MonoBehaviour:
   centerDragSpeed: 0.05
   scrollSpeed: 20
   maxDistance: 90
-  centerMargin: 1
+  margin: 1
+  topMargin: 7
 --- !u!1001 &1116136412
 PrefabInstance:
   m_ObjectHideFlags: 0

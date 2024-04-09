@@ -12,7 +12,9 @@ public class CameraScript : MonoBehaviour
     [Range(0, 200)]
     public float maxDistance;
     [Range(0, 5)]
-    public float centerMargin;
+    public float margin;
+    [Range(0, 10)]
+    public float topMargin;
 
     private AreaScript area;
 
@@ -20,6 +22,11 @@ public class CameraScript : MonoBehaviour
     private float distance;
     private float theta;
     private float phi;
+
+    private Vector3 oldCenter;
+    private float oldDistance;
+    private float oldTheta;
+    private float oldPhi;
 
     private Vector3 dragOrigin;
     private Vector3 centerDragOrigin;
@@ -38,6 +45,7 @@ public class CameraScript : MonoBehaviour
             transform.position
         );
 
+        UpdateOldValues();
         UpdateRotation();
     }
 
@@ -123,13 +131,27 @@ public class CameraScript : MonoBehaviour
 
         center = Clamp3D(
             center,
-            area.minPt + centerMargin * Vector3.one,
-            area.maxPt - centerMargin * Vector3.one
+            area.minPt + margin * Vector3.one,
+            area.maxPt - margin * Vector3.one
         );
 
-        transform.position = MathHelpers.SphericalToCartesian(
+        Vector3 newPosition = MathHelpers.SphericalToCartesian(
             center, distance, theta, phi);
 
+        if (MathHelpers.IsInBox(
+            newPosition,
+            area.minPt - margin * Vector3.one,
+            area.maxPt + new Vector3(margin, topMargin, margin)
+            )
+        )
+        {
+            RestoreOldValues();
+            return;
+        }
+
+        transform.position = newPosition;
+
+        UpdateOldValues();
         UpdateRotation();
     }
 
@@ -140,5 +162,21 @@ public class CameraScript : MonoBehaviour
             Mathf.Clamp(value.y, min.y, max.y),
             Mathf.Clamp(value.z, min.z, max.z)
         );
+    }
+
+    private void UpdateOldValues()
+    {
+        oldCenter = center;
+        oldDistance = distance;
+        oldTheta = theta;
+        oldPhi = phi;
+    }
+
+    private void RestoreOldValues()
+    {
+        center = oldCenter;
+        distance = oldDistance;
+        theta = oldTheta;
+        phi = oldPhi;
     }
 }

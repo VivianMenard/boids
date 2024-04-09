@@ -38,4 +38,18 @@ public static class MathHelpers
 
         return (distance, theta, phi);
     }
+
+    public static bool IsBetween(float value, float min, float max)
+    {
+        return value >= min && value <= max;
+    }
+
+    public static bool IsInBox(Vector3 point, Vector3 minPt, Vector3 maxPt)
+    {
+        return (
+            IsBetween(point.x, minPt.x, maxPt.x) &&
+            IsBetween(point.y, minPt.y, maxPt.y) &&
+            IsBetween(point.z, minPt.z, maxPt.z)
+        );
+    }
 }
