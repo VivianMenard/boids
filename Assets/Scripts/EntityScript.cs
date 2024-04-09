@@ -472,11 +472,8 @@ public abstract class EntityScript : MonoBehaviour
         float theta = Random.Range(0f, 2f * Mathf.PI);
         float phi = Random.Range(0f, Mathf.PI);
 
-        return new Vector3(
-            Mathf.Sin(phi) * Mathf.Cos(theta),
-            Mathf.Sin(phi) * Mathf.Sin(theta),
-            Mathf.Cos(phi)
-        );
+        return MathHelpers.SphericalToCartesian(
+            Vector3.zero, 1f, theta, phi);
     }
 
     private void UpdateDirectionAndRotation()
