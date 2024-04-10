@@ -59,7 +59,7 @@ public abstract class EntityScript : MonoBehaviour
         raycastDistance = parameters.raycastBaseDistance;
         obstacleMargin = parameters.obstacleBaseMargin;
 
-        SetNewDirectionTarget(GetRandomDirection(), initialization: true);
+        SetNewDirectionTarget(GetInitialDirection(), initialization: true);
 
         myScale = transform.localScale.x;
         myPosition = transform.position;
@@ -77,6 +77,11 @@ public abstract class EntityScript : MonoBehaviour
     }
 
     protected abstract void InitParams();
+
+    protected virtual Vector3 GetInitialDirection()
+    {
+        return GetRandomDirection();
+    }
 
     protected abstract Vector3 ComputeNewDirection();
 
@@ -463,10 +468,15 @@ public abstract class EntityScript : MonoBehaviour
         );
     }
 
-    protected Vector3 GetRandomDirection()
+    protected Vector3 GetRandomDirection(bool restrictVerticaly = false)
     {
         float theta = Random.Range(0f, 2f * Mathf.PI);
-        float phi = Random.Range(0f, Mathf.PI);
+        float phi;
+
+        if (restrictVerticaly)
+            phi = Random.Range(Mathf.PI / 4, 3 * Mathf.PI / 4);
+        else
+            phi = Random.Range(0f, Mathf.PI);
 
         return MathHelpers.SphericalToCartesian(
             Vector3.zero, 1f, theta, phi);

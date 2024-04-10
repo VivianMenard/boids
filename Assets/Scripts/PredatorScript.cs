@@ -12,6 +12,11 @@ public class PredatorScript : EntityScript
         currentAnimationPhase = Random.Range(0, 2 * Mathf.PI);
     }
 
+    protected override Vector3 GetInitialDirection()
+    {
+        return GetRandomDirection(restrictVerticaly: true);
+    }
+
     protected override Vector3 ComputeNewDirection()
     {
         if (state == State.CHILLING)
