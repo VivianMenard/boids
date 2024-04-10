@@ -1810,7 +1810,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   initialOffset: {x: 0, y: -8, z: 0}
   dragSpeed: 0.005
-  centerDragSpeed: 0.05
+  centerDragSpeed: 0.1
   scrollSpeed: 20
   maxDistance: 90
   margin: 1

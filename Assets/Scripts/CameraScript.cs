@@ -2,38 +2,45 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
-    public Vector3 initialOffset;
-    [Range(0, 0.05f)]
-    public float dragSpeed;
-    [Range(0, 0.1f)]
-    public float centerDragSpeed;
-    [Range(0, 30)]
-    public float scrollSpeed;
-    [Range(0, 200)]
-    public float maxDistance;
-    [Range(0, 5)]
-    public float margin;
-    [Range(0, 10)]
-    public float topMargin;
+    [SerializeField]
+    private Vector3 initialOffset;
+    [SerializeField, Range(0, 0.05f)]
+    private float dragSpeed;
+    [SerializeField, Range(0, 0.1f)]
+    private float centerDragSpeed;
+    [SerializeField, Range(0, 30)]
+    private float scrollSpeed;
+    [SerializeField, Range(0, 200)]
+    private float maxDistance;
+    [SerializeField, Range(0, 5)]
+    private float margin;
+    [SerializeField, Range(0, 10)]
+    private float topMargin;
 
-    private AreaScript area;
+    private Vector3 initialCenter;
+
+    private Vector3 areaMinPtForCamera, areaMaxPtForCamera,
+    areaMinPtForCenter, areaMaxPtForCenter;
 
     private Vector3 center;
-    private float distance;
-    private float theta;
-    private float phi;
+    private float distance, theta, phi;
 
-    private Vector3 dragOrigin;
-    private Vector3 centerDragOrigin;
+    private Vector3 dragOrigin, centerDragOrigin;
 
     private bool needUpdate = false;
 
     void Start()
     {
-        area = GameObject.FindGameObjectWithTag("Area").
+        AreaScript area = GameObject.FindGameObjectWithTag("Area").
             GetComponent<AreaScript>();
 
-        center = area.transform.position + initialOffset;
+        initialCenter = area.transform.position + initialOffset;
+        center = initialCenter;
+
+        areaMinPtForCamera = area.minPt - margin * Vector3.one;
+        areaMaxPtForCamera = area.maxPt + new Vector3(margin, topMargin, margin);
+        areaMinPtForCenter = area.minPt + margin * Vector3.one;
+        areaMaxPtForCenter = area.maxPt - margin * Vector3.one;
 
         (distance, theta, phi) = MathHelpers.CartesianToSpherical(
             center,
@@ -87,7 +94,7 @@ public class CameraScript : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.F))
         {
-            center = area.transform.position + initialOffset;
+            center = initialCenter;
             needUpdate = true;
         }
     }
@@ -113,31 +120,27 @@ public class CameraScript : MonoBehaviour
         phi = Mathf.Clamp(phi, epsilon, Mathf.PI - epsilon);
         distance = Mathf.Clamp(distance, epsilon, maxDistance);
 
-        center = Clamp3D(
+        center = MathHelpers.ClampVector(
             center,
-            area.minPt + margin * Vector3.one,
-            area.maxPt - margin * Vector3.one
+            areaMinPtForCenter,
+            areaMaxPtForCenter
         );
 
         Vector3 newPosition = MathHelpers.SphericalToCartesian(
             center, distance, theta, phi);
 
-        Vector3 areaMinPtWithMargin = area.minPt - margin * Vector3.one,
-            areaMaxPtWithMargin = area.maxPt +
-                new Vector3(margin, topMargin, margin);
-
         if (MathHelpers.IsInBox(
                 newPosition,
-                areaMinPtWithMargin,
-                areaMaxPtWithMargin
+                areaMinPtForCamera,
+                areaMaxPtForCamera
             )
         )
         {
             newPosition = MathHelpers.FindPointOnBoxBetween(
                 newPosition,
                 transform.position,
-                areaMinPtWithMargin,
-                areaMaxPtWithMargin
+                areaMinPtForCamera,
+                areaMaxPtForCamera
             );
             (distance, theta, phi) = MathHelpers.CartesianToSpherical(
                 center, newPosition);
@@ -145,14 +148,5 @@ public class CameraScript : MonoBehaviour
 
         transform.position = newPosition;
         UpdateRotation();
-    }
-
-    private Vector3 Clamp3D(Vector3 value, Vector3 min, Vector3 max)
-    {
-        return new Vector3(
-            Mathf.Clamp(value.x, min.x, max.x),
-            Mathf.Clamp(value.y, min.y, max.y),
-            Mathf.Clamp(value.z, min.z, max.z)
-        );
     }
 }

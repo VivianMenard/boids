@@ -4,11 +4,7 @@ using UnityEngine.UI;
 public class GlobalManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject entitiesManager;
-    [SerializeField]
-    private GameObject Ui;
-    [SerializeField]
-    private GameObject paramsUi;
+    private GameObject entitiesManager, Ui, paramsUi;
 
     [Space, SerializeField]
     private Toggle fpsToggle;
@@ -20,20 +16,14 @@ public class GlobalManager : MonoBehaviour
     [Space, SerializeField]
     private Text nbBoidsDisplay;
     [SerializeField]
-    private Button addBoidsButton;
+    private Text nbPredatorsDisplay;
     [SerializeField]
-    private Button removeBoidsButton;
+    private Button addBoidsButton, removeBoidsButton,
+    addPredatorsButton, removePredatorsButton;
     [SerializeField, Range(0, 5000)]
     private int maxNbBoidsInUi;
     [SerializeField, Range(0, 500)]
     private int nbBoidsStep;
-
-    [Space, SerializeField]
-    private Text nbPredatorsDisplay;
-    [SerializeField]
-    private Button addPredatorsButton;
-    [SerializeField]
-    private Button removePredatorsButton;
     [SerializeField, Range(0, 20)]
     private int maxNbPredatorsInUi;
     [SerializeField, Range(0, 5)]
@@ -77,11 +67,11 @@ public class GlobalManager : MonoBehaviour
 
     public void QuitGame()
     {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
             Application.Quit();
-        #endif
+#endif
     }
 
     public void AddBoids()

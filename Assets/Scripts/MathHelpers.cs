@@ -53,6 +53,15 @@ public static class MathHelpers
         );
     }
 
+    public static Vector3 ClampVector(Vector3 initialVector, Vector3 min, Vector3 max)
+    {
+        return new Vector3(
+            Mathf.Clamp(initialVector.x, min.x, max.x),
+            Mathf.Clamp(initialVector.y, min.y, max.y),
+            Mathf.Clamp(initialVector.z, min.z, max.z)
+        );
+    }
+
     public static Vector3 FindPointOnBoxBetween(Vector3 ptIn, Vector3 ptOut, Vector3 minPt, Vector3 maxPt)
     {
         // Returns the point on the (axis aligned) box surface between a point in the box and another out of it. 

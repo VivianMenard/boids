@@ -21,13 +21,11 @@ public abstract class EntityScript : MonoBehaviour
     private float randomBonusVelocityFactor = 1;
     private int sinceLastBonusChange = 0;
 
-    private Quaternion lastRotation;
-    private Quaternion targetRotation;
+    private Quaternion lastRotation, targetRotation;
     private int sinceLastCalculation;
 
     // Random walk parameters
-    private Vector3 rwLastDirection;
-    private Vector3 rwTargetDirection;
+    private Vector3 rwLastDirection, rwTargetDirection;
     private int rwStateTimeRemaiming;
     protected RwState rwState = RwState.NOT_IN_RW;
 
@@ -43,9 +41,8 @@ public abstract class EntityScript : MonoBehaviour
 
     protected Collider myCollider;
 
-    private float raycastDistance;
-    private float obstacleMargin;
-    private Vector3[] avoidanceDirections;
+    private float raycastDistance, obstacleMargin;
+    private Vector3[] avoidanceDirections = new Vector3[8];
 
     void Start()
     {
@@ -61,7 +58,6 @@ public abstract class EntityScript : MonoBehaviour
         velocity = parameters.velocities[state];
         raycastDistance = parameters.raycastBaseDistance;
         obstacleMargin = parameters.obstacleBaseMargin;
-        avoidanceDirections = new Vector3[8];
 
         SetNewDirectionTarget(GetRandomDirection(), initialization: true);
 

@@ -16,20 +16,15 @@ public class EntitiesManagerScript : MonoBehaviour
 
     [Space, Range(0, 3000)]
     public int numberOfBoids;
-    private int currentNbBoids = 0;
-
     [Range(0, 10)]
     public int numberOfPredators;
-    private int currentNbPredators = 0;
+
+    private int currentNbBoids = 0, currentNbPredators = 0;
 
     [HideInInspector]
-    public LayerMask obstacleLayerMask;
+    public LayerMask obstacleLayerMask, entitiesLayerMask;
     [HideInInspector]
-    public LayerMask entitiesLayerMask;
-    [HideInInspector]
-    public int boidsLayer;
-    [HideInInspector]
-    public int predatorsLayer;
+    public int boidsLayer, predatorsLayer;
 
     [HideInInspector]
     public Dictionary<State, bool> isItEmergencyState = new Dictionary<State, bool>{
@@ -46,8 +41,8 @@ public class EntitiesManagerScript : MonoBehaviour
 
     private AreaScript area;
 
-    private List<GameObject> boids = new List<GameObject>();
-    private List<GameObject> predators = new List<GameObject>();
+    private List<GameObject> boids = new List<GameObject>(),
+        predators = new List<GameObject>();
 
     [Space]
     public BoidsParameters boidsParams;
