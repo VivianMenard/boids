@@ -159,13 +159,13 @@ MonoBehaviour:
   fpsDisplay: {fileID: 1521059753}
   fpsRefreshPeriod: 0.2
   nbBoidsDisplay: {fileID: 2099000749}
+  nbPredatorsDisplay: {fileID: 237223748}
   addBoidsButton: {fileID: 1803299299}
   removeBoidsButton: {fileID: 1289393274}
-  maxNbBoidsInUi: 3000
-  nbBoidsStep: 100
-  nbPredatorsDisplay: {fileID: 237223748}
   addPredatorsButton: {fileID: 501356199}
   removePredatorsButton: {fileID: 1570987842}
+  maxNbBoidsInUi: 3000
+  nbBoidsStep: 100
   maxNbPredatorsInUi: 10
   nbPredatorsStep: 1
 --- !u!4 &34356141
@@ -1943,6 +1943,7 @@ MonoBehaviour:
   boidsParams:
     prefab: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
     scaleVariations: 0.2
+    spawnMargin: 3
     raycastBaseDistance: 10
     obstacleBaseMargin: 3
     applyVelocityFactor: 1
@@ -2010,6 +2011,7 @@ MonoBehaviour:
   predatorsParams:
     prefab: {fileID: 6344359519432126883, guid: 4a99d52c6ca7350469280d5621b9d7ac, type: 3}
     scaleVariations: 0.2
+    spawnMargin: 15
     raycastBaseDistance: 25
     obstacleBaseMargin: 3
     applyVelocityFactor: 0

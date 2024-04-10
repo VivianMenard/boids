@@ -176,7 +176,7 @@ public class EntitiesManagerScript : MonoBehaviour
     private Vector3 GetRandomSpawnablePositionInArea(EntityType type)
     {
         float obstacleMargin = (type == EntityType.BOID) ?
-            boidsParams.obstacleBaseMargin : predatorsParams.obstacleBaseMargin;
+            boidsParams.spawnMargin : predatorsParams.spawnMargin;
 
         Vector3 minPtToSpawn = area.minPt + obstacleMargin * Vector3.one;
         Vector3 maxPtToSpawn = area.maxPt - obstacleMargin * Vector3.one;

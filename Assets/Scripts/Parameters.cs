@@ -11,6 +11,9 @@ public abstract class EntityParameters
     [Space, Range(0, 1)]
     public float scaleVariations;
 
+    [Space, Range(0, 30), Tooltip("Minimum distance of the border at which entities will spawn")]
+    public float spawnMargin;
+
     [Space, Range(0, 30)]
     public float raycastBaseDistance;
     [Range(0, 5), Tooltip("The distance entities will try to keep between them and the obstacle")]
