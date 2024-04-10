@@ -41,7 +41,7 @@ public static class MathHelpers
 
     public static bool IsBetween(float value, float min, float max)
     {
-        return value >= min && value <= max;
+        return value > min && value < max;
     }
 
     public static bool IsInBox(Vector3 point, Vector3 minPt, Vector3 maxPt)
@@ -51,5 +51,26 @@ public static class MathHelpers
             IsBetween(point.y, minPt.y, maxPt.y) &&
             IsBetween(point.z, minPt.z, maxPt.z)
         );
+    }
+
+    public static Vector3 FindPointOnBoxBetween(Vector3 ptIn, Vector3 ptOut, Vector3 minPt, Vector3 maxPt)
+    {
+        // Returns the point on the (axis aligned) box surface between a point in the box and another out of it. 
+        float t = 0f;
+
+        if (IsBetween(minPt.x, ptOut.x, ptIn.x))
+            t = Mathf.InverseLerp(ptOut.x, ptIn.x, minPt.x);
+        else if (IsBetween(maxPt.x, ptIn.x, ptOut.x))
+            t = Mathf.InverseLerp(ptOut.x, ptIn.x, maxPt.x);
+        else if (IsBetween(minPt.y, ptOut.y, ptIn.y))
+            t = Mathf.InverseLerp(ptOut.y, ptIn.y, minPt.y);
+        else if (IsBetween(maxPt.y, ptIn.y, ptOut.y))
+            t = Mathf.InverseLerp(ptOut.y, ptIn.y, maxPt.y);
+        else if (IsBetween(minPt.z, ptOut.z, ptIn.z))
+            t = Mathf.InverseLerp(ptOut.z, ptIn.z, minPt.z);
+        else if (IsBetween(maxPt.z, ptIn.z, ptOut.z))
+            t = Mathf.InverseLerp(ptOut.z, ptIn.z, maxPt.z);
+
+        return Vector3.Lerp(ptOut, ptIn, t);
     }
 }

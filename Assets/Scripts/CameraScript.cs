@@ -23,11 +23,6 @@ public class CameraScript : MonoBehaviour
     private float theta;
     private float phi;
 
-    private Vector3 oldCenter;
-    private float oldDistance;
-    private float oldTheta;
-    private float oldPhi;
-
     private Vector3 dragOrigin;
     private Vector3 centerDragOrigin;
 
@@ -45,7 +40,6 @@ public class CameraScript : MonoBehaviour
             transform.position
         );
 
-        UpdateOldValues();
         UpdateRotation();
     }
 
@@ -119,34 +113,37 @@ public class CameraScript : MonoBehaviour
         phi = Mathf.Clamp(phi, epsilon, Mathf.PI - epsilon);
         distance = Mathf.Clamp(distance, epsilon, maxDistance);
 
-        if (!MathHelpers.IsInBox(
-                center,
-                area.minPt + margin * Vector3.one,
-                area.maxPt - margin * Vector3.one
-            )
-        )
-        {
-            RestoreOldValues();
-            return;
-        }
+        center = Clamp3D(
+            center,
+            area.minPt + margin * Vector3.one,
+            area.maxPt - margin * Vector3.one
+        );
 
         Vector3 newPosition = MathHelpers.SphericalToCartesian(
             center, distance, theta, phi);
 
+        Vector3 areaMinPtWithMargin = area.minPt - margin * Vector3.one,
+            areaMaxPtWithMargin = area.maxPt +
+                new Vector3(margin, topMargin, margin);
+
         if (MathHelpers.IsInBox(
                 newPosition,
-                area.minPt - margin * Vector3.one,
-                area.maxPt + new Vector3(margin, topMargin, margin)
+                areaMinPtWithMargin,
+                areaMaxPtWithMargin
             )
         )
         {
-            RestoreOldValues();
-            return;
+            newPosition = MathHelpers.FindPointOnBoxBetween(
+                newPosition,
+                transform.position,
+                areaMinPtWithMargin,
+                areaMaxPtWithMargin
+            );
+            (distance, theta, phi) = MathHelpers.CartesianToSpherical(
+                center, newPosition);
         }
 
         transform.position = newPosition;
-
-        UpdateOldValues();
         UpdateRotation();
     }
 
@@ -157,21 +154,5 @@ public class CameraScript : MonoBehaviour
             Mathf.Clamp(value.y, min.y, max.y),
             Mathf.Clamp(value.z, min.z, max.z)
         );
-    }
-
-    private void UpdateOldValues()
-    {
-        oldCenter = center;
-        oldDistance = distance;
-        oldTheta = theta;
-        oldPhi = phi;
-    }
-
-    private void RestoreOldValues()
-    {
-        center = oldCenter;
-        distance = oldDistance;
-        theta = oldTheta;
-        phi = oldPhi;
     }
 }
