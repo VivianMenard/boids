@@ -10,16 +10,6 @@ public class AreaScript : MonoBehaviour
         ComputeBoundaries();
     }
 
-    private void FixedUpdate()
-    {
-        if (transform.hasChanged)
-        {
-            ComputeBoundaries();
-            transform.rotation = Quaternion.identity;
-            transform.hasChanged = false;
-        }
-    }
-
     private void ComputeBoundaries()
     {
         Vector3 delta = transform.localScale / 2;
