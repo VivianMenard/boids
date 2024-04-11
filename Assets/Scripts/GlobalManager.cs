@@ -29,6 +29,13 @@ public class GlobalManager : MonoBehaviour
     [SerializeField, Range(0, 5)]
     private int nbPredatorsStep;
 
+    [Space, SerializeField]
+    private Material waterMaterial;
+    [SerializeField]
+    private Material underSurfaceMaterial;
+
+    private bool pause = false;
+
     private EntitiesManagerScript entitiesManagerScript;
 
     private float fpsTimer;
@@ -162,5 +169,51 @@ public class GlobalManager : MonoBehaviour
     public void ToggleFpsDisplay()
     {
         fpsDisplay.gameObject.SetActive(fpsToggle.isOn);
+    }
+
+    public void TogglePause()
+    {
+        if (pause)
+        {
+            UnPauseShader(waterMaterial);
+            UnPauseShader(underSurfaceMaterial);
+            entitiesManagerScript.entitiesMovement = true;
+        }
+        else
+        {
+            PauseShader(waterMaterial);
+            PauseShader(underSurfaceMaterial);
+            entitiesManagerScript.entitiesMovement = false;
+        }
+
+        pause = !pause;
+    }
+
+    private void PauseShader(Material shader)
+    {
+        float currentTimeOffset = shader.GetFloat("_timeOffset");
+        shader.SetInt("_pause", 1);
+        shader.SetFloat("_timeOffset", Time.time + currentTimeOffset);
+    }
+
+    private void UnPauseShader(Material shader)
+    {
+        float currentTimeOffset = shader.GetFloat("_timeOffset");
+        float timeDiff = Time.time - currentTimeOffset;
+
+        shader.SetInt("_pause", 0);
+        shader.SetFloat("_timeOffset", -timeDiff);
+    }
+
+    private void RestoreShaderValues(Material shader)
+    {
+        shader.SetInt("_pause", 0);
+        shader.SetFloat("_timeOffset", 0f);
+    }
+
+    private void OnApplicationQuit()
+    {
+        RestoreShaderValues(waterMaterial);
+        RestoreShaderValues(underSurfaceMaterial);
     }
 }

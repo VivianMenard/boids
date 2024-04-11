@@ -50,6 +50,9 @@ public class EntitiesManagerScript : MonoBehaviour
     [Space]
     public PredatorsParameters predatorsParams;
 
+    [HideInInspector]
+    public bool entitiesMovement = true;
+
     private void Awake()
     {
         PreCalculateParameters();
@@ -84,7 +87,8 @@ public class EntitiesManagerScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        clock++;
+        if (entitiesMovement)
+            clock++;
 
         AdjustNbEntities(
             numberOfBoids - currentNbBoids,

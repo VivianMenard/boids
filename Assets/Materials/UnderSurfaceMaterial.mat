@@ -143,9 +143,11 @@ Material:
     - _baseSpacialFrequency: 7
     - _baseSpeed: 0.9
     - _lateralMovementsStrengh: 0.05
+    - _pause: 0
     - _smoothness: 1
     - _spacialFrequencyFactor: 1.16
     - _speedFactor: 1.11
+    - _timeOffset: 0
     - _wavesAmplitude: 0.05
     - _wavesScale: 5
     - _wavesSpeed: 0.1

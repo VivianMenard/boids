@@ -99,6 +99,9 @@ public abstract class EntityScript : MonoBehaviour
 
     private void FixedUpdate()
     {
+        if (!entitiesManager.entitiesMovement)
+            return;
+
         if (entitiesManager.clock % entitiesManager.calculationInterval ==
             id % entitiesManager.calculationInterval)
         {

@@ -146,9 +146,10 @@ Material:
     - _foamNoiseStrengh: 0.08
     - _foamSmoothness: 0.5
     - _fogStrengh: 1
-    - _lateralMovementsStrengh: 0.05
+    - _lateralMovementsStrengh: 0.045
     - _maxDistance: 80
     - _minDepth: 0.1
+    - _pause: 0
     - _refractionSpeed: 0.05
     - _refractionStrengh: 0.08
     - _sideSmoothness: 1
@@ -156,6 +157,7 @@ Material:
     - _spacialFrequencyFactor: 1.16
     - _speed: 0.02
     - _speedFactor: 1.11
+    - _timeOffset: 0
     - _waveScales: 5
     - _wavesAmplitude: 0.05
     - _wavesScale: 5
