@@ -116,10 +116,15 @@ public class EntitiesManagerScript : MonoBehaviour
 
         for (int _ = 0; _ < nbToSpawn; _++)
         {
+            Quaternion entityRotation = Quaternion.LookRotation(
+                MathHelpers.GetRandomDirection(
+                    restrictVerticaly: type == EntityType.PREDATOR
+                )
+            );
             GameObject entity = Instantiate(
                 entityPrefab,
                 GetRandomSpawnablePositionInArea(type),
-                Quaternion.identity,
+                entityRotation,
                 gameObject.transform
             );
             SetEntityScale(entity, type);

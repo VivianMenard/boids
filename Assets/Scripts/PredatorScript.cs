@@ -12,11 +12,6 @@ public class PredatorScript : EntityScript
         currentAnimationPhase = Random.Range(0, 2 * Mathf.PI);
     }
 
-    protected override Vector3 GetInitialDirection()
-    {
-        return GetRandomDirection(restrictVerticaly: true);
-    }
-
     protected override Vector3 ComputeNewDirection()
     {
         if (state == State.CHILLING)
@@ -160,7 +155,7 @@ public class PredatorScript : EntityScript
         for (int boneIndex = parameters.animationFirstBone; boneIndex < bones.Length; boneIndex++)
         {
             (Vector3 bonePosition, Quaternion boneRotation) = bonesPositionsAndRotations[boneIndex];
-            Vector3 boneDirection = boneRotation * Vector3.forward;
+            Vector3 boneDirection = MathHelpers.RotationToDirection(boneRotation);
             Vector3 right = Vector3.Cross(boneDirection, Vector3.up).normalized;
 
             float distanceToHead = BoneDistanceToHead(boneIndex);

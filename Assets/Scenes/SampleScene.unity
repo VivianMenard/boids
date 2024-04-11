@@ -2010,7 +2010,7 @@ MonoBehaviour:
     afraidVelocity: 11
   predatorsParams:
     prefab: {fileID: 6344359519432126883, guid: 4a99d52c6ca7350469280d5621b9d7ac, type: 3}
-    scaleVariations: 0.2
+    scaleVariations: 0.3
     spawnMargin: 15
     raycastBaseDistance: 25
     obstacleBaseMargin: 3
@@ -2042,7 +2042,7 @@ MonoBehaviour:
     - 10.781644
     - 11.688427
     - 12.544172
-    nbTransformsToStore: 157
+    nbTransformsToStore: 170
     boneBaseRotation:
     - {x: 0.50000006, y: -0.49999997, z: 0.50000006, w: -0.5}
     - {x: 0.49999997, y: -0.5, z: 0.50000006, w: -0.49999994}

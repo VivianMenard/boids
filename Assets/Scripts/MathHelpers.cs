@@ -82,4 +82,23 @@ public static class MathHelpers
 
         return Vector3.Lerp(ptOut, ptIn, t);
     }
+
+    public static Vector3 GetRandomDirection(bool restrictVerticaly = false)
+    {
+        float theta = Random.Range(0f, 2f * Mathf.PI);
+        float phi;
+
+        if (restrictVerticaly)
+            phi = Random.Range(Mathf.PI / 4, 3 * Mathf.PI / 4);
+        else
+            phi = Random.Range(0f, Mathf.PI);
+
+        return SphericalToCartesian(
+            Vector3.zero, 1f, theta, phi);
+    }
+
+    public static Vector3 RotationToDirection(Quaternion rotation)
+    {
+        return rotation * Vector3.forward;
+    }
 }

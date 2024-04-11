@@ -125,7 +125,7 @@ public class BoidScript : EntityScript
 
     protected override Vector3 GetObstacleAvoidanceReference()
     {
-        return GetRandomDirection();
+        return MathHelpers.GetRandomDirection();
     }
 
     private float GetEntitySeparationWeight(float squaredDistance)

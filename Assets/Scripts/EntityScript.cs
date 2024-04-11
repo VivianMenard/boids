@@ -59,11 +59,11 @@ public abstract class EntityScript : MonoBehaviour
         raycastDistance = parameters.raycastBaseDistance;
         obstacleMargin = parameters.obstacleBaseMargin;
 
-        SetNewDirectionTarget(GetInitialDirection(), initialization: true);
-
         myScale = transform.localScale.x;
         myPosition = transform.position;
-        myRotation = Quaternion.LookRotation(Direction);
+        myRotation = transform.rotation;
+
+        SetNewDirectionTarget(GetInitialDirection(), initialization: true);
 
         myCollider = GetComponent<Collider>();
 
@@ -78,12 +78,12 @@ public abstract class EntityScript : MonoBehaviour
 
     protected abstract void InitParams();
 
-    protected virtual Vector3 GetInitialDirection()
-    {
-        return GetRandomDirection();
-    }
-
     protected abstract Vector3 ComputeNewDirection();
+
+    private Vector3 GetInitialDirection()
+    {
+        return MathHelpers.RotationToDirection(myRotation);
+    }
 
     private void CreateFakeTransformHistory()
     {
@@ -259,7 +259,7 @@ public abstract class EntityScript : MonoBehaviour
     {
         Vector3 TryDirectionForRw()
         {
-            Vector3 newDirection = GetRandomDirection() +
+            Vector3 newDirection = MathHelpers.GetRandomDirection() +
                 Direction * parameters.rwMomentumWeight;
             newDirection.y = newDirection.y * parameters.rwVerticalDirFactor;
             return newDirection.normalized;
@@ -468,20 +468,6 @@ public abstract class EntityScript : MonoBehaviour
         );
     }
 
-    protected Vector3 GetRandomDirection(bool restrictVerticaly = false)
-    {
-        float theta = Random.Range(0f, 2f * Mathf.PI);
-        float phi;
-
-        if (restrictVerticaly)
-            phi = Random.Range(Mathf.PI / 4, 3 * Mathf.PI / 4);
-        else
-            phi = Random.Range(0f, Mathf.PI);
-
-        return MathHelpers.SphericalToCartesian(
-            Vector3.zero, 1f, theta, phi);
-    }
-
     private void UpdateDirectionAndRotation()
     {
         float rotationProgress = (float)sinceLastCalculation /
@@ -493,7 +479,7 @@ public abstract class EntityScript : MonoBehaviour
         transform.rotation = newRotation;
         myRotation = newRotation;
 
-        Direction = newRotation * Vector3.forward;
+        Direction = MathHelpers.RotationToDirection(newRotation);
         // the direction is based on the rotation and not the contrary, it's intentionnal.
         // It allows the rotation twists to be smooth, what wouldn't be the case if the lerp
         // was on the direction and the rotation was based on the result
