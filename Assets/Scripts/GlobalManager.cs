@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class GlobalManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject entitiesManager, Ui, paramsUi;
+    private GameObject entitiesManager, Ui, paramsUi, pauseIcon, playIcon;
 
     [Space, SerializeField]
     private Toggle fpsToggle;
@@ -187,6 +187,9 @@ public class GlobalManager : MonoBehaviour
         }
 
         pause = !pause;
+
+        pauseIcon.SetActive(!pause);
+        playIcon.SetActive(pause);
     }
 
     private void PauseShader(Material shader)
