@@ -121,9 +121,7 @@ public class EntitiesManagerScript : MonoBehaviour
         for (int _ = 0; _ < nbToSpawn; _++)
         {
             Quaternion entityRotation = Quaternion.LookRotation(
-                MathHelpers.GetRandomDirection(
-                    restrictVerticaly: type == EntityType.PREDATOR
-                )
+                MathHelpers.GetRandomDirection(restrictVerticaly: true)
             );
             GameObject entity = Instantiate(
                 entityPrefab,
