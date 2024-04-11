@@ -31,7 +31,7 @@ public class CameraScript : MonoBehaviour
 
     void Start()
     {
-        AreaScript area = GameObject.FindGameObjectWithTag("Area").
+        AreaScript area = GameObject.FindGameObjectWithTag(Constants.areaTag).
             GetComponent<AreaScript>();
 
         initialCenter = area.transform.position + initialOffset;
@@ -52,7 +52,7 @@ public class CameraScript : MonoBehaviour
 
     void Update()
     {
-        float scrollValue = Input.GetAxis("Mouse ScrollWheel");
+        float scrollValue = Input.GetAxis(Constants.scrollAxisName);
 
         if (scrollValue != 0)
         {

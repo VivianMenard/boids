@@ -48,7 +48,7 @@ public abstract class EntityScript : MonoBehaviour
     {
         id = nextId++;
 
-        entitiesManager = GameObject.FindGameObjectWithTag("EntitiesManager").
+        entitiesManager = GameObject.FindGameObjectWithTag(Constants.entitiesManagerTag).
             GetComponent<EntitiesManagerScript>();
 
         InitParams();

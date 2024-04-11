@@ -65,7 +65,7 @@ public class GlobalManager : MonoBehaviour
         if (fpsTimer > fpsRefreshPeriod)
         {
             int averageFps = (int)(nbFrameSinceLastFpsUpdate / fpsTimer);
-            fpsDisplay.text = averageFps + " fps";
+            fpsDisplay.text = string.Format(Constants.fpsDisplayTemplate, averageFps);
 
             fpsTimer = 0f;
             nbFrameSinceLastFpsUpdate = 0;
@@ -144,16 +144,21 @@ public class GlobalManager : MonoBehaviour
     private void UpdateNbBoidsDisplay()
     {
         int nbBoids = entitiesManagerScript.numberOfBoids;
-        string formattedNbBoids = (nbBoids > 0) ? nbBoids.ToString("#,###") : nbBoids.ToString();
-        string strToAdd = (nbBoids > 1) ? " fishes" : " fish";
-        nbBoidsDisplay.text = formattedNbBoids + strToAdd;
+        string formattedNbBoids = (nbBoids > 0) ? nbBoids.ToString(Constants.nbBoidsFormat)
+            : nbBoids.ToString();
+        string nbFishesDisplayTemplate = (nbBoids > 1) ? Constants.nbFishesDisplayTemplatePlural :
+            Constants.nbFishesDisplayTemplate;
+        nbBoidsDisplay.text = string.Format(nbFishesDisplayTemplate, formattedNbBoids);
     }
 
     private void UpdateNbPredatorsDisplay()
     {
         int nbPredators = entitiesManagerScript.numberOfPredators;
-        string strToAdd = (nbPredators > 1) ? " sharks" : " shark";
-        nbPredatorsDisplay.text = entitiesManagerScript.numberOfPredators + strToAdd;
+        string nbSharksDisplayTemplate = (nbPredators > 1) ? Constants.nbSharksDisplayTemplatePlural :
+            Constants.nbSharksDisplayTemplate;
+        nbPredatorsDisplay.text = string.Format(
+            nbSharksDisplayTemplate, entitiesManagerScript.numberOfPredators
+        );
     }
 
     private void ToggleUiDisplay()
@@ -194,24 +199,24 @@ public class GlobalManager : MonoBehaviour
 
     private void PauseShader(Material shader)
     {
-        float currentTimeOffset = shader.GetFloat("_timeOffset");
-        shader.SetInt("_pause", 1);
-        shader.SetFloat("_timeOffset", Time.time + currentTimeOffset);
+        float currentTimeOffset = shader.GetFloat(Constants.shaderTimeOffsetReference);
+        shader.SetInt(Constants.shaderPauseReference, 1);
+        shader.SetFloat(Constants.shaderTimeOffsetReference, Time.time + currentTimeOffset);
     }
 
     private void UnPauseShader(Material shader)
     {
-        float currentTimeOffset = shader.GetFloat("_timeOffset");
+        float currentTimeOffset = shader.GetFloat(Constants.shaderTimeOffsetReference);
         float timeDiff = Time.time - currentTimeOffset;
 
-        shader.SetInt("_pause", 0);
-        shader.SetFloat("_timeOffset", -timeDiff);
+        shader.SetInt(Constants.shaderPauseReference, 0);
+        shader.SetFloat(Constants.shaderTimeOffsetReference, -timeDiff);
     }
 
     private void RestoreShaderValues(Material shader)
     {
-        shader.SetInt("_pause", 0);
-        shader.SetFloat("_timeOffset", 0f);
+        shader.SetInt(Constants.shaderPauseReference, 0);
+        shader.SetFloat(Constants.shaderTimeOffsetReference, 0f);
     }
 
     private void OnApplicationQuit()

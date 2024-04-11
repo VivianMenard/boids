@@ -61,12 +61,15 @@ public class EntitiesManagerScript : MonoBehaviour
 
     void Start()
     {
-        area = GameObject.FindGameObjectWithTag("Area").
+        area = GameObject.FindGameObjectWithTag(Constants.areaTag).
             GetComponent<AreaScript>();
-        obstacleLayerMask = LayerMask.GetMask("Obstacles");
-        entitiesLayerMask = LayerMask.GetMask("Boids", "Predators");
-        boidsLayer = LayerMask.NameToLayer("Boids");
-        predatorsLayer = LayerMask.NameToLayer("Predators");
+        obstacleLayerMask = LayerMask.GetMask(Constants.obstaclesLayerName);
+        entitiesLayerMask = LayerMask.GetMask(
+            Constants.boidsLayerName,
+            Constants.predatorsLayerName
+        );
+        boidsLayer = LayerMask.NameToLayer(Constants.boidsLayerName);
+        predatorsLayer = LayerMask.NameToLayer(Constants.predatorsLayerName);
     }
 
     private void PreCalculateParameters()
