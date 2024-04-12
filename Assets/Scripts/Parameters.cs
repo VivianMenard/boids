@@ -295,3 +295,22 @@ public class PredatorsParameters : EntityParameters
         return (calculationInterval * Time.fixedDeltaTime) / averageTimeInState;
     }
 }
+
+[System.Serializable]
+public class WaterMovementsFloatParams
+{
+    [Range(0, 10)]
+    public float baseSpacialFrequency;
+    [Range(0, 5)]
+    public float baseSpeed;
+    [Range(0, 1)]
+    public float baseAmplitude;
+    [Range(0, 2)]
+    public float spacialFrequencyFactor;
+    [Range(0, 2)]
+    public float speedFactor;
+    [Range(0, 1)]
+    public float amplitudeFactor;
+    [Range(0, 1)]
+    public float lateralMovementsStrengh;
+}
