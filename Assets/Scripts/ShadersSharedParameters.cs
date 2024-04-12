@@ -1,28 +1,46 @@
 using UnityEngine;
 using System.Reflection;
+using System.Collections.Generic;
+using System;
 
 public class ShadersSharedParameters : MonoBehaviour
 {
     [SerializeField]
-    private WaterMovementsFloatParams waterMovementsFloatParams;
+    private SharedParameters sharedParameters;
+
+    private Dictionary<Type, Action<string, object>> TypeToSetGlobalVar = new Dictionary<Type, Action<string, object>>
+    {
+        { typeof(float), (name, value) => Shader.SetGlobalFloat(name, (float)value) }
+    };
 
     private void Awake()
     {
-        SetGlobalFloatParams();
+        SetGlobalParameters();
     }
     private void OnValidate()
     {
-        SetGlobalFloatParams();
+        SetGlobalParameters();
     }
 
-    private void SetGlobalFloatParams()
+    private void SetGlobalParameters()
     {
-        FieldInfo[] fields = waterMovementsFloatParams.GetType().GetFields();
+        FieldInfo[] fields = sharedParameters.GetType().GetFields();
 
         foreach (FieldInfo field in fields)
         {
-            float value = (float)field.GetValue(waterMovementsFloatParams);
-            Shader.SetGlobalFloat("_" + field.Name, value);
+            Type fieldType = field.FieldType;
+            object value = field.GetValue(sharedParameters);
+            string fieldName = field.Name;
+            string fieldReference = "_" + fieldName;
+
+            if (TypeToSetGlobalVar.ContainsKey(fieldType))
+                TypeToSetGlobalVar[fieldType](fieldReference, value);
+
+            else
+                Debug.LogWarning(
+                    "The SetGlobal method associated to type " +
+                    fieldType + " isn't already implemented."
+                );
         }
     }
 }

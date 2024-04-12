@@ -2992,7 +2992,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 52038afe4c360c545b211ccfe3eda51e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  waterMovementsFloatParams:
+  sharedParameters:
     baseSpacialFrequency: 7
     baseSpeed: 0.9
     baseAmplitude: 0.021

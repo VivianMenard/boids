@@ -297,7 +297,7 @@ public class PredatorsParameters : EntityParameters
 }
 
 [System.Serializable]
-public class WaterMovementsFloatParams
+public class SharedParameters
 {
     [Range(0, 10)]
     public float baseSpacialFrequency;
