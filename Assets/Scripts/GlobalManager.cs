@@ -29,11 +29,6 @@ public class GlobalManager : MonoBehaviour
     [SerializeField, Range(0, 5)]
     private int nbPredatorsStep;
 
-    [Space, SerializeField]
-    private Material waterMaterial;
-    [SerializeField]
-    private Material underSurfaceMaterial;
-
     private bool pause = false;
 
     private EntitiesManagerScript entitiesManagerScript;
@@ -180,14 +175,12 @@ public class GlobalManager : MonoBehaviour
     {
         if (pause)
         {
-            UnPauseShader(waterMaterial);
-            UnPauseShader(underSurfaceMaterial);
+            UnPauseShaders();
             entitiesManagerScript.entitiesMovement = true;
         }
         else
         {
-            PauseShader(waterMaterial);
-            PauseShader(underSurfaceMaterial);
+            PauseShaders();
             entitiesManagerScript.entitiesMovement = false;
         }
 
@@ -197,31 +190,25 @@ public class GlobalManager : MonoBehaviour
         playIcon.SetActive(pause);
     }
 
-    private void PauseShader(Material shader)
+    private void PauseShaders()
     {
-        float currentTimeOffset = shader.GetFloat(Constants.shaderTimeOffsetReference);
-        shader.SetInt(Constants.shaderPauseReference, 1);
-        shader.SetFloat(Constants.shaderTimeOffsetReference, Time.time + currentTimeOffset);
+        float currentTimeOffset = Shader.GetGlobalFloat(Constants.shaderTimeOffsetReference);
+        Shader.SetGlobalInt(Constants.shaderPauseReference, 1);
+        Shader.SetGlobalFloat(Constants.shaderTimeOffsetReference, Time.time + currentTimeOffset);
     }
 
-    private void UnPauseShader(Material shader)
+    private void UnPauseShaders()
     {
-        float currentTimeOffset = shader.GetFloat(Constants.shaderTimeOffsetReference);
+        float currentTimeOffset = Shader.GetGlobalFloat(Constants.shaderTimeOffsetReference);
         float timeDiff = Time.time - currentTimeOffset;
 
-        shader.SetInt(Constants.shaderPauseReference, 0);
-        shader.SetFloat(Constants.shaderTimeOffsetReference, -timeDiff);
-    }
-
-    private void RestoreShaderValues(Material shader)
-    {
-        shader.SetInt(Constants.shaderPauseReference, 0);
-        shader.SetFloat(Constants.shaderTimeOffsetReference, 0f);
+        Shader.SetGlobalInt(Constants.shaderPauseReference, 0);
+        Shader.SetGlobalFloat(Constants.shaderTimeOffsetReference, -timeDiff);
     }
 
     private void OnApplicationQuit()
     {
-        RestoreShaderValues(waterMaterial);
-        RestoreShaderValues(underSurfaceMaterial);
+        Shader.SetGlobalInt(Constants.shaderPauseReference, 0);
+        Shader.SetGlobalFloat(Constants.shaderTimeOffsetReference, 0f);
     }
 }
