@@ -2289,7 +2289,7 @@ MonoBehaviour:
     averageHuntingTime: 6
     probaChillingAfterHunting: 0.03333333
     probaHuntingAfterAttacking: 0.8
-    nbPreysToAttack: 180
+    percentagePreysToAttack: 0.15
     chillingVelocity: 6
     huntingVelocity: 8
     attackingVelocity: 20

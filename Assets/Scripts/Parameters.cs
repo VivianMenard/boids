@@ -226,8 +226,8 @@ public class PredatorsParameters : EntityParameters
     public float probaChillingAfterHunting;
     [Range(0, 1), Tooltip("Probability for the predator to enter HUNTING state again after exiting ATTACKING state")]
     public float probaHuntingAfterAttacking;
-    [Range(0, 500), Tooltip("Number of prey in predator FOV needed to switch from HUNTING state to ATTACKING state")]
-    public int nbPreysToAttack;
+    [Range(0, 1), Tooltip("Percentage of preys in predator FOV needed to switch from HUNTING state to ATTACKING state")]
+    public float percentagePreysToAttack;
 
     [Space, Range(0, 50), Tooltip("In u/s")]
     public float chillingVelocity;

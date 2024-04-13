@@ -115,14 +115,18 @@ public class PredatorScript : EntityScript
                 break;
 
             case State.HUNTING:
-                if (nbPreysInFOV > predatorsParams.nbPreysToAttack)
+                if (nbPreysInFOV > (predatorsParams.percentagePreysToAttack *
+                    entitiesManager.numberOfBoids)
+                )
                     state = State.ATTACKING;
                 else if (Bernoulli(predatorsParams.probaChillingAfterHunting))
                     state = State.CHILLING;
                 break;
 
             case State.ATTACKING:
-                if (nbPreysInFOV < predatorsParams.nbPreysToAttack)
+                if (nbPreysInFOV < (predatorsParams.percentagePreysToAttack *
+                    entitiesManager.numberOfBoids)
+                )
                 {
                     if (Bernoulli(predatorsParams.probaHuntingAfterAttacking))
                         state = State.HUNTING;
