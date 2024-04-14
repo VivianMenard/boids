@@ -10,7 +10,10 @@ public class ShadersSharedParameters : MonoBehaviour
 
     private Dictionary<Type, Action<string, object>> TypeToSetGlobalVar = new Dictionary<Type, Action<string, object>>
     {
-        { typeof(float), (name, value) => Shader.SetGlobalFloat(name, (float)value) }
+        { typeof(float), (name, value) => Shader.SetGlobalFloat(name, (float)value) },
+        { typeof(Vector2), (name, value) => Shader.SetGlobalVector(name, (Vector2)value) },
+        { typeof(Vector3), (name, value) => Shader.SetGlobalVector(name, (Vector3)value) },
+        { typeof(Color), (name, value) => Shader.SetGlobalColor(name, (Color)value) }
     };
 
     private void Awake()

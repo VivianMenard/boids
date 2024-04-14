@@ -313,4 +313,27 @@ public class SharedParameters
     public float amplitudeFactor;
     [Range(0, 1)]
     public float lateralMovementsStrengh;
+
+    [Space, Range(0, 1)]
+    public float causticsIntensity;
+    public Vector3 causticsProjectionDirection;
+    public Color causticsColor;
+    [Range(0, 5)]
+    public float causticsCellsDensity;
+    [Range(0, 10)]
+    public float causticsSpeed;
+    [Range(0, 50)]
+    public float causticsNoiseTiling;
+    [Range(0, 5)]
+    public float causticsNoiseStrengh;
+    [Range(0, 5)]
+    public float causticsNoiseSpeed;
+    public Vector2 causticsLayerOffset;
+    [Range(0, 2)]
+    public float causticsIntensityNoiseCellsDensity;
+    [Range(0, 5)]
+    public float causticsIntensityNoiseSpeed;
+    [Range(0, 0.5f)]
+    public float causticsIntensityNoiseAmplitude;
+
 }
