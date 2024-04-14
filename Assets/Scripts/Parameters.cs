@@ -299,7 +299,7 @@ public class PredatorsParameters : EntityParameters
 [System.Serializable]
 public class SharedParameters
 {
-    [Range(0, 10)]
+    [Range(0, 20)]
     public float baseSpacialFrequency;
     [Range(0, 5)]
     public float baseSpeed;

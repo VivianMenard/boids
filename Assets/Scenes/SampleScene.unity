@@ -3000,13 +3000,13 @@ MonoBehaviour:
     speedFactor: 1.11
     amplitudeFactor: 0.78
     lateralMovementsStrengh: 0.045
-    causticsIntensity: 0.6
+    causticsIntensity: 0.7
     causticsProjectionDirection: {x: 0, y: -1, z: 0}
     causticsColor: {r: 0.9529412, g: 0.9529412, b: 0.7764706, a: 0}
-    causticsCellsDensity: 0.42
+    causticsCellsDensity: 0.35
     causticsSpeed: 3
     causticsNoiseTiling: 12
-    causticsNoiseStrengh: 1.5
+    causticsNoiseStrengh: 1.6
     causticsNoiseSpeed: 1.5
     causticsLayerOffset: {x: -40, y: -8}
     causticsIntensityNoiseCellsDensity: 0.1
