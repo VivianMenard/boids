@@ -351,7 +351,7 @@ public class SharedParameters
     public float causticsIntensityNoiseCellsDensity;
     [Range(0, 5)]
     public float causticsIntensityNoiseSpeed;
-    [Range(0, 0.5f)]
-    public float causticsIntensityNoiseAmplitude;
+    [Range(0, 1)]
+    public float causticsIntensityNoiseStrengh;
 
 }

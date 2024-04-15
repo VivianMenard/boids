@@ -1003,10 +1003,10 @@
     "m_Guid": {
         "m_GuidSerialized": "5cde4910-56e1-46a3-a197-14b5f74a09cf"
     },
-    "m_Name": "causticsIntensityNoiseAmplitude",
+    "m_Name": "causticsIntensityNoiseStrengh",
     "m_DefaultRefNameVersion": 1,
-    "m_RefNameGeneratedByDisplayName": "causticsIntensityNoiseAmplitude",
-    "m_DefaultReferenceName": "_causticsIntensityNoiseAmplitude",
+    "m_RefNameGeneratedByDisplayName": "causticsIntensityNoiseStrengh",
+    "m_DefaultReferenceName": "_causticsIntensityNoiseStrengh",
     "m_OverrideReferenceName": "",
     "m_GeneratePropertyBlock": false,
     "m_UseCustomSlotLabel": false,
@@ -1909,7 +1909,7 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "99d85443295a48fcba16ae283969416a",
     "m_Id": 0,
-    "m_DisplayName": "causticsIntensityNoiseAmplitude",
+    "m_DisplayName": "causticsIntensityNoiseStrengh",
     "m_SlotType": 1,
     "m_Hidden": false,
     "m_ShaderOutputName": "Out",
@@ -2768,10 +2768,10 @@
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "e2e00e45b0aa4cb09fdfd6e388f41234",
     "m_Id": -122357736,
-    "m_DisplayName": "intensityNoiseAmplitude",
+    "m_DisplayName": "intensityNoiseStrengh",
     "m_SlotType": 0,
     "m_Hidden": false,
-    "m_ShaderOutputName": "_intensityNoiseAmplitude",
+    "m_ShaderOutputName": "_intensityNoiseStrengh",
     "m_StageCapability": 2,
     "m_Value": 0.30000001192092898,
     "m_DefaultValue": 0.0,
@@ -2833,10 +2833,10 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -1000.8001098632813,
-            "y": 807.2000122070313,
-            "width": 235.2000732421875,
-            "height": 33.60003662109375
+            "x": -989.5999755859375,
+            "y": 807.2000732421875,
+            "width": 224.0,
+            "height": 33.5999755859375
         }
     },
     "m_Slots": [

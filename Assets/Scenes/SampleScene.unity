@@ -3001,7 +3001,7 @@ MonoBehaviour:
     speedFactor: 1.11
     amplitudeFactor: 0.78
     lateralMovementsStrengh: 0.045
-    causticsIntensity: 0.7
+    causticsIntensity: 0.55
     causticsProjectionDirection: {x: 0, y: -1, z: 0}
     causticsColor: {r: 0.9529412, g: 0.9529412, b: 0.7764706, a: 0}
     causticsCellsDensity: 0.35
@@ -3012,7 +3012,7 @@ MonoBehaviour:
     causticsLayerOffset: {x: -40, y: -8}
     causticsIntensityNoiseCellsDensity: 0.1
     causticsIntensityNoiseSpeed: 2
-    causticsIntensityNoiseAmplitude: 0.3
+    causticsIntensityNoiseStrengh: 0.7
 --- !u!4 &1473159636
 Transform:
   m_ObjectHideFlags: 0
