@@ -79,11 +79,11 @@ public class GlobalManager : MonoBehaviour
     public void AddBoids()
     {
         int newNbBoids = Mathf.Min(
-            entitiesManagerScript.numberOfBoids + nbBoidsStep,
+            entitiesManagerScript.NumberOfBoids + nbBoidsStep,
             maxNbBoidsInUi
         );
 
-        entitiesManagerScript.numberOfBoids = newNbBoids;
+        entitiesManagerScript.NumberOfBoids = newNbBoids;
         UpdateNbBoidsDisplay();
         UpdateBoidsButtonsInteractivity();
     }
@@ -91,11 +91,11 @@ public class GlobalManager : MonoBehaviour
     public void RemoveBoids()
     {
         int newNbBoids = Mathf.Max(
-            entitiesManagerScript.numberOfBoids - nbBoidsStep,
+            entitiesManagerScript.NumberOfBoids - nbBoidsStep,
             0
         );
 
-        entitiesManagerScript.numberOfBoids = newNbBoids;
+        entitiesManagerScript.NumberOfBoids = newNbBoids;
         UpdateNbBoidsDisplay();
         UpdateBoidsButtonsInteractivity();
     }
@@ -103,11 +103,11 @@ public class GlobalManager : MonoBehaviour
     public void AddPredators()
     {
         int newNbPredators = Mathf.Min(
-            entitiesManagerScript.numberOfPredators + nbPredatorsStep,
+            entitiesManagerScript.NumberOfPredators + nbPredatorsStep,
             maxNbPredatorsInUi
         );
 
-        entitiesManagerScript.numberOfPredators = newNbPredators;
+        entitiesManagerScript.NumberOfPredators = newNbPredators;
         UpdateNbPredatorsDisplay();
         UpdatePredatorsButtonsInteractivity();
     }
@@ -115,30 +115,30 @@ public class GlobalManager : MonoBehaviour
     public void RemovePredators()
     {
         int newNbPredators = Mathf.Max(
-            entitiesManagerScript.numberOfPredators - nbPredatorsStep,
+            entitiesManagerScript.NumberOfPredators - nbPredatorsStep,
             0
         );
 
-        entitiesManagerScript.numberOfPredators = newNbPredators;
+        entitiesManagerScript.NumberOfPredators = newNbPredators;
         UpdateNbPredatorsDisplay();
         UpdatePredatorsButtonsInteractivity();
     }
 
     public void UpdateBoidsButtonsInteractivity()
     {
-        addBoidsButton.interactable = entitiesManagerScript.numberOfBoids < maxNbBoidsInUi;
-        removeBoidsButton.interactable = entitiesManagerScript.numberOfBoids > 0;
+        addBoidsButton.interactable = entitiesManagerScript.NumberOfBoids < maxNbBoidsInUi;
+        removeBoidsButton.interactable = entitiesManagerScript.NumberOfBoids > 0;
     }
 
     public void UpdatePredatorsButtonsInteractivity()
     {
-        addPredatorsButton.interactable = entitiesManagerScript.numberOfPredators < maxNbPredatorsInUi;
-        removePredatorsButton.interactable = entitiesManagerScript.numberOfPredators > 0;
+        addPredatorsButton.interactable = entitiesManagerScript.NumberOfPredators < maxNbPredatorsInUi;
+        removePredatorsButton.interactable = entitiesManagerScript.NumberOfPredators > 0;
     }
 
     private void UpdateNbBoidsDisplay()
     {
-        int nbBoids = entitiesManagerScript.numberOfBoids;
+        int nbBoids = entitiesManagerScript.NumberOfBoids;
         string formattedNbBoids = (nbBoids > 0) ? nbBoids.ToString(Constants.nbBoidsFormat)
             : nbBoids.ToString();
         string nbFishesDisplayTemplate = (nbBoids > 1) ? Constants.nbFishesDisplayTemplatePlural :
@@ -148,11 +148,11 @@ public class GlobalManager : MonoBehaviour
 
     private void UpdateNbPredatorsDisplay()
     {
-        int nbPredators = entitiesManagerScript.numberOfPredators;
+        int nbPredators = entitiesManagerScript.NumberOfPredators;
         string nbSharksDisplayTemplate = (nbPredators > 1) ? Constants.nbSharksDisplayTemplatePlural :
             Constants.nbSharksDisplayTemplate;
         nbPredatorsDisplay.text = string.Format(
-            nbSharksDisplayTemplate, entitiesManagerScript.numberOfPredators
+            nbSharksDisplayTemplate, entitiesManagerScript.NumberOfPredators
         );
     }
 

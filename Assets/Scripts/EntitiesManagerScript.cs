@@ -14,10 +14,10 @@ public class EntitiesManagerScript : MonoBehaviour
     [HideInInspector]
     public long clock = 0;
 
-    [Space, Range(0, 3000)]
-    public int numberOfBoids;
-    [Range(0, 10)]
-    public int numberOfPredators;
+    [Space, SerializeField, Range(0, 3000)]
+    private int numberOfBoids;
+    [SerializeField, Range(0, 10)]
+    private int numberOfPredators;
 
     private int currentNbBoids = 0, currentNbPredators = 0;
 
@@ -53,6 +53,22 @@ public class EntitiesManagerScript : MonoBehaviour
     [HideInInspector]
     public bool entitiesMovement = true;
 
+    public int NumberOfBoids
+    {
+        get { return numberOfBoids; }
+        set
+        {
+            numberOfBoids = value;
+            predatorsParams.UpdateNbPreysToAttack(value);
+        }
+    }
+
+    public int NumberOfPredators
+    {
+        get { return numberOfPredators; }
+        set { numberOfPredators = value; }
+    }
+
     private void Awake()
     {
         PreCalculateParameters();
@@ -74,17 +90,24 @@ public class EntitiesManagerScript : MonoBehaviour
 
     private void PreCalculateParameters()
     {
-        boidsParams.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
-        predatorsParams.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
+        boidsParams.PreCalculateParameters(
+            calculationInterval, smoothnessRadiusOffset, numberOfBoids
+        );
+        predatorsParams.PreCalculateParameters(
+            calculationInterval, smoothnessRadiusOffset, numberOfBoids
+        );
 
         for (
             int visionDistance = 1;
-            visionDistance <= Mathf.Max(boidsParams.visionDistance, predatorsParams.visionDistance);
+            visionDistance <= Mathf.Max(
+                boidsParams.visionDistance, predatorsParams.visionDistance
+            );
             visionDistance++
         )
         {
             visionDistanceSmoothRangeSizeInverses[visionDistance] = 1 /
-                (MathHelpers.Square(visionDistance - smoothnessRadiusOffset) - MathHelpers.Square(visionDistance));
+                (MathHelpers.Square(visionDistance - smoothnessRadiusOffset) -
+                MathHelpers.Square(visionDistance));
         }
     }
 

@@ -2290,6 +2290,7 @@ MonoBehaviour:
     probaChillingAfterHunting: 0.03333333
     probaHuntingAfterAttacking: 0.8
     percentagePreysToAttack: 0.15
+    nbPreysToAttack: 180
     chillingVelocity: 6
     huntingVelocity: 8
     attackingVelocity: 20

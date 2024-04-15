@@ -75,7 +75,9 @@ public abstract class EntityParameters
     [HideInInspector]
     public float[] avoidanceDirectionPreferences;
 
-    public virtual void PreCalculateParameters(int calculationInterval, float smoothnessRadiusOffset)
+    public virtual void PreCalculateParameters(
+        int calculationInterval, float smoothnessRadiusOffset, int nbBoids
+    )
     {
         cosVisionSemiAngle = Mathf.Cos(visionSemiAngle * Mathf.Deg2Rad);
 
@@ -97,7 +99,10 @@ public abstract class EntityParameters
 
             for (int boneIndex = 0; boneIndex < bones.Length; boneIndex++)
             {
-                boneBaseDistanceToHead[boneIndex] = Vector3.Distance(headPosition, bones[boneIndex].position);
+                boneBaseDistanceToHead[boneIndex] = Vector3.Distance(
+                    headPosition,
+                    bones[boneIndex].position
+                );
                 boneBaseRotation[boneIndex] = bones[boneIndex].rotation;
             }
 
@@ -160,7 +165,9 @@ public class BoidsParameters : EntityParameters
     [Range(0, 50), Tooltip("In u/s")]
     public float afraidVelocity;
 
-    public override void PreCalculateParameters(int calculationInterval, float smoothnessRadiusOffset)
+    public override void PreCalculateParameters(
+        int calculationInterval, float smoothnessRadiusOffset, int nbBoids
+    )
     {
         squaredSeparationRadius = MathHelpers.Square(separationRadius);
         squaredFullSeparationRadius = MathHelpers.Square(
@@ -190,7 +197,7 @@ public class BoidsParameters : EntityParameters
 
         avoidanceDirectionPreferences = new float[8] { 1, 1, 1, 1, 1, 1, 1, 1 };
 
-        base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
+        base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset, nbBoids);
     }
 }
 
@@ -228,6 +235,8 @@ public class PredatorsParameters : EntityParameters
     public float probaHuntingAfterAttacking;
     [Range(0, 1), Tooltip("Percentage of preys in predator FOV needed to switch from HUNTING state to ATTACKING state")]
     public float percentagePreysToAttack;
+    [HideInInspector]
+    public int nbPreysToAttack;
 
     [Space, Range(0, 50), Tooltip("In u/s")]
     public float chillingVelocity;
@@ -249,7 +258,9 @@ public class PredatorsParameters : EntityParameters
     [Range(0, 1)]
     public float velocityImpactOnWaves;
 
-    public override void PreCalculateParameters(int calculationInterval, float smoothnessRadiusOffset)
+    public override void PreCalculateParameters(
+        int calculationInterval, float smoothnessRadiusOffset, int nbBoids
+    )
     {
         squaredPeerRepulsionRadius = MathHelpers.Square(peerRepulsionRadius);
         squaredFullPeerRepulsionRadius = MathHelpers.Square(
@@ -287,7 +298,14 @@ public class PredatorsParameters : EntityParameters
             verticalPreference // up preference
         };
 
-        base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset);
+        UpdateNbPreysToAttack(nbBoids);
+
+        base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset, nbBoids);
+    }
+
+    public void UpdateNbPreysToAttack(int nbBoids)
+    {
+        nbPreysToAttack = (int)Mathf.Max(percentagePreysToAttack * nbBoids, 10);
     }
 
     private float ComputeStateChangeProba(float averageTimeInState, int calculationInterval)
