@@ -321,9 +321,9 @@ public class SharedParameters
     public float baseSpacialFrequency;
     [Range(0, 5)]
     public float baseSpeed;
-    [Range(0, 1)]
+    [Range(0, 0.1f)]
     public float baseAmplitude;
-    [Range(0, 2)]
+    [Range(1, 1.3f)]
     public float spacialFrequencyFactor;
     [Range(0, 2)]
     public float speedFactor;

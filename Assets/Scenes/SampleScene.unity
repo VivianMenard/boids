@@ -2922,10 +2922,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   sharedParameters:
-    baseSpacialFrequency: 7
+    baseSpacialFrequency: 8.86
     baseSpeed: 0.9
     baseAmplitude: 0.021
-    spacialFrequencyFactor: 1.16
+    spacialFrequencyFactor: 1.145
     speedFactor: 1.11
     amplitudeFactor: 0.78
     lateralMovementsStrengh: 0.045
