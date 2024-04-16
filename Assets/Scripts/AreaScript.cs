@@ -2,8 +2,10 @@ using UnityEngine;
 
 public class AreaScript : MonoBehaviour
 {
-    [HideInInspector]
-    public Vector3 minPt, maxPt;
+    private Vector3 minPt, maxPt;
+
+    public Vector3 MinPt { get { return minPt; } }
+    public Vector3 MaxPt { get { return maxPt; } }
 
     private void Awake()
     {

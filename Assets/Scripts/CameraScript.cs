@@ -37,10 +37,10 @@ public class CameraScript : MonoBehaviour
         initialCenter = area.transform.position + initialOffset;
         center = initialCenter;
 
-        areaMinPtForCamera = area.minPt - margin * Vector3.one;
-        areaMaxPtForCamera = area.maxPt + new Vector3(margin, topMargin, margin);
-        areaMinPtForCenter = area.minPt + margin * Vector3.one;
-        areaMaxPtForCenter = area.maxPt - margin * Vector3.one;
+        areaMinPtForCamera = area.MinPt - margin * Vector3.one;
+        areaMaxPtForCamera = area.MaxPt + new Vector3(margin, topMargin, margin);
+        areaMinPtForCenter = area.MinPt + margin * Vector3.one;
+        areaMaxPtForCenter = area.MaxPt - margin * Vector3.one;
 
         (distance, theta, phi) = MathHelpers.CartesianToSpherical(
             center,
