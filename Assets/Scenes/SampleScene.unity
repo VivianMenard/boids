@@ -2151,20 +2151,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 76656174a1e25294c84c4aebfa0ad7c5, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  TimeScale: 1
+  timeScale: 1
   calculationInterval: 10
   smoothnessRadiusOffset: 1
-  clock: 0
   numberOfBoids: 1200
   numberOfPredators: 1
-  obstacleLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  entitiesLayerMask:
-    serializedVersion: 2
-    m_Bits: 0
-  boidsLayer: 0
-  predatorsLayer: 0
   boidsParams:
     prefab: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
     scaleVariations: 0.2
@@ -2312,7 +2303,15 @@ MonoBehaviour:
     wavesEnveloppeMin: 3
     wavesEnveloppeGradient: 1
     velocityImpactOnWaves: 0.35
-  entitiesMovement: 1
+  EntitiesMovement: 1
+  ObstacleLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  EntitiesLayerMask:
+    serializedVersion: 2
+    m_Bits: 0
+  BoidsLayer: 0
+  PredatorsLayer: 0
 --- !u!4 &1119471559
 Transform:
   m_ObjectHideFlags: 0

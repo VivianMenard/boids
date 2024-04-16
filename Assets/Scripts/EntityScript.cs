@@ -7,7 +7,8 @@ public abstract class EntityScript : MonoBehaviour
     private static int nextId = 0;
 
 
-    public Vector3 Direction;
+    protected Vector3 direction;
+    public Vector3 Direction { get { return direction; } }
 
     protected EntitiesManagerScript entitiesManager;
     protected EntityParameters parameters;
@@ -89,8 +90,8 @@ public abstract class EntityScript : MonoBehaviour
     {
         for (int fakeFrame = 0; fakeFrame < parameters.nbTransformsToStore; fakeFrame++)
         {
-            frameToTransformInfo[entitiesManager.clock - fakeFrame] = (
-                myPosition - velocity * fakeFrame * Time.fixedDeltaTime * Direction,
+            frameToTransformInfo[entitiesManager.Clock - fakeFrame] = (
+                myPosition - velocity * fakeFrame * Time.fixedDeltaTime * direction,
                 myRotation,
                 velocity * Time.fixedDeltaTime
             );
@@ -99,11 +100,11 @@ public abstract class EntityScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (!entitiesManager.entitiesMovement)
+        if (!entitiesManager.EntitiesMovement)
             return;
 
-        if (entitiesManager.clock % entitiesManager.calculationInterval ==
-            id % entitiesManager.calculationInterval)
+        if (entitiesManager.Clock % entitiesManager.CalculationInterval ==
+            id % entitiesManager.CalculationInterval)
         {
             Vector3 optimalDirection = ComputeNewDirection();
             Vector3 adjustedDirection = IterateOnDirectionToAvoidObstacles(
@@ -126,7 +127,7 @@ public abstract class EntityScript : MonoBehaviour
 
         StoreTransformInfo();
 
-        if (!frameToTransformInfo.ContainsKey(entitiesManager.clock - parameters.nbTransformsToStore))
+        if (!frameToTransformInfo.ContainsKey(entitiesManager.Clock - parameters.nbTransformsToStore))
             return;
 
         ComputeBonesPositionsAndRotations();
@@ -135,13 +136,13 @@ public abstract class EntityScript : MonoBehaviour
 
     private void StoreTransformInfo()
     {
-        frameToTransformInfo[entitiesManager.clock] = (
+        frameToTransformInfo[entitiesManager.Clock] = (
             myPosition,
             myRotation,
             velocity * Time.fixedDeltaTime
         );
 
-        frameToTransformInfo.Remove(entitiesManager.clock - parameters.nbTransformsToStore - 1);
+        frameToTransformInfo.Remove(entitiesManager.Clock - parameters.nbTransformsToStore - 1);
     }
 
     private void ApplyBonesPositionsAndRotations()
@@ -172,12 +173,12 @@ public abstract class EntityScript : MonoBehaviour
         while (currentBone < bones.Length)
         {
             (Vector3 pastPosition, Quaternion pastRotation, float frameTraveledDistance) =
-                frameToTransformInfo[entitiesManager.clock - currentFrameOffset];
+                frameToTransformInfo[entitiesManager.Clock - currentFrameOffset];
 
             if (traveledDistance + frameTraveledDistance >= BoneDistanceToHead(currentBone))
             {
                 (Vector3 pastPastPosition, Quaternion pastPastRotation, float _) =
-                    frameToTransformInfo[entitiesManager.clock - currentFrameOffset - 1];
+                    frameToTransformInfo[entitiesManager.Clock - currentFrameOffset - 1];
                 float frameFraction = (BoneDistanceToHead(currentBone) - traveledDistance) /
                     frameTraveledDistance;
                 bonesPositionsAndRotations[currentBone] = (
@@ -224,12 +225,12 @@ public abstract class EntityScript : MonoBehaviour
             {
                 rwState = RwState.DIRECTION_CHANGE;
 
-                rwLastDirection = Direction;
+                rwLastDirection = direction;
                 rwTargetDirection = GetDirectionForRw();
             }
         }
 
-        Vector3 newDirection = Direction;
+        Vector3 newDirection = direction;
 
         if (rwState == RwState.DIRECTION_CHANGE)
         {
@@ -263,7 +264,7 @@ public abstract class EntityScript : MonoBehaviour
         Vector3 TryDirectionForRw()
         {
             Vector3 newDirection = MathHelpers.GetRandomDirection() +
-                Direction * parameters.rwMomentumWeight;
+                direction * parameters.rwMomentumWeight;
             newDirection.y = newDirection.y * parameters.rwVerticalDirFactor;
             return newDirection.normalized;
         }
@@ -366,14 +367,14 @@ public abstract class EntityScript : MonoBehaviour
         return toMin + (clampedValue - fromMin) * (toMax - toMin) / (fromMax - fromMin);
     }
 
-    private bool PerformRaycastOnObstacles(Vector3 direction, out RaycastHit hitInfo)
+    private bool PerformRaycastOnObstacles(Vector3 raycastDirection, out RaycastHit hitInfo)
     {
-        Ray ray = new Ray(myPosition, direction);
+        Ray ray = new Ray(myPosition, raycastDirection);
 
         return Physics.Raycast(
             ray, out hitInfo,
             raycastDistance,
-            entitiesManager.obstacleLayerMask
+            entitiesManager.ObstacleLayerMask
         );
     }
 
@@ -381,7 +382,7 @@ public abstract class EntityScript : MonoBehaviour
     {
         float cosAngle = Vector3.Dot(
             (entityPosition - myPosition).normalized,
-            Direction
+            direction
         );
 
         return cosAngle >= parameters.cosVisionSemiAngle;
@@ -390,7 +391,7 @@ public abstract class EntityScript : MonoBehaviour
     private void SetNewDirectionTarget(Vector3 newDirection, bool initialization = false)
     {
         if (initialization)
-            Direction = newDirection;
+            direction = newDirection;
 
         Quaternion newRotation = Quaternion.LookRotation(newDirection);
 
@@ -410,7 +411,7 @@ public abstract class EntityScript : MonoBehaviour
         return Physics.OverlapSphere(
             myPosition,
             visionDistance,
-            entitiesManager.entitiesLayerMask
+            entitiesManager.EntitiesLayerMask
         );
     }
 
@@ -466,7 +467,7 @@ public abstract class EntityScript : MonoBehaviour
         return InverseLerpOpti(
             MathHelpers.Square(visionDistance),
             MathHelpers.Square(visionDistance - 1),
-            entitiesManager.visionDistanceSmoothRangeSizeInverses[visionDistance],
+            entitiesManager.VisionDistanceSmoothRangeSizeInverses[visionDistance],
             squaredDistance
         );
     }
@@ -474,7 +475,7 @@ public abstract class EntityScript : MonoBehaviour
     private void UpdateDirectionAndRotation()
     {
         float rotationProgress = (float)sinceLastCalculation /
-            (float)entitiesManager.calculationInterval;
+            (float)entitiesManager.CalculationInterval;
 
         Quaternion newRotation = Quaternion.Slerp(
             lastRotation, targetRotation, rotationProgress);
@@ -482,7 +483,7 @@ public abstract class EntityScript : MonoBehaviour
         transform.rotation = newRotation;
         myRotation = newRotation;
 
-        Direction = MathHelpers.RotationToDirection(newRotation);
+        direction = MathHelpers.RotationToDirection(newRotation);
         // the direction is based on the rotation and not the contrary, it's intentionnal.
         // It allows the rotation twists to be smooth, what wouldn't be the case if the lerp
         // was on the direction and the rotation was based on the result
@@ -492,7 +493,7 @@ public abstract class EntityScript : MonoBehaviour
 
     private void Move()
     {
-        Vector3 newPosition = myPosition + velocity * Time.fixedDeltaTime * Direction;
+        Vector3 newPosition = myPosition + velocity * Time.fixedDeltaTime * direction;
 
         transform.position = newPosition;
         myPosition = newPosition;
@@ -501,7 +502,7 @@ public abstract class EntityScript : MonoBehaviour
     private void AdaptVelocity()
     {
         float velocityGoal = parameters.velocities[state] * randomBonusVelocityFactor;
-        float acceleration = (entitiesManager.isItEmergencyState[state]) ?
+        float acceleration = (entitiesManager.IsItEmergencyState[state]) ?
             parameters.emergencyAcceleration : parameters.acceleration;
         float velocityStep = acceleration * Time.fixedDeltaTime;
 

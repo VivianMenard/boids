@@ -3,55 +3,20 @@ using UnityEngine;
 
 public class EntitiesManagerScript : MonoBehaviour
 {
-    [Range(0, 3)]
-    public float TimeScale;
+    [SerializeField, Range(0, 3)]
+    private float timeScale;
 
-    [Range(1, 15), Space, Tooltip("Number of FixedUpdates between velocity calculations")]
-    public int calculationInterval;
-    [Range(0, 1), Tooltip("Size of the smoothing zone between two behaviors")]
-    public float smoothnessRadiusOffset;
+    [SerializeField, Range(1, 15), Space, Tooltip("Number of FixedUpdates between velocity calculations")]
+    private int calculationInterval;
+    public int CalculationInterval { get { return calculationInterval; } }
 
-    [HideInInspector]
-    public long clock = 0;
+    [SerializeField, Range(0, 1), Tooltip("Size of the smoothing zone between two behaviors")]
+    private float smoothnessRadiusOffset;
 
     [Space, SerializeField, Range(0, 3000)]
     private int numberOfBoids;
     [SerializeField, Range(0, 10)]
     private int numberOfPredators;
-
-    private int currentNbBoids = 0, currentNbPredators = 0;
-
-    [HideInInspector]
-    public LayerMask obstacleLayerMask, entitiesLayerMask;
-    [HideInInspector]
-    public int boidsLayer, predatorsLayer;
-
-    [HideInInspector]
-    public Dictionary<State, bool> isItEmergencyState = new Dictionary<State, bool>{
-        {State.NORMAL, false},
-        {State.ALONE, false},
-        {State.AFRAID, true},
-        {State.CHILLING, false},
-        {State.HUNTING, false},
-        {State.ATTACKING, true}
-    };
-
-    [HideInInspector]
-    public Dictionary<int, float> visionDistanceSmoothRangeSizeInverses = new Dictionary<int, float>();
-
-    private AreaScript area;
-
-    private List<GameObject> boids = new List<GameObject>(),
-        predators = new List<GameObject>();
-
-    [Space]
-    public BoidsParameters boidsParams;
-
-    [Space]
-    public PredatorsParameters predatorsParams;
-
-    [HideInInspector]
-    public bool entitiesMovement = true;
 
     public int NumberOfBoids
     {
@@ -69,6 +34,43 @@ public class EntitiesManagerScript : MonoBehaviour
         set { numberOfPredators = value; }
     }
 
+    private int currentNbBoids = 0, currentNbPredators = 0;
+
+    [Space]
+    public BoidsParameters boidsParams;
+
+    [Space]
+    public PredatorsParameters predatorsParams;
+
+    private long clock = 0;
+    public long Clock { get { return clock; } }
+
+    [HideInInspector]
+    public bool EntitiesMovement = true;
+
+    [HideInInspector]
+    public LayerMask ObstacleLayerMask, EntitiesLayerMask;
+    [HideInInspector]
+    public int BoidsLayer, PredatorsLayer;
+
+    [HideInInspector]
+    public Dictionary<State, bool> IsItEmergencyState = new Dictionary<State, bool>{
+        {State.NORMAL, false},
+        {State.ALONE, false},
+        {State.AFRAID, true},
+        {State.CHILLING, false},
+        {State.HUNTING, false},
+        {State.ATTACKING, true}
+    };
+
+    [HideInInspector]
+    public Dictionary<int, float> VisionDistanceSmoothRangeSizeInverses = new Dictionary<int, float>();
+
+    private AreaScript area;
+
+    private List<GameObject> boids = new List<GameObject>(),
+        predators = new List<GameObject>();
+
     private void Awake()
     {
         PreCalculateParameters();
@@ -79,13 +81,13 @@ public class EntitiesManagerScript : MonoBehaviour
     {
         area = GameObject.FindGameObjectWithTag(Constants.areaTag).
             GetComponent<AreaScript>();
-        obstacleLayerMask = LayerMask.GetMask(Constants.obstaclesLayerName);
-        entitiesLayerMask = LayerMask.GetMask(
+        ObstacleLayerMask = LayerMask.GetMask(Constants.obstaclesLayerName);
+        EntitiesLayerMask = LayerMask.GetMask(
             Constants.boidsLayerName,
             Constants.predatorsLayerName
         );
-        boidsLayer = LayerMask.NameToLayer(Constants.boidsLayerName);
-        predatorsLayer = LayerMask.NameToLayer(Constants.predatorsLayerName);
+        BoidsLayer = LayerMask.NameToLayer(Constants.boidsLayerName);
+        PredatorsLayer = LayerMask.NameToLayer(Constants.predatorsLayerName);
     }
 
     private void PreCalculateParameters()
@@ -105,7 +107,7 @@ public class EntitiesManagerScript : MonoBehaviour
             visionDistance++
         )
         {
-            visionDistanceSmoothRangeSizeInverses[visionDistance] = 1 /
+            VisionDistanceSmoothRangeSizeInverses[visionDistance] = 1 /
                 (MathHelpers.Square(visionDistance - smoothnessRadiusOffset) -
                 MathHelpers.Square(visionDistance));
         }
@@ -113,7 +115,7 @@ public class EntitiesManagerScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        if (entitiesMovement)
+        if (EntitiesMovement)
             clock++;
 
         AdjustNbEntities(
@@ -223,7 +225,7 @@ public class EntitiesManagerScript : MonoBehaviour
 
     private void OnValidate()
     {
-        Time.timeScale = TimeScale;
+        Time.timeScale = timeScale;
 
         CheckBoundsForDynamicRangeParameters();
         PreCalculateParameters();

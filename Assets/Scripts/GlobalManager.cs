@@ -176,12 +176,12 @@ public class GlobalManager : MonoBehaviour
         if (pause)
         {
             UnPauseShaders();
-            entitiesManagerScript.entitiesMovement = true;
+            entitiesManagerScript.EntitiesMovement = true;
         }
         else
         {
             PauseShaders();
-            entitiesManagerScript.entitiesMovement = false;
+            entitiesManagerScript.EntitiesMovement = false;
         }
 
         pause = !pause;

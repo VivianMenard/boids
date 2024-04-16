@@ -35,7 +35,7 @@ public class BoidScript : EntityScript
             float squaredDistance = (entityPosition - myPosition).sqrMagnitude;
             int entityLayer = entityCollider.gameObject.layer;
 
-            if (entityLayer == entitiesManager.boidsLayer)
+            if (entityLayer == entitiesManager.BoidsLayer)
             {
                 nbBoidsNearby++;
 
@@ -65,7 +65,7 @@ public class BoidScript : EntityScript
                     alignmentDirectionSum += boidAlignmentWeight * boidScript.Direction;
                 }
             }
-            else if (entityLayer == entitiesManager.predatorsLayer)
+            else if (entityLayer == entitiesManager.PredatorsLayer)
             {
                 float predatorWeight = GetEntityFearWeight(squaredDistance);
 
@@ -94,7 +94,7 @@ public class BoidScript : EntityScript
             weightedNbPredators;
 
         if (weightSum < Mathf.Epsilon)
-            return Direction;
+            return direction;
 
         Vector3 separationDirection = GetIdealDirectionForBehavior(
                 Behavior.SEPARATION, separationPositionSum, weightedNbBoidsSeparation),
@@ -115,7 +115,7 @@ public class BoidScript : EntityScript
                 weightedNbPredators, boidsParams.fearBaseWeight);
 
         return (
-            boidsParams.momentumWeight * Direction +
+            boidsParams.momentumWeight * direction +
             separationWeight * separationDirection +
             alignmentWeight * alignmentDirection +
             cohesionWeight * cohesionDirection +
