@@ -150,7 +150,7 @@ Material:
     - _minDepth: 0.05
     - _refractionSpeed: 0.05
     - _refractionStrengh: 0.08
-    - _sideSmoothness: 1
+    - _sideSmoothness: 0.85
     - _smoothness: 1
     - _speed: 0.02
     - _waveScales: 5
