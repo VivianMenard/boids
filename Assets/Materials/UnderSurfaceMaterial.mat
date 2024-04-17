@@ -138,6 +138,15 @@ Material:
     - _ZTest: 4
     - _ZWrite: 1
     - _ZWriteControl: 0
+    - _lightEnhanceLowAngles: 1.3
+    - _lightGradientSize: 0.2
+    - _lightLowAnglesTreshold: 0.2
+    - _lightNoiseDeformation: 2.2
+    - _lightNoiseStrengh: 0.536
+    - _lightNoiseTiling: 20
+    - _lightStrengh: 0.85
+    - _lowAnglesTreshold: 0.2
+    - _minValueForLight: 0.8
     - _smoothness: 1
     - _wavesAmplitude: 0.05
     - _wavesScale: 5
@@ -147,5 +156,6 @@ Material:
     - _Color: {r: 0.07924521, g: 0.07159673, b: 0.06504088, a: 1}
     - _EmissionColor: {r: 0, g: 0, b: 0, a: 1}
     - _SpecColor: {r: 0.2, g: 0.2, b: 0.2, a: 1}
+    - _lightColor: {r: 0.7058824, g: 0.91764706, b: 0.9490196, a: 0}
     - _mainColor: {r: 0.7059096, g: 0.91933733, b: 0.94716984, a: 0}
   m_BuildTextureStacks: []
