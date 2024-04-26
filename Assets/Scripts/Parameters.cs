@@ -11,8 +11,10 @@ public abstract class EntityParameters
     [Space, Range(0, 1)]
     public float scaleVariations;
 
-    [Space, Range(0, 30), Tooltip("Minimum distance of the border at which entities will spawn")]
-    public float spawnMargin;
+    [Space]
+    public GameObject spawnAreaGO;
+    [HideInInspector]
+    public AreaScript spawnArea;
 
     [Space, Range(0, 30)]
     public float raycastBaseDistance;
@@ -79,6 +81,8 @@ public abstract class EntityParameters
         int calculationInterval, float smoothnessRadiusOffset, int nbBoids
     )
     {
+        spawnArea = spawnAreaGO.GetComponent<AreaScript>();
+
         cosVisionSemiAngle = Mathf.Cos(visionSemiAngle * Mathf.Deg2Rad);
 
         nbCalculationsBetweenVelocityBonusFactorChange = (int)(
@@ -317,11 +321,11 @@ public class PredatorsParameters : EntityParameters
 [System.Serializable]
 public class SharedParameters
 {
-    [Range(0, 20)]
+    [Range(0, 0.4f)]
     public float baseSpacialFrequency;
     [Range(0, 5)]
     public float baseSpeed;
-    [Range(0, 0.1f)]
+    [Range(0, 5)]
     public float baseAmplitude;
     [Range(1, 1.3f)]
     public float spacialFrequencyFactor;
@@ -329,7 +333,7 @@ public class SharedParameters
     public float speedFactor;
     [Range(0, 1)]
     public float amplitudeFactor;
-    [Range(0, 1)]
+    [Range(0, 5)]
     public float lateralMovementsStrengh;
 
     [Space, Range(0, 1)]

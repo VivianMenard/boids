@@ -66,8 +66,6 @@ public class EntitiesManagerScript : MonoBehaviour
     [HideInInspector]
     public Dictionary<int, float> VisionDistanceSmoothRangeSizeInverses = new Dictionary<int, float>();
 
-    private AreaScript area;
-
     private List<GameObject> boids = new List<GameObject>(),
         predators = new List<GameObject>();
 
@@ -79,8 +77,6 @@ public class EntitiesManagerScript : MonoBehaviour
 
     void Start()
     {
-        area = GameObject.FindGameObjectWithTag(Constants.areaTag).
-            GetComponent<AreaScript>();
         ObstacleLayerMask = LayerMask.GetMask(Constants.obstaclesLayerName);
         EntitiesLayerMask = LayerMask.GetMask(
             Constants.boidsLayerName,
@@ -210,16 +206,13 @@ public class EntitiesManagerScript : MonoBehaviour
 
     private Vector3 GetRandomSpawnablePositionInArea(EntityType type)
     {
-        float obstacleMargin = (type == EntityType.BOID) ?
-            boidsParams.spawnMargin : predatorsParams.spawnMargin;
-
-        Vector3 minPtToSpawn = area.MinPt + obstacleMargin * Vector3.one;
-        Vector3 maxPtToSpawn = area.MaxPt - obstacleMargin * Vector3.one;
+        AreaScript spawnArea = (type == EntityType.BOID) ?
+            boidsParams.spawnArea : predatorsParams.spawnArea;
 
         return new Vector3(
-            UnityEngine.Random.Range(minPtToSpawn.x, maxPtToSpawn.x),
-            UnityEngine.Random.Range(minPtToSpawn.y, maxPtToSpawn.y),
-            UnityEngine.Random.Range(minPtToSpawn.z, maxPtToSpawn.z)
+            UnityEngine.Random.Range(spawnArea.MinPt.x, spawnArea.MaxPt.x),
+            UnityEngine.Random.Range(spawnArea.MinPt.y, spawnArea.MaxPt.y),
+            UnityEngine.Random.Range(spawnArea.MinPt.z, spawnArea.MaxPt.z)
         );
     }
 

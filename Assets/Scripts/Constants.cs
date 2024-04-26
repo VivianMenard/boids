@@ -30,7 +30,6 @@ public enum RwState
 
 public static class Constants
 {
-    public const string areaTag = "Area";
     public const string entitiesManagerTag = "EntitiesManager";
 
     public const string obstaclesLayerName = "Obstacles";

@@ -3,6 +3,8 @@ using UnityEngine;
 public class CameraScript : MonoBehaviour
 {
     [SerializeField]
+    private GameObject cameraExclusionArea;
+    [SerializeField]
     private Vector3 initialOffset;
     [SerializeField, Range(0, 0.05f)]
     private float dragSpeed;
@@ -14,8 +16,6 @@ public class CameraScript : MonoBehaviour
     private float maxDistance;
     [SerializeField, Range(0, 5)]
     private float margin;
-    [SerializeField, Range(0, 10)]
-    private float topMargin;
 
     private Vector3 initialCenter;
 
@@ -31,14 +31,13 @@ public class CameraScript : MonoBehaviour
 
     void Start()
     {
-        AreaScript area = GameObject.FindGameObjectWithTag(Constants.areaTag).
-            GetComponent<AreaScript>();
+        AreaScript area = cameraExclusionArea.GetComponent<AreaScript>();
 
         initialCenter = area.transform.position + initialOffset;
         center = initialCenter;
 
         areaMinPtForCamera = area.MinPt - margin * Vector3.one;
-        areaMaxPtForCamera = area.MaxPt + new Vector3(margin, topMargin, margin);
+        areaMaxPtForCamera = area.MaxPt + margin * Vector3.one;
         areaMinPtForCenter = area.MinPt + margin * Vector3.one;
         areaMaxPtForCenter = area.MaxPt - margin * Vector3.one;
 
