@@ -5102,6 +5102,12 @@ MonoBehaviour:
     speedFactor: 1.11
     amplitudeFactor: 0.78
     lateralMovementsStrengh: 2.25
+    maxDistance: 90
+    fogColor: {r: 0.023529412, g: 0.7882353, b: 0.8117647, a: 0}
+    fogStrengh: 1
+    absportionComplementaryColor: {r: 0.34509805, g: 0.45882353, b: 0.8862745, a: 0}
+    absorptionStrengh: 0.92
+    minDepth: 0.05
     causticsIntensity: 0.55
     causticsProjectionDirection: {x: 0, y: -1, z: 0}
     causticsColor: {r: 0.9529412, g: 0.9529412, b: 0.7764706, a: 0}

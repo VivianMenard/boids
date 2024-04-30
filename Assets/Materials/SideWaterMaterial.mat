@@ -8,7 +8,7 @@ Material:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_Name: SideWaterMaterial
-  m_Shader: {fileID: -6465566751694194690, guid: 07edab7837da55242aae44e3efeb1250, type: 3}
+  m_Shader: {fileID: -6465566751694194690, guid: c3b338aa48089d54c8998eac8b5b2c58, type: 3}
   m_Parent: {fileID: 0}
   m_ModifiedSerializedProperties: 0
   m_ValidKeywords: []
@@ -151,7 +151,7 @@ Material:
     - _refractionSpeed: 0.05
     - _refractionStrengh: 0.08
     - _sideSmoothness: 0.75
-    - _smoothness: 1
+    - _smoothness: 0.75
     - _speed: 0.02
     - _waveScales: 5
     - _wavesAmplitude: 0.05

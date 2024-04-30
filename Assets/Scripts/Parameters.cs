@@ -336,6 +336,17 @@ public class SharedParameters
     [Range(0, 5)]
     public float lateralMovementsStrengh;
 
+    [Space, Range(0, 150)]
+    public float maxDistance;
+    public Color fogColor;
+    [Range(0, 1)]
+    public float fogStrengh;
+    public Color absportionComplementaryColor;
+    [Range(0, 1)]
+    public float absorptionStrengh;
+    [Range(0, 1)]
+    public float minDepth;
+
     [Space, Range(0, 1)]
     public float causticsIntensity;
     public Vector3 causticsProjectionDirection;
