@@ -1,5 +1,5 @@
 fileFormatVersion: 2
-guid: 3e3775d0412251c4b98f5da2d6fd68dc
+guid: 305514af965b420498ffec1df68d6ea3
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
@@ -7,13 +7,18 @@ ModelImporter:
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: UnderSurfaceMaterial
-    second: {fileID: 2100000, guid: f07b24b90ba369a49b3025b441e48939, type: 2}
+      name: SideWaterMaterial
+    second: {fileID: 2100000, guid: 9efa5523ffaac1b4eb2370dcd0d7b85c, type: 2}
   - first:
       type: UnityEngine:Material
       assembly: UnityEngine.CoreModule
-      name: WaterMaterial
+      name: SurfaceWaterMaterial
     second: {fileID: 2100000, guid: 63ce5ca880f320f42bfdf86de9521473, type: 2}
+  - first:
+      type: UnityEngine:Material
+      assembly: UnityEngine.CoreModule
+      name: UnderSurfaceMaterial
+    second: {fileID: 2100000, guid: f07b24b90ba369a49b3025b441e48939, type: 2}
   materials:
     materialImportMode: 2
     materialName: 0
