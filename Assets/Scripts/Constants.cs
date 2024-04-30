@@ -48,4 +48,6 @@ public static class Constants
 
     public const string shaderTimeOffsetReference = "_timeOffset";
     public const string shaderPauseReference = "_pause";
+
+    public const string godraysNameTemplate = "GodRay_{0}";
 }
