@@ -300,21 +300,6 @@
 
 {
     "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
-    "m_ObjectId": "02cde4b9406845fa83a3373f88518839",
-    "m_Id": 1,
-    "m_DisplayName": "dynamicNoiseValue",
-    "m_SlotType": 1,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "dynamicNoiseValue",
-    "m_StageCapability": 2,
-    "m_Value": 0.0,
-    "m_DefaultValue": 0.0,
-    "m_Labels": []
-}
-
-{
-    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.BooleanMaterialSlot",
     "m_ObjectId": "066e6eab549f47ce984d0d917f1b0129",
     "m_Id": 1821351856,
@@ -603,9 +588,9 @@
         "m_Expanded": true,
         "m_Position": {
             "serializedVersion": "2",
-            "x": -199.2000732421875,
-            "y": -76.80004119873047,
-            "width": 125.60002136230469,
+            "x": -200.800048828125,
+            "y": -78.4000244140625,
+            "width": 128.800048828125,
             "height": 117.60003662109375
         }
     },
@@ -792,21 +777,6 @@
 
 {
     "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
-    "m_ObjectId": "493fe20267834a898beb28a5a2f77ac0",
-    "m_Id": 1,
-    "m_DisplayName": "dynamicNoiseValue",
-    "m_SlotType": 0,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "dynamicNoiseValue",
-    "m_StageCapability": 2,
-    "m_Value": 0.0,
-    "m_DefaultValue": 0.0,
-    "m_Labels": []
-}
-
-{
-    "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector2MaterialSlot",
     "m_ObjectId": "5cfe6bf6b28f4b5b9e2f12287b35e466",
     "m_Id": 0,
@@ -838,6 +808,27 @@
     "m_StageCapability": 3,
     "m_Value": 0.0,
     "m_DefaultValue": 0.0,
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector2MaterialSlot",
+    "m_ObjectId": "6583a7dd2b634f9f8510c5d9fc194d14",
+    "m_Id": 1,
+    "m_DisplayName": "dynamicNoiseValue",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "dynamicNoiseValue",
+    "m_StageCapability": 2,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0
+    },
     "m_Labels": []
 }
 
@@ -918,7 +909,7 @@
     },
     "m_Slots": [
         {
-            "m_Id": "493fe20267834a898beb28a5a2f77ac0"
+            "m_Id": "8c48edf19a624e39bdda12484fc7db57"
         }
     ],
     "synonyms": [],
@@ -996,6 +987,27 @@
         "z": 0.0,
         "w": 0.0
     }
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector2MaterialSlot",
+    "m_ObjectId": "8c48edf19a624e39bdda12484fc7db57",
+    "m_Id": 1,
+    "m_DisplayName": "dynamicNoiseValue",
+    "m_SlotType": 0,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "dynamicNoiseValue",
+    "m_StageCapability": 2,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "m_Labels": []
 }
 
 {
@@ -1103,21 +1115,6 @@
 {
     "m_SGVersion": 0,
     "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
-    "m_ObjectId": "9bee2bb3db974f5bbdb37aa9dc69ea5f",
-    "m_Id": 1,
-    "m_DisplayName": "dynamicNoiseValue",
-    "m_SlotType": 1,
-    "m_Hidden": false,
-    "m_ShaderOutputName": "dynamicNoiseValue",
-    "m_StageCapability": 2,
-    "m_Value": 0.0,
-    "m_DefaultValue": 0.0,
-    "m_Labels": []
-}
-
-{
-    "m_SGVersion": 0,
-    "m_Type": "UnityEditor.ShaderGraph.Vector1MaterialSlot",
     "m_ObjectId": "a1864f2273954d7ba766bf9de3138b4d",
     "m_Id": -515251264,
     "m_DisplayName": "movementSpeed",
@@ -1137,7 +1134,7 @@
     "m_Group": {
         "m_Id": ""
     },
-    "m_Name": "DynamicNoiseLayer",
+    "m_Name": "2DDynamicPerlinNoiseLayer",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -1165,7 +1162,7 @@
             "m_Id": "39d9d8549c454ef8a12e055a5edded3f"
         },
         {
-            "m_Id": "02cde4b9406845fa83a3373f88518839"
+            "m_Id": "6583a7dd2b634f9f8510c5d9fc194d14"
         }
     ],
     "synonyms": [],
@@ -1267,7 +1264,7 @@
     "m_Group": {
         "m_Id": ""
     },
-    "m_Name": "DynamicNoiseLayer",
+    "m_Name": "2DDynamicPerlinNoiseLayer",
     "m_DrawState": {
         "m_Expanded": true,
         "m_Position": {
@@ -1295,7 +1292,7 @@
             "m_Id": "cfb9a26187b8477fa888eb4ee6c73d12"
         },
         {
-            "m_Id": "9bee2bb3db974f5bbdb37aa9dc69ea5f"
+            "m_Id": "d91eab0f76a64ec0a6fbaa8ed50bde73"
         }
     ],
     "synonyms": [],
@@ -1444,6 +1441,27 @@
     "m_SlotType": 0,
     "m_Hidden": false,
     "m_ShaderOutputName": "_UV",
+    "m_StageCapability": 2,
+    "m_Value": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "m_DefaultValue": {
+        "x": 0.0,
+        "y": 0.0
+    },
+    "m_Labels": []
+}
+
+{
+    "m_SGVersion": 0,
+    "m_Type": "UnityEditor.ShaderGraph.Vector2MaterialSlot",
+    "m_ObjectId": "d91eab0f76a64ec0a6fbaa8ed50bde73",
+    "m_Id": 1,
+    "m_DisplayName": "dynamicNoiseValue",
+    "m_SlotType": 1,
+    "m_Hidden": false,
+    "m_ShaderOutputName": "dynamicNoiseValue",
     "m_StageCapability": 2,
     "m_Value": {
         "x": 0.0,
