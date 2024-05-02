@@ -19,6 +19,10 @@ public class CameraScript : MonoBehaviour
 
     [SerializeField, Range(0, 1)]
     private float centeringAnimationTotalTime;
+    [SerializeField, Range(0, 2), Tooltip("In u, distance from origin under which the camera is considered non moved")]
+    private float thresholdForOriginCriteria;
+    [SerializeField, Range(0, 0.1f), Tooltip("In rad, angular distance from origin under which the camera is considered non moved")]
+    private float angularThresholdForOriginCriteria;
     private float centeringTime;
     private bool centeringInProgress = false;
     private Vector3 initialCenter;
@@ -130,8 +134,25 @@ public class CameraScript : MonoBehaviour
         }
     }
 
+    private bool IsAtOrigin()
+    {
+        bool isInitialCenter =
+                Vector3.Distance(center, initialCenter) < thresholdForOriginCriteria,
+            isInitialDistance =
+                Mathf.Abs(distance - initialDistance) < thresholdForOriginCriteria,
+            IsInitialTheta =
+                Mathf.Abs(theta - initialTheta) < angularThresholdForOriginCriteria,
+            IsInitialPhi =
+                Mathf.Abs(phi - initialPhi) < angularThresholdForOriginCriteria;
+
+        return isInitialCenter && isInitialDistance && IsInitialTheta && IsInitialPhi;
+    }
+
     private void BeginCenteringAnimation()
     {
+        if (IsAtOrigin())
+            return;
+
         centeringInProgress = true;
 
         centeringTime = 0f;

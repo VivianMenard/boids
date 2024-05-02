@@ -3384,6 +3384,8 @@ MonoBehaviour:
   maxDistance: 90
   margin: 1
   centeringAnimationTotalTime: 0.3
+  thresholdForOriginCriteria: 1
+  angularThresholdForOriginCriteria: 0.01
 --- !u!1 &981232802
 GameObject:
   m_ObjectHideFlags: 0
