@@ -47,22 +47,21 @@ public class CameraScript : MonoBehaviour
     {
         AreaScript area = cameraExclusionArea.GetComponent<AreaScript>();
 
-        initialCenter = area.transform.position + initialOffset;
-        center = initialCenter;
-
-        ComputeThetaReference();
-
         areaMinPtForCamera = area.MinPt - margin * Vector3.one;
         areaMaxPtForCamera = area.MaxPt + margin * Vector3.one;
         areaMinPtForCenter = area.MinPt + margin * Vector3.one;
         areaMaxPtForCenter = area.MaxPt - margin * Vector3.one;
 
+        center = area.transform.position + initialOffset;
+
+        ComputeThetaReference();
         (distance, theta, phi) = MathHelpers.CartesianToSpherical(
             center,
             transform.position,
             referenceForTheta
         );
 
+        initialCenter = center;
         initialDistance = distance;
         initialTheta = theta;
         initialPhi = phi;
