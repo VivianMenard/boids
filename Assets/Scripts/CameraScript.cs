@@ -17,13 +17,23 @@ public class CameraScript : MonoBehaviour
     [SerializeField, Range(0, 5)]
     private float margin;
 
+    [SerializeField, Range(0, 1)]
+    private float centeringAnimationTotalTime;
+    private float centeringTime;
+    private bool centeringInProgress = false;
     private Vector3 initialCenter;
+    private Vector3 beginingAnimCenter;
+    private float initialDistance, initialTheta, initialPhi;
+    private float beginingAnimDistance, beginingAnimTheta, beginingAnimPhi;
 
     private Vector3 areaMinPtForCamera, areaMaxPtForCamera,
     areaMinPtForCenter, areaMaxPtForCenter;
 
     private Vector3 center;
     private float distance, theta, phi;
+
+    private Vector2 referenceForTheta;
+    private float thetaOffset;
 
     private Vector3 dragOrigin, centerDragOrigin;
 
@@ -36,6 +46,8 @@ public class CameraScript : MonoBehaviour
         initialCenter = area.transform.position + initialOffset;
         center = initialCenter;
 
+        ComputeThetaReference();
+
         areaMinPtForCamera = area.MinPt - margin * Vector3.one;
         areaMaxPtForCamera = area.MaxPt + margin * Vector3.one;
         areaMinPtForCenter = area.MinPt + margin * Vector3.one;
@@ -43,14 +55,40 @@ public class CameraScript : MonoBehaviour
 
         (distance, theta, phi) = MathHelpers.CartesianToSpherical(
             center,
-            transform.position
+            transform.position,
+            referenceForTheta
         );
+
+        initialDistance = distance;
+        initialTheta = theta;
+        initialPhi = phi;
 
         UpdateRotation();
     }
 
+    private void ComputeThetaReference()
+    {
+        Vector3 centerToPosition = transform.position - center;
+        Vector2 centerToPositionXZ = new Vector2(centerToPosition.x, centerToPosition.z);
+
+        referenceForTheta = centerToPositionXZ.normalized;
+        thetaOffset = Vector2.Angle(centerToPositionXZ, Vector2.right) * Mathf.Deg2Rad;
+    }
+
     void Update()
     {
+        if (centeringInProgress)
+        {
+            ProcessCenteringAnimation();
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.F))
+        {
+            BeginCenteringAnimation();
+            return;
+        }
+
         float scrollValue = Input.GetAxis(Constants.scrollAxisName);
 
         if (scrollValue != 0)
@@ -90,12 +128,38 @@ public class CameraScript : MonoBehaviour
 
             centerDragOrigin = Input.mousePosition;
         }
+    }
 
-        if (Input.GetKeyDown(KeyCode.F))
-        {
-            center = initialCenter;
-            needUpdate = true;
-        }
+    private void BeginCenteringAnimation()
+    {
+        centeringInProgress = true;
+
+        centeringTime = 0f;
+
+        beginingAnimCenter = center;
+        beginingAnimDistance = distance;
+        beginingAnimTheta = MathHelpers.EquivalentInTrigoRange(theta);
+        beginingAnimPhi = phi;
+    }
+
+    private void ProcessCenteringAnimation()
+    {
+        centeringTime += Time.deltaTime;
+        float progress = Mathf.SmoothStep(
+            0,
+            1,
+            Mathf.Clamp(centeringTime / centeringAnimationTotalTime, 0, 1)
+        );
+
+        center = Vector3.Lerp(beginingAnimCenter, initialCenter, progress);
+        distance = Mathf.Lerp(beginingAnimDistance, initialDistance, progress);
+        theta = Mathf.Lerp(beginingAnimTheta, initialTheta, progress);
+        phi = Mathf.Lerp(beginingAnimPhi, initialPhi, progress);
+
+        if (centeringTime >= centeringAnimationTotalTime)
+            centeringInProgress = false;
+
+        needUpdate = true;
     }
 
     void FixedUpdate()
@@ -126,7 +190,7 @@ public class CameraScript : MonoBehaviour
         );
 
         Vector3 newPosition = MathHelpers.SphericalToCartesian(
-            center, distance, theta, phi);
+            center, distance, theta, phi, thetaOffset);
 
         if (MathHelpers.IsInBox(
                 newPosition,
@@ -142,7 +206,7 @@ public class CameraScript : MonoBehaviour
                 areaMaxPtForCamera
             );
             (distance, theta, phi) = MathHelpers.CartesianToSpherical(
-                center, newPosition);
+                center, newPosition, referenceForTheta);
         }
 
         transform.position = newPosition;

@@ -9,31 +9,41 @@ public static class MathHelpers
         return number * number;
     }
 
-    public static Vector3 SphericalToCartesian(Vector3 center, float distance, float theta, float phi)
+    public static Vector3 SphericalToCartesian(
+        Vector3 center, float distance, float theta, float phi, float thetaOffset = 0)
     {
         // mathematics convention 
         // distance in R+ (radial distance), theta in [-pi, pi[ (azimuthal angle), phi in [0, pi] (polar angle)
 
         Vector3 direction = new Vector3(
-           Mathf.Sin(phi) * Mathf.Cos(theta),
+           Mathf.Sin(phi) * Mathf.Cos(thetaOffset + theta),
            Mathf.Cos(phi),
-           Mathf.Sin(phi) * Mathf.Sin(theta)
+           Mathf.Sin(phi) * Mathf.Sin(thetaOffset + theta)
        );
 
         return center + distance * direction;
     }
 
-    public static (float, float, float) CartesianToSpherical(Vector3 center, Vector3 cartesianPosition)
+    public static (float, float, float) CartesianToSpherical(
+        Vector3 center, Vector3 cartesianPosition, Vector2 referenceForTheta = default)
     {
         // mathematics convention 
         // distance in R+ (radial distance), theta in [-pi, pi[ (azimuthal angle), phi in [0, pi] (polar angle)
 
+        if (referenceForTheta == default)
+            referenceForTheta = Vector2.right;
+
         Vector3 centerToPosition = cartesianPosition - center;
         Vector2 centerToPositionXZ = new Vector2(centerToPosition.x, centerToPosition.z);
 
+        Vector2 referenceForThetaOrtho = new Vector2(-referenceForTheta.y, referenceForTheta.x);
+
+        float thetaSign = Mathf.Sign(Vector2.Dot(referenceForThetaOrtho, centerToPositionXZ));
+
         float distance = centerToPosition.magnitude;
-        float theta = Mathf.Sign(centerToPosition.z) *
-            Vector2.Angle(centerToPositionXZ, Vector2.right) * Mathf.Deg2Rad;
+        float theta = thetaSign *
+            Vector2.Angle(centerToPositionXZ, referenceForTheta) *
+            Mathf.Deg2Rad;
         float phi = Vector3.Angle(Vector3.up, centerToPosition) * Mathf.Deg2Rad;
 
         return (distance, theta, phi);
@@ -100,5 +110,19 @@ public static class MathHelpers
     public static Vector3 RotationToDirection(Quaternion rotation)
     {
         return rotation * Vector3.forward;
+    }
+
+    public static float EquivalentInTrigoRange(float initialAngle)
+    {
+        // return the equivalent of the angle in [-pi, pi[ interval
+
+        float moduloAngle = initialAngle % (2 * Mathf.PI);
+        if (moduloAngle < 0)
+            moduloAngle += (2 * Mathf.PI);
+
+        if (moduloAngle <= Mathf.PI)
+            return moduloAngle;
+
+        return moduloAngle - 2 * Mathf.PI;
     }
 }

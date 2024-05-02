@@ -3383,6 +3383,7 @@ MonoBehaviour:
   scrollSpeed: 20
   maxDistance: 90
   margin: 1
+  centeringAnimationTotalTime: 0.3
 --- !u!1 &981232802
 GameObject:
   m_ObjectHideFlags: 0
