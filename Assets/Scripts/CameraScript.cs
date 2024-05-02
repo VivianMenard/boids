@@ -17,7 +17,7 @@ public class CameraScript : MonoBehaviour
     [SerializeField, Range(0, 5)]
     private float margin;
 
-    [SerializeField, Range(0, 1)]
+    [SerializeField, Range(0, 1), Tooltip("In seconds")]
     private float centeringAnimationTotalTime;
     [SerializeField, Range(0, 2), Tooltip("In u, distance from origin under which the camera is considered non moved")]
     private float thresholdForOriginCriteria;
@@ -65,6 +65,18 @@ public class CameraScript : MonoBehaviour
         initialDistance = distance;
         initialTheta = theta;
         initialPhi = phi;
+
+        UpdateRotation();
+    }
+
+    [ContextMenu("Adjust camera position")]
+    private void AdjustCameraPosition()
+    {
+        AreaScript area = cameraExclusionArea.GetComponent<AreaScript>();
+        center = area.transform.position + initialOffset;
+
+        Vector3 cameraDirection = (transform.position - center).normalized;
+        transform.position = center + cameraDirection * maxDistance;
 
         UpdateRotation();
     }
