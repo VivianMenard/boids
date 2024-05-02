@@ -98,7 +98,7 @@ public class CameraScript : MonoBehaviour
             return;
         }
 
-        if (Input.GetKeyDown(KeyCode.F))
+        if (Input.GetKeyDown(KeyCode.C))
         {
             BeginCenteringAnimation();
             return;

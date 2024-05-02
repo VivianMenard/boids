@@ -4,7 +4,7 @@ using UnityEngine.UI;
 public class GlobalManager : MonoBehaviour
 {
     [SerializeField]
-    private GameObject entitiesManager, Ui, paramsUi, pauseIcon, playIcon;
+    private GameObject entitiesManager, Ui, paramsUi, controlsUi, pauseIcon, playIcon;
 
     [Space, SerializeField]
     private Toggle fpsToggle;
@@ -163,7 +163,14 @@ public class GlobalManager : MonoBehaviour
 
     public void ToggleParamsDisplay()
     {
+        controlsUi.SetActive(false);
         paramsUi.SetActive(!paramsUi.activeInHierarchy);
+    }
+
+    public void ToggleControlsDisplay()
+    {
+        paramsUi.SetActive(false);
+        controlsUi.SetActive(!controlsUi.activeInHierarchy);
     }
 
     public void ToggleFpsDisplay()
