@@ -157,9 +157,17 @@ public class CameraScript : MonoBehaviour
         phi = Mathf.Lerp(beginingAnimPhi, initialPhi, progress);
 
         if (centeringTime >= centeringAnimationTotalTime)
-            centeringInProgress = false;
+            EndCenteringAnimation();
 
         needUpdate = true;
+    }
+
+    private void EndCenteringAnimation()
+    {
+        centeringInProgress = false;
+
+        dragOrigin = Input.mousePosition;
+        centerDragOrigin = Input.mousePosition;
     }
 
     void FixedUpdate()
