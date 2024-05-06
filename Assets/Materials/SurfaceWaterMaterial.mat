@@ -23,6 +23,10 @@ Material:
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _AddFoam_77a6f3b1244042ada6e0bda99da27fb2_additionalTexture_1862633068_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 3ea9fd84a6fa4e44f8b79ea88bbd30bc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -67,8 +71,20 @@ Material:
         m_Texture: {fileID: 2800000, guid: aa3582647f497b44b93ed2d5f0d6f2c7, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_10a3999e0c59466c82917998a75867db_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 25b66513410f0cb44a7b3fd697f61429, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_2f7fe5d940e8401f83f698f0e9261582_Texture_1_Texture2D:
         m_Texture: {fileID: 2800000, guid: 7925d21741e1c3446b01d0e83174072d, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_30ae5bf8ad4e4188ba7d450de48259a4_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 3ea9fd84a6fa4e44f8b79ea88bbd30bc, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_43fbf9e1ad3543a68ce2f7a32f32759a_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: 90e149fce451e034da4d552e93dccd92, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_57f4db8441474b848b26b5533d6c0c94_Texture_1_Texture2D:
@@ -89,6 +105,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _SpecGlossMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _foamAdditionalTexture:
+        m_Texture: {fileID: 2800000, guid: c01c81fb164cce5438e59e6c90e4d2c0, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - unity_Lightmaps:
@@ -141,6 +161,8 @@ Material:
     - _absportionStrengh: 1
     - _alpha: 1
     - _faddingStrengh: 0.7
+    - _foamAdditionalTextureStrengh: 0.6
+    - _foamAdditionalTextureTiling: 60
     - _foamGradientSize: 7.6
     - _foamMinHeight: 22
     - _foamNoiseStrengh: 0.945
