@@ -6,6 +6,9 @@ public class GlobalManager : MonoBehaviour
     [SerializeField]
     private GameObject entitiesManager, Ui, paramsUi, controlsUi, pauseIcon, playIcon;
 
+    [SerializeField]
+    private Color buttonNormalColor, buttonTabSelectedColor;
+
     [Space, SerializeField]
     private Toggle fpsToggle;
     [SerializeField]
@@ -18,7 +21,7 @@ public class GlobalManager : MonoBehaviour
     [SerializeField]
     private Text nbPredatorsDisplay;
     [SerializeField]
-    private Button addBoidsButton, removeBoidsButton,
+    private Button controlsButton, paramsButton, addBoidsButton, removeBoidsButton,
     addPredatorsButton, removePredatorsButton;
     [SerializeField, Range(0, 5000)]
     private int maxNbBoidsInUi;
@@ -42,6 +45,7 @@ public class GlobalManager : MonoBehaviour
 
         UpdateNbBoidsDisplay();
         UpdateNbPredatorsDisplay();
+        UpdateButtonsColor();
     }
 
     void Update()
@@ -165,12 +169,26 @@ public class GlobalManager : MonoBehaviour
     {
         controlsUi.SetActive(false);
         paramsUi.SetActive(!paramsUi.activeInHierarchy);
+        UpdateButtonsColor();
     }
 
     public void ToggleControlsDisplay()
     {
         paramsUi.SetActive(false);
         controlsUi.SetActive(!controlsUi.activeInHierarchy);
+        UpdateButtonsColor();
+    }
+
+    private void UpdateButtonColor(Button button, bool isTabSelected)
+    {
+        button.GetComponent<Image>().color = (isTabSelected) ?
+            buttonTabSelectedColor : buttonNormalColor;
+    }
+
+    private void UpdateButtonsColor()
+    {
+        UpdateButtonColor(paramsButton, paramsUi.activeInHierarchy);
+        UpdateButtonColor(controlsButton, controlsUi.activeInHierarchy);
     }
 
     public void ToggleFpsDisplay()

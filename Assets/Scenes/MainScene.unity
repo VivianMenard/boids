@@ -241,11 +241,15 @@ MonoBehaviour:
   controlsUi: {fileID: 1438679992}
   pauseIcon: {fileID: 767687047}
   playIcon: {fileID: 1730294238}
+  buttonNormalColor: {r: 0.8352941, g: 0.8352941, b: 0.8352941, a: 1}
+  buttonTabSelectedColor: {r: 0.70980394, g: 0.70980394, b: 0.70980394, a: 1}
   fpsToggle: {fileID: 1508627224}
   fpsDisplay: {fileID: 1521059753}
   fpsRefreshPeriod: 0.2
   nbBoidsDisplay: {fileID: 2099000749}
   nbPredatorsDisplay: {fileID: 237223748}
+  controlsButton: {fileID: 1281961169}
+  paramsButton: {fileID: 1374498809}
   addBoidsButton: {fileID: 1803299299}
   removeBoidsButton: {fileID: 1289393274}
   addPredatorsButton: {fileID: 501356199}
