@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -6,8 +7,10 @@ public class GlobalManager : MonoBehaviour
     [SerializeField]
     private GameObject entitiesManager, Ui, paramsUi, controlsUi, pauseIcon, playIcon;
 
-    [SerializeField]
+    [Space, SerializeField]
     private Color buttonNormalColor, buttonTabSelectedColor;
+    [SerializeField]
+    private List<GameObject> allUiComponentsWithBgColor = new List<GameObject>();
 
     [Space, SerializeField]
     private Toggle fpsToggle;
@@ -46,6 +49,13 @@ public class GlobalManager : MonoBehaviour
         UpdateNbBoidsDisplay();
         UpdateNbPredatorsDisplay();
         UpdateButtonsColor();
+    }
+
+    [ContextMenu("Update components color")]
+    private void UpdateComponentsColor()
+    {
+        foreach (GameObject component in allUiComponentsWithBgColor)
+            component.GetComponent<Image>().color = buttonNormalColor;
     }
 
     void Update()
