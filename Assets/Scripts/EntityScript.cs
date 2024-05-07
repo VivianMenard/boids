@@ -7,9 +7,6 @@ public abstract class EntityScript : MonoBehaviour
     private static int nextId = 0;
 
 
-    protected Vector3 direction;
-    public Vector3 Direction { get { return direction; } }
-
     protected EntitiesManagerScript entitiesManager;
     protected EntityParameters parameters;
     protected int visionDistance;
@@ -18,6 +15,7 @@ public abstract class EntityScript : MonoBehaviour
 
     private int id;
 
+    protected Vector3 direction;
     protected float velocity;
     private float randomBonusVelocityFactor = 1;
     private int sinceLastBonusChange = 0;
@@ -487,6 +485,8 @@ public abstract class EntityScript : MonoBehaviour
         // It allows the rotation twists to be smooth, what wouldn't be the case if the lerp
         // was on the direction and the rotation was based on the result
 
+        entitiesManager.UpdateEntityDirection(myCollider, direction);
+
         sinceLastCalculation++;
     }
 
@@ -496,6 +496,7 @@ public abstract class EntityScript : MonoBehaviour
 
         transform.position = newPosition;
         myPosition = newPosition;
+        entitiesManager.UpdateEntityPosition(myCollider, newPosition);
     }
 
     private void AdaptVelocity()
@@ -512,5 +513,10 @@ public abstract class EntityScript : MonoBehaviour
 
         if (parameters.applyVelocityFactor)
             AdaptObstacleAvoidanceParams();
+    }
+
+    private void OnDestroy()
+    {
+        entitiesManager.RemoveAssociatedEntries(myCollider);
     }
 }

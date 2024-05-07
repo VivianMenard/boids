@@ -32,11 +32,11 @@ public class PredatorScript : EntityScript
             if (entityCollider == myCollider)
                 continue;
 
-            Vector3 entityPosition = entityCollider.transform.position;
+            Vector3 entityPosition = entitiesManager.ColliderToPosition(entityCollider);
             float squaredDistance = (entityPosition - myPosition).sqrMagnitude;
-            int entityLayer = entityCollider.gameObject.layer;
+            EntityType entityType = entitiesManager.ColliderToEntityType(entityCollider);
 
-            if (entityLayer == entitiesManager.BoidsLayer)
+            if (entityType == EntityType.BOID)
             {
                 if (!IsInMyFOV(entityPosition))
                     continue;
@@ -47,7 +47,7 @@ public class PredatorScript : EntityScript
                 weightedNbPreys += preyWeight;
                 preysPositionsSum += preyWeight * entityPosition;
             }
-            else if (entityLayer == entitiesManager.PredatorsLayer)
+            else if (entityType == EntityType.PREDATOR)
             {
                 float peerWeight = GetEntityPeerRepulsionWeight(squaredDistance);
 

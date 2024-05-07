@@ -50,8 +50,6 @@ public class EntitiesManagerScript : MonoBehaviour
 
     [HideInInspector]
     public LayerMask ObstacleLayerMask, EntitiesLayerMask;
-    [HideInInspector]
-    public int BoidsLayer, PredatorsLayer;
 
     [HideInInspector]
     public Dictionary<State, bool> IsItEmergencyState = new Dictionary<State, bool>{
@@ -69,6 +67,42 @@ public class EntitiesManagerScript : MonoBehaviour
     private List<GameObject> boids = new List<GameObject>(),
         predators = new List<GameObject>();
 
+    private Dictionary<Collider, EntityType> colliderToEntityType = new Dictionary<Collider, EntityType>();
+    private Dictionary<Collider, Vector3> colliderToDirection = new Dictionary<Collider, Vector3>();
+    private Dictionary<Collider, Vector3> colliderToPosition = new Dictionary<Collider, Vector3>();
+
+    public EntityType ColliderToEntityType(Collider collider)
+    {
+        return colliderToEntityType[collider];
+    }
+
+    public Vector3 ColliderToDirection(Collider collider)
+    {
+        return colliderToDirection[collider];
+    }
+
+    public Vector3 ColliderToPosition(Collider collider)
+    {
+        return colliderToPosition[collider];
+    }
+
+    public void UpdateEntityPosition(Collider collider, Vector3 newPosition)
+    {
+        colliderToPosition[collider] = newPosition;
+    }
+
+    public void UpdateEntityDirection(Collider collider, Vector3 newDirection)
+    {
+        colliderToDirection[collider] = newDirection;
+    }
+
+    public void RemoveAssociatedEntries(Collider collider)
+    {
+        colliderToEntityType.Remove(collider);
+        colliderToDirection.Remove(collider);
+        colliderToPosition.Remove(collider);
+    }
+
     private void Awake()
     {
         PreCalculateParameters();
@@ -82,8 +116,6 @@ public class EntitiesManagerScript : MonoBehaviour
             Constants.boidsLayerName,
             Constants.predatorsLayerName
         );
-        BoidsLayer = LayerMask.NameToLayer(Constants.boidsLayerName);
-        PredatorsLayer = LayerMask.NameToLayer(Constants.predatorsLayerName);
     }
 
     private void PreCalculateParameters()
@@ -144,15 +176,23 @@ public class EntitiesManagerScript : MonoBehaviour
 
         for (int _ = 0; _ < nbToSpawn; _++)
         {
-            Quaternion entityRotation = Quaternion.LookRotation(
-                MathHelpers.GetRandomDirection(restrictVerticaly: true)
-            );
+            Vector3 entityDirection = MathHelpers.
+                GetRandomDirection(restrictVerticaly: true);
+            Quaternion entityRotation = Quaternion.LookRotation(entityDirection);
+            Vector3 entityPosition = GetRandomSpawnablePositionInArea(type);
+
             GameObject entity = Instantiate(
                 entityPrefab,
-                GetRandomSpawnablePositionInArea(type),
+                entityPosition,
                 entityRotation,
                 gameObject.transform
             );
+
+            Collider entityCollider = entity.GetComponent<Collider>();
+            colliderToEntityType[entityCollider] = type;
+            colliderToDirection[entityCollider] = entityDirection;
+            colliderToPosition[entityCollider] = entityPosition;
+
             SetEntityScale(entity, type);
             entitiesList.Add(entity);
         }

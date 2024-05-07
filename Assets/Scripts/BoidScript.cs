@@ -31,16 +31,18 @@ public class BoidScript : EntityScript
             if (entityCollider == myCollider)
                 continue;
 
-            Vector3 entityPosition = entityCollider.transform.position;
+            Vector3 entityPosition = entitiesManager.ColliderToPosition(entityCollider);
             float squaredDistance = (entityPosition - myPosition).sqrMagnitude;
-            int entityLayer = entityCollider.gameObject.layer;
+            EntityType entityType = entitiesManager.ColliderToEntityType(entityCollider);
 
-            if (entityLayer == entitiesManager.BoidsLayer)
+            if (entityType == EntityType.BOID)
             {
                 nbBoidsNearby++;
 
                 if (!IsInMyFOV(entityPosition))
                     continue;
+
+                Vector3 boidDirection = entitiesManager.ColliderToDirection(entityCollider);
 
                 float boidWeight = GetEntityWeightAccordingToVisionDistance(squaredDistance);
 
@@ -58,14 +60,9 @@ public class BoidScript : EntityScript
 
                 separationPositionSum += boidSeparationWeight * entityPosition;
                 cohesionPositionSum += boidCohesionWeight * entityPosition;
-
-                if (boidAlignmentWeight > Mathf.Epsilon)
-                {
-                    BoidScript boidScript = entityCollider.GetComponent<BoidScript>();
-                    alignmentDirectionSum += boidAlignmentWeight * boidScript.Direction;
-                }
+                alignmentDirectionSum += boidAlignmentWeight * boidDirection;
             }
-            else if (entityLayer == entitiesManager.PredatorsLayer)
+            else if (entityType == EntityType.PREDATOR)
             {
                 float predatorWeight = GetEntityFearWeight(squaredDistance);
 
