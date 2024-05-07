@@ -55,7 +55,16 @@ public class GlobalManager : MonoBehaviour
     private void UpdateComponentsColor()
     {
         foreach (GameObject component in allUiComponentsWithBgColor)
-            component.GetComponent<Image>().color = buttonNormalColor;
+        {
+            Image imageComponent = component.GetComponent<Image>();
+            if (imageComponent == null)
+                throw new MissingComponentException(
+                    component.name +
+                    ": No Image component to change the background color of."
+                );
+
+            imageComponent.color = buttonNormalColor;
+        }
     }
 
     void Update()
@@ -191,8 +200,15 @@ public class GlobalManager : MonoBehaviour
 
     private void UpdateButtonColor(Button button, bool isTabSelected)
     {
-        button.GetComponent<Image>().color = (isTabSelected) ?
-            buttonTabSelectedColor : buttonNormalColor;
+        Image imageComponent = button.GetComponent<Image>();
+        if (imageComponent == null)
+            throw new MissingComponentException(
+                button.name +
+                ": No Image component to change the background color of."
+            );
+
+        imageComponent.color = (isTabSelected) ? buttonTabSelectedColor :
+            buttonNormalColor;
     }
 
     private void UpdateButtonsColor()

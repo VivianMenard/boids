@@ -189,6 +189,11 @@ public class EntitiesManagerScript : MonoBehaviour
             );
 
             Collider entityCollider = entity.GetComponent<Collider>();
+            if (entityCollider == null)
+                throw new MissingComponentException(
+                    "No Collider component on Entity."
+                );
+
             colliderToEntityType[entityCollider] = type;
             colliderToDirection[entityCollider] = entityDirection;
             colliderToPosition[entityCollider] = entityPosition;
@@ -271,6 +276,11 @@ public class EntitiesManagerScript : MonoBehaviour
         {
             SphereCollider sphereCollider = predator
                 .GetComponent<SphereCollider>();
+            if (sphereCollider == null)
+                throw new MissingComponentException(
+                    "No sphereCollider component on predator GameObject."
+                );
+
             sphereCollider.radius = boidsParams.fearRadius;
         }
 

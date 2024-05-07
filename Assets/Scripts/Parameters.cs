@@ -82,6 +82,10 @@ public abstract class EntityParameters
     )
     {
         spawnArea = spawnAreaGO.GetComponent<AreaScript>();
+        if (spawnArea == null)
+            throw new MissingComponentException(
+                "No AreaScript component on spawnAreaGO GameObject."
+            );
 
         cosVisionSemiAngle = Mathf.Cos(visionSemiAngle * Mathf.Deg2Rad);
 

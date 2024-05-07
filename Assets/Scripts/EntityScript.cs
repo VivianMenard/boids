@@ -64,6 +64,10 @@ public abstract class EntityScript : MonoBehaviour
         SetNewDirectionTarget(GetInitialDirection(), initialization: true);
 
         myCollider = GetComponent<Collider>();
+        if (myCollider == null)
+            throw new MissingComponentException(
+                "No Collider component on Entity."
+            );
 
         if (parameters.hasRig)
         {

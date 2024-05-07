@@ -45,7 +45,7 @@ public class CameraScript : MonoBehaviour
 
     void Start()
     {
-        AreaScript area = cameraExclusionArea.GetComponent<AreaScript>();
+        AreaScript area = GetArea();
 
         areaMinPtForCamera = area.MinPt - margin * Vector3.one;
         areaMaxPtForCamera = area.MaxPt + margin * Vector3.one;
@@ -69,10 +69,22 @@ public class CameraScript : MonoBehaviour
         UpdateRotation();
     }
 
+    private AreaScript GetArea()
+    {
+        AreaScript area = cameraExclusionArea.GetComponent<AreaScript>();
+        if (area == null)
+            throw new MissingComponentException(
+                "No AreaScript component on cameraExclusionArea GameObject."
+            );
+
+        return area;
+    }
+
     [ContextMenu("Adjust camera position")]
     private void AdjustCameraPosition()
     {
-        AreaScript area = cameraExclusionArea.GetComponent<AreaScript>();
+        AreaScript area = GetArea();
+
         center = area.transform.position + initialOffset;
 
         Vector3 cameraDirection = (transform.position - center).normalized;
