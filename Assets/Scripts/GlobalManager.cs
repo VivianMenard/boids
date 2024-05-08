@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -15,14 +16,14 @@ public class GlobalManager : MonoBehaviour
     [Space, SerializeField]
     private Toggle fpsToggle;
     [SerializeField]
-    private Text fpsDisplay;
+    private TextMeshProUGUI fpsDisplay;
     [SerializeField, Range(0.01f, 1f), Tooltip("Time in seconds between fps display refreshing")]
     private float fpsRefreshPeriod;
 
     [Space, SerializeField]
-    private Text nbBoidsDisplay;
+    private TextMeshProUGUI nbBoidsDisplay;
     [SerializeField]
-    private Text nbPredatorsDisplay;
+    private TextMeshProUGUI nbPredatorsDisplay;
     [SerializeField]
     private Button controlsButton, paramsButton, addBoidsButton, removeBoidsButton,
     addPredatorsButton, removePredatorsButton;
