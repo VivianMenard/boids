@@ -93,15 +93,16 @@ public static class MathHelpers
         return Vector3.Lerp(ptOut, ptIn, t);
     }
 
-    public static Vector3 GetRandomDirection(bool restrictVerticaly = false)
+    public static Vector3 GetRandomDirection(float verticalRestriction = 0f)
     {
-        float theta = Random.Range(0f, 2f * Mathf.PI);
-        float phi;
+        float verticalRestrictionInRad = (Mathf.PI / 2) * Mathf.Clamp(
+            verticalRestriction, 0, 1 - Mathf.Epsilon);
 
-        if (restrictVerticaly)
-            phi = Random.Range(Mathf.PI / 4, 3 * Mathf.PI / 4);
-        else
-            phi = Random.Range(0f, Mathf.PI);
+        float theta = Random.Range(0f, 2f * Mathf.PI);
+        float phi = Random.Range(
+            verticalRestrictionInRad,
+            Mathf.PI - verticalRestrictionInRad
+        );
 
         return SphericalToCartesian(
             Vector3.zero, 1f, theta, phi);

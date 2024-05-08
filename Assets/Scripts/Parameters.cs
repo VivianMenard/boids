@@ -43,8 +43,8 @@ public abstract class EntityParameters
     public float rwMomentumWeight;
     [Range(0, 1), Tooltip("In random walk: probability to go straight")]
     public float rwProbaStraightLine;
-    [Range(0, 1), Tooltip("In random walk: allows to avoid vertical directions if close to 0")]
-    public float rwVerticalDirFactor;
+    [Range(0, 1), Tooltip("Mainly for random walk but also used for spawn direction: the higher this value is, the more the entity will avoid vertical directions")]
+    public float rwVerticalRestriction;
     [Range(0, 10), Tooltip("In random walk: Max number of attempts to find a new random direction without obstacles")]
     public int rwMaxAttempts;
 

@@ -264,10 +264,8 @@ public abstract class EntityScript : MonoBehaviour
     {
         Vector3 TryDirectionForRw()
         {
-            Vector3 newDirection = MathHelpers.GetRandomDirection() +
-                direction * parameters.rwMomentumWeight;
-            newDirection.y = newDirection.y * parameters.rwVerticalDirFactor;
-            return newDirection.normalized;
+            return (MathHelpers.GetRandomDirection(parameters.rwVerticalRestriction) +
+                direction * parameters.rwMomentumWeight).normalized;
         }
 
         Vector3 directionForRw = TryDirectionForRw();

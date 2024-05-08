@@ -173,11 +173,13 @@ public class EntitiesManagerScript : MonoBehaviour
             boidsParams.prefab : predatorsParams.prefab;
         List<GameObject> entitiesList = (type == EntityType.BOID) ?
             boids : predators;
+        float verticalRestriction = (type == EntityType.BOID) ?
+            boidsParams.rwVerticalRestriction : predatorsParams.rwVerticalRestriction;
 
         for (int _ = 0; _ < nbToSpawn; _++)
         {
             Vector3 entityDirection = MathHelpers.
-                GetRandomDirection(restrictVerticaly: true);
+                GetRandomDirection(verticalRestriction);
             Quaternion entityRotation = Quaternion.LookRotation(entityDirection);
             Vector3 entityPosition = GetRandomSpawnablePositionInArea(type);
 

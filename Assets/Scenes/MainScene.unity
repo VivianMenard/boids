@@ -5066,7 +5066,7 @@ MonoBehaviour:
     rwStatePeriod: 5
     rwMomentumWeight: 1
     rwProbaStraightLine: 0.2
-    rwVerticalDirFactor: 0.6
+    rwVerticalRestriction: 0.5
     rwMaxAttempts: 3
     visionDistance: 8
     visionSemiAngle: 100
@@ -5135,7 +5135,7 @@ MonoBehaviour:
     rwStatePeriod: 15
     rwMomentumWeight: 1
     rwProbaStraightLine: 0.2
-    rwVerticalDirFactor: 0.3
+    rwVerticalRestriction: 0.75
     rwMaxAttempts: 3
     visionDistance: 15
     visionSemiAngle: 80
