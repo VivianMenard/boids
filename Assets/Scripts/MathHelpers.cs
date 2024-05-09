@@ -126,4 +126,19 @@ public static class MathHelpers
 
         return moduloAngle - 2 * Mathf.PI;
     }
+
+    public static Vector3 RestrictDirectionVertically(Vector3 initialDirection, float verticalRestriction)
+    {
+        float verticalRestrictionInRad = (Mathf.PI / 2) * Mathf.Clamp(
+            verticalRestriction, 0, 1 - Mathf.Epsilon);
+
+        (float distance, float theta, float phi) = CartesianToSpherical(
+            Vector3.zero, initialDirection);
+
+        float restrictedPhi = Mathf.Clamp(
+            phi, verticalRestrictionInRad, Mathf.PI - verticalRestrictionInRad);
+
+        return SphericalToCartesian(
+            Vector3.zero, distance, theta, restrictedPhi);
+    }
 }

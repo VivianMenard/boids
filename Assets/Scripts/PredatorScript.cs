@@ -73,21 +73,16 @@ public class PredatorScript : EntityScript
             peerRepulsionWeight = GetReelWeight(
                 weightedNbPeers, predatorsParams.peerRepulsionBaseWeight);
 
-        return ClampDirectionVertically((
+        Vector3 idealNewDirection = (
             predatorsParams.momentumWeight * direction +
             preyAttractionWeight * preyAttractionDirection +
             peerRepulsionWeight * peerRepulsionDirection
-        ).normalized);
-    }
+        );
 
-    private Vector3 ClampDirectionVertically(Vector3 initialDirection)
-    {
-        float yValue = Mathf.Min(
-            predatorsParams.maxVerticalDirection, initialDirection.y);
-
-        return (
-            new Vector3(initialDirection.x, yValue, initialDirection.z)
-        ).normalized;
+        return MathHelpers.RestrictDirectionVertically(
+            idealNewDirection,
+            predatorsParams.verticalRestriction
+        );
     }
 
     protected override Vector3 GetObstacleAvoidanceReference()

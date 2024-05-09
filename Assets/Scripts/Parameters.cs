@@ -217,9 +217,9 @@ public class PredatorsParameters : EntityParameters
     [Range(0, 10), Tooltip("How repulsed the predator is to the other ones")]
     public float peerRepulsionBaseWeight;
 
-    [Space, Range(0, 1)]
-    public float maxVerticalDirection;
-    [Range(0, 1)]
+    [Space, Range(0, 1), Tooltip("The higher this value is, the more the predator will avoid vertical directions")]
+    public float verticalRestriction;
+    [Range(0, 1), Tooltip("The higher this value is, the more the predator will favor horizontal directions to avoid obstacles")]
     public float preferenceForHorizontalAvoidance;
 
     [Space, Range(0, 15), Tooltip("Distance under which the predator will try to distance itself from others")]

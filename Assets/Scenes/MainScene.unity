@@ -5176,7 +5176,7 @@ MonoBehaviour:
     - 1
     preyAttractionBaseWeight: 1
     peerRepulsionBaseWeight: 0.4
-    maxVerticalDirection: 0.4
+    verticalRestriction: 0.6
     preferenceForHorizontalAvoidance: 0.5
     peerRepulsionRadius: 10
     squaredPeerRepulsionRadius: 100
