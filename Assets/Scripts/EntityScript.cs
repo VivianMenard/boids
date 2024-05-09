@@ -201,19 +201,6 @@ public abstract class EntityScript : MonoBehaviour
         return myScale * parameters.boneBaseDistanceToHead[boneIndex];
     }
 
-    private (Vector3, Quaternion) FrameToTransform(float frame)
-    {
-        (Vector3 firstPosition, Quaternion firstRotation, float _) =
-            frameToTransformInfo[(long)Mathf.Floor(frame)];
-        (Vector3 secondPosition, Quaternion secondRotation, float _) =
-            frameToTransformInfo[(long)Mathf.Ceil(frame)];
-
-        return (
-            Vector3.Lerp(firstPosition, secondPosition, frame % 1f),
-            Quaternion.Slerp(firstRotation, secondRotation, frame % 1f)
-        );
-    }
-
     protected Vector3 RandomWalk() // is abreviated by 'rw' in the rest of the code
     {
         if (rwState == RwState.NOT_IN_RW || rwStateTimeRemaiming == 0)
