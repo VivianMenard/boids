@@ -14,12 +14,6 @@ public class PredatorScript : EntityScript
 
     protected override Vector3 ComputeNewDirection()
     {
-        if (state == State.CHILLING)
-        {
-            AdaptState();
-            return RandomWalk();
-        }
-
         Collider[] nearbyEntityColliders = GetNearbyEntityColliders();
 
         Vector3 preysPositionsSum = Vector3.zero,
@@ -38,7 +32,7 @@ public class PredatorScript : EntityScript
 
             if (entityType == EntityType.BOID)
             {
-                if (!IsInMyFOV(entityPosition))
+                if (state == State.CHILLING || !IsInMyFOV(entityPosition))
                     continue;
 
                 float preyWeight = GetEntityWeightAccordingToVisionDistance(
