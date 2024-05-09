@@ -46,7 +46,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 16c29c8b28d8e984189c49920922121d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Direction: {x: 0, y: 0, z: 0}
 --- !u!135 &4745662870058721019
 SphereCollider:
   m_ObjectHideFlags: 0
@@ -67,7 +66,7 @@ SphereCollider:
   m_Enabled: 1
   serializedVersion: 3
   m_Radius: 10
-  m_Center: {x: 0, y: 0, z: 0}
+  m_Center: {x: 0, y: 0, z: -3.5}
 --- !u!1001 &1951618169308384438
 PrefabInstance:
   m_ObjectHideFlags: 0
