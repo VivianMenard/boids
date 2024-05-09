@@ -405,7 +405,7 @@ public abstract class EntityScript : MonoBehaviour
         Behavior behavior, Vector3 relevantSum, float totalWeight
     )
     {
-        if (totalWeight == 0f)
+        if (totalWeight < Mathf.Epsilon)
             return Vector3.zero;
 
         if (behavior == Behavior.ALIGNMENT)
