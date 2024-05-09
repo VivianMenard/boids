@@ -6666,6 +6666,7 @@ MonoBehaviour:
     causticsIntensityNoiseCellsDensity: 0.1
     causticsIntensityNoiseSpeed: 2
     causticsIntensityNoiseStrengh: 0.7
+    foamTextureTiling: 60
 --- !u!4 &1473159636
 Transform:
   m_ObjectHideFlags: 0

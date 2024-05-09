@@ -35,10 +35,14 @@ Material:
     RenderType: Opaque
   disabledShaderPasses:
   - SHADOWCASTER
-  m_LockedProperties: 
+  m_LockedProperties: _mainColor
   m_SavedProperties:
     serializedVersion: 3
     m_TexEnvs:
+    - _AddFoam_49e283b2672e4decbf08a3ba58a3efef_additionalTexture_1862633068_Texture2D:
+        m_Texture: {fileID: 2800000, guid: ca99df1357819404897a5a9ceebd971a, type: 3}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
     - _BaseMap:
         m_Texture: {fileID: 0}
         m_Scale: {x: 1, y: 1}
@@ -77,6 +81,10 @@ Material:
         m_Offset: {x: 0, y: 0}
     - _ParallaxMap:
         m_Texture: {fileID: 0}
+        m_Scale: {x: 1, y: 1}
+        m_Offset: {x: 0, y: 0}
+    - _SampleTexture2D_0e036d1f94d344acaf0e938611bb1c3f_Texture_1_Texture2D:
+        m_Texture: {fileID: 2800000, guid: ca99df1357819404897a5a9ceebd971a, type: 3}
         m_Scale: {x: 1, y: 1}
         m_Offset: {x: 0, y: 0}
     - _SampleTexture2D_57f4db8441474b848b26b5533d6c0c94_Texture_1_Texture2D:
@@ -139,13 +147,15 @@ Material:
     - _ZTest: 4
     - _ZWrite: 1
     - _ZWriteControl: 0
-    - _lightEnhanceLowAngles: 1.3
+    - _foamTextureStrengh: 0.7
+    - _lightEnhanceLowAngles: 1.6
     - _lightGradientSize: 0.2
-    - _lightLowAnglesTreshold: 0.2
+    - _lightLowAnglesTreshold: 0.4
     - _lightNoiseDeformation: 2.2
     - _lightNoiseStrengh: 0.536
     - _lightNoiseTiling: 20
-    - _lightStrengh: 0.85
+    - _lightStrengh: 1.1
+    - _lightUnderFoamStrengh: 0.2
     - _lowAnglesTreshold: 0.2
     - _minValueForLight: 0.8
     - _smoothness: 1
