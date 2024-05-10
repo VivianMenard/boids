@@ -1,5 +1,8 @@
 using UnityEngine;
 
+/// <summary>
+/// Represents an axis-aligned area.
+/// </summary>
 public class AreaScript : MonoBehaviour
 {
     private Vector3 minPt, maxPt;
@@ -12,6 +15,9 @@ public class AreaScript : MonoBehaviour
         ComputeBoundaries();
     }
 
+    /// <summary>
+    /// Computes the boundaries of the area based on its position and scale.
+    /// </summary>
     private void ComputeBoundaries()
     {
         Vector3 delta = transform.localScale / 2;
