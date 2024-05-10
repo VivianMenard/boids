@@ -1,10 +1,16 @@
 using System;
 using UnityEngine;
 
+/// <summary>
+/// Static class to facilitate the access of the entitiesManager instance.
+/// </summary>
 public static class Accessors
 {
     private static EntitiesManagerScript entitiesManager;
 
+    /// <summary>
+    /// The EntitiesManagerScript instance in use.
+    /// </summary>
     public static EntitiesManagerScript EntitiesManager
     {
         get
