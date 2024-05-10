@@ -1,9 +1,15 @@
+/// <summary>
+/// Represents the type of an entity.
+/// </summary>
 public enum EntityType
 {
     BOID,
     PREDATOR
 }
 
+/// <summary>
+/// Represents the state of an entity.
+/// </summary>
 public enum State
 {
     NORMAL,
@@ -14,6 +20,9 @@ public enum State
     ATTACKING
 }
 
+/// <summary>
+/// Represents the behavior that an entity will adopt regarding another one.
+/// </summary>
 public enum Behavior
 {
     SEPARATION,
@@ -21,6 +30,9 @@ public enum Behavior
     COHESION
 }
 
+/// <summary>
+/// Represent the random walk state of an entity.
+/// </summary>
 public enum RwState
 {
     STRAIGHT_LINE,
@@ -28,6 +40,9 @@ public enum RwState
     NOT_IN_RW
 }
 
+/// <summary>
+/// Static class that regroups all the string constants of the project.
+/// </summary>
 public static class Constants
 {
     public const string entitiesManagerTag = "EntitiesManager";
