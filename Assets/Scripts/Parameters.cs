@@ -155,12 +155,6 @@ public class BoidsParameters : EntityParameters
     public float squaredFullCohesionRadius;
     [HideInInspector]
     public float squaredFullFearRadius;
-    [HideInInspector]
-    public float separationSmoothRangeSizeInverse;
-    [HideInInspector]
-    public float cohesionSmoothRangeSizeInverse;
-    [HideInInspector]
-    public float fearSmoothRangeSizeInverse;
 
     [Space, Range(0, 15), Tooltip("Used to adapt vision distance to improve performances")]
     public int idealNbNeighbors;
@@ -182,18 +176,12 @@ public class BoidsParameters : EntityParameters
         squaredSeparationRadius = MathHelpers.Square(separationRadius);
         squaredFullSeparationRadius = MathHelpers.Square(
             separationRadius - smoothnessRadiusOffset);
-        separationSmoothRangeSizeInverse = 1 /
-            (squaredFullSeparationRadius - squaredSeparationRadius);
         squaredCohesionRadius = MathHelpers.Square(cohesionRadius);
         squaredFullCohesionRadius = MathHelpers.Square(
             cohesionRadius + smoothnessRadiusOffset);
-        cohesionSmoothRangeSizeInverse = 1 /
-            (squaredFullCohesionRadius - squaredCohesionRadius);
         squaredFearRadius = MathHelpers.Square(fearRadius);
         squaredFullFearRadius = MathHelpers.Square(
             fearRadius - smoothnessRadiusOffset);
-        fearSmoothRangeSizeInverse = 1 /
-            (squaredFullFearRadius - squaredFearRadius);
 
         velocities = new Dictionary<State, float>{
             {State.NORMAL, normalVelocity},
@@ -235,8 +223,6 @@ public class PredatorsParameters : EntityParameters
     public float squaredPeerRepulsionRadius;
     [HideInInspector]
     public float squaredFullPeerRepulsionRadius;
-    [HideInInspector]
-    public float peerRepulsionSmoothRangeSizeInverse;
 
     [Space, Range(0, 15), Tooltip("In seconds")]
     public float averageChillingTime;
@@ -280,8 +266,6 @@ public class PredatorsParameters : EntityParameters
         squaredPeerRepulsionRadius = MathHelpers.Square(peerRepulsionRadius);
         squaredFullPeerRepulsionRadius = MathHelpers.Square(
             peerRepulsionRadius - smoothnessRadiusOffset);
-        peerRepulsionSmoothRangeSizeInverse = 1 /
-            (squaredFullPeerRepulsionRadius - squaredPeerRepulsionRadius);
 
         velocities = new Dictionary<State, float>{
             {State.CHILLING, chillingVelocity},

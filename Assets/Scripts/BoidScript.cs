@@ -127,30 +127,27 @@ public class BoidScript : EntityScript
 
     private float GetEntitySeparationWeight(float squaredDistance)
     {
-        return InverseLerpOpti(
+        return Mathf.InverseLerp(
             boidsParams.squaredSeparationRadius,
             boidsParams.squaredFullSeparationRadius,
-            boidsParams.separationSmoothRangeSizeInverse,
             squaredDistance
         );
     }
 
     private float GetEntityCohesionWeight(float squaredDistance)
     {
-        return InverseLerpOpti(
+        return Mathf.InverseLerp(
             boidsParams.squaredCohesionRadius,
             boidsParams.squaredFullCohesionRadius,
-            boidsParams.cohesionSmoothRangeSizeInverse,
             squaredDistance
         );
     }
 
     private float GetEntityFearWeight(float squaredDistance)
     {
-        return InverseLerpOpti(
+        return Mathf.InverseLerp(
             boidsParams.squaredFearRadius,
             boidsParams.squaredFullFearRadius,
-            boidsParams.fearSmoothRangeSizeInverse,
             squaredDistance
         );
     }

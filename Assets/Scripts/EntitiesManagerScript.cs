@@ -61,9 +61,6 @@ public class EntitiesManagerScript : MonoBehaviour
         {State.ATTACKING, true}
     };
 
-    [HideInInspector]
-    public Dictionary<int, float> VisionDistanceSmoothRangeSizeInverses = new Dictionary<int, float>();
-
     private List<GameObject> boids = new List<GameObject>(),
         predators = new List<GameObject>();
 
@@ -122,19 +119,6 @@ public class EntitiesManagerScript : MonoBehaviour
         predatorsParams.PreCalculateParameters(
             calculationInterval, smoothnessRadiusOffset, numberOfBoids
         );
-
-        for (
-            int visionDistance = 1;
-            visionDistance <= Mathf.Max(
-                boidsParams.visionDistance, predatorsParams.visionDistance
-            );
-            visionDistance++
-        )
-        {
-            VisionDistanceSmoothRangeSizeInverses[visionDistance] = 1 /
-                (MathHelpers.Square(visionDistance - smoothnessRadiusOffset) -
-                MathHelpers.Square(visionDistance));
-        }
     }
 
     private void FixedUpdate()

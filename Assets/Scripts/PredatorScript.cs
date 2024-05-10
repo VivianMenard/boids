@@ -86,10 +86,9 @@ public class PredatorScript : EntityScript
 
     private float GetEntityPeerRepulsionWeight(float squaredDistance)
     {
-        return InverseLerpOpti(
+        return Mathf.InverseLerp(
             predatorsParams.squaredPeerRepulsionRadius,
             predatorsParams.squaredFullPeerRepulsionRadius,
-            predatorsParams.peerRepulsionSmoothRangeSizeInverse,
             squaredDistance
         );
     }
