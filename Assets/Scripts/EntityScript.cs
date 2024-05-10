@@ -360,7 +360,7 @@ public abstract class EntityScript : MonoBehaviour
         return Physics.Raycast(
             ray, out hitInfo,
             raycastDistance,
-            entitiesManager.ObstacleLayerMask
+            parameters.obstaclesLayerMask
         );
     }
 

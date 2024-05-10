@@ -22,6 +22,8 @@ public abstract class EntityParameters
     public float obstacleBaseMargin;
     [Tooltip("If yes, obstacle avoidance parameters will be proportional to entity velocity. Must not be switched during playmode")]
     public bool applyVelocityFactor;
+    [HideInInspector]
+    public LayerMask obstaclesLayerMask;
 
     [Space, Range(0, 50), Tooltip("In u/s²")]
     public float acceleration;
@@ -205,6 +207,11 @@ public class BoidsParameters : EntityParameters
 
         avoidanceDirectionPreferences = new float[8] { 1, 1, 1, 1, 1, 1, 1, 1 };
 
+        obstaclesLayerMask = LayerMask.GetMask(
+            Constants.obstaclesLayerName,
+            Constants.boidsObstaclesLayerName
+        );
+
         base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset, nbBoids);
     }
 }
@@ -307,6 +314,11 @@ public class PredatorsParameters : EntityParameters
         };
 
         UpdateNbPreysToAttack(nbBoids);
+
+        obstaclesLayerMask = LayerMask.GetMask(
+            Constants.obstaclesLayerName,
+            Constants.predatorsObstaclesLayerName
+        );
 
         base.PreCalculateParameters(calculationInterval, smoothnessRadiusOffset, nbBoids);
     }

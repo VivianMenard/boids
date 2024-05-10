@@ -49,7 +49,7 @@ public class EntitiesManagerScript : MonoBehaviour
     public bool EntitiesMovement = true;
 
     [HideInInspector]
-    public LayerMask ObstacleLayerMask, EntitiesLayerMask;
+    public LayerMask EntitiesLayerMask;
 
     [HideInInspector]
     public Dictionary<State, bool> IsItEmergencyState = new Dictionary<State, bool>{
@@ -111,7 +111,6 @@ public class EntitiesManagerScript : MonoBehaviour
 
     void Start()
     {
-        ObstacleLayerMask = LayerMask.GetMask(Constants.obstaclesLayerName);
         EntitiesLayerMask = LayerMask.GetMask(
             Constants.boidsLayerName,
             Constants.predatorsLayerName
