@@ -35,8 +35,7 @@ public static class Constants
     public const string obstaclesLayerName = "Obstacles";
     public const string boidsObstaclesLayerName = "BoidsObstacles";
     public const string predatorsObstaclesLayerName = "PredatorsObstacles";
-    public const string boidsLayerName = "Boids";
-    public const string predatorsLayerName = "Predators";
+    public const string entitiesLayerName = "Entities";
 
     public const string scrollAxisName = "Mouse ScrollWheel";
 

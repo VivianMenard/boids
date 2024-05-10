@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 6240550308047002988}
   - component: {fileID: 2830639815527929236}
   - component: {fileID: 529898481279035698}
-  m_Layer: 3
+  m_Layer: 6
   m_Name: Boid
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -131,21 +131,45 @@ PrefabInstance:
       propertyPath: m_Name
       value: Bone3
       objectReference: {fileID: 0}
+    - target: {fileID: -6522695966643703301, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 919132149155446097, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
       propertyPath: m_Name
       value: fish
+      objectReference: {fileID: 0}
+    - target: {fileID: 919132149155446097, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 1790183945725220954, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
       propertyPath: m_Name
       value: Bone1
       objectReference: {fileID: 0}
+    - target: {fileID: 1790183945725220954, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2356043224471405935, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2480909740878747892, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
       propertyPath: m_Name
       value: Bone4
       objectReference: {fileID: 0}
+    - target: {fileID: 2480909740878747892, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 4819001077394492298, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
       propertyPath: m_Name
       value: Bone2
+      objectReference: {fileID: 0}
+    - target: {fileID: 4819001077394492298, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 6730980521014811751, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
       propertyPath: m_Materials.Array.data[0]
@@ -154,6 +178,14 @@ PrefabInstance:
     - target: {fileID: 6905609870639353253, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
       propertyPath: m_Name
       value: Head
+      objectReference: {fileID: 0}
+    - target: {fileID: 6905609870639353253, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
+      propertyPath: m_Layer
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 7036213049465896255, guid: 8dfb64e2bc8024f4da3e3a8630f1cf98, type: 3}
+      propertyPath: m_Layer
+      value: 6
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []

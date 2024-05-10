@@ -9,10 +9,10 @@ TagManager:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Boids
+  - 
   - Water
   - UI
-  - Predators
+  - Entities
   - Obstacles
   - BoidsObstacles
   - PredatorsObstacles
