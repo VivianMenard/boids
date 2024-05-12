@@ -2767,7 +2767,7 @@ GameObject:
   - component: {fileID: 606382683}
   - component: {fileID: 606382682}
   m_Layer: 5
-  m_Name: RecenterText
+  m_Name: ResetCameraText
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2812,7 +2812,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Recenter camera
+  m_text: Reset camera view
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 19fac13b1e3498145856f878972f70e5, type: 2}
   m_sharedMaterial: {fileID: -5232032759608096349, guid: 19fac13b1e3498145856f878972f70e5, type: 2}
@@ -3737,7 +3737,7 @@ GameObject:
   m_Component:
   - component: {fileID: 811802991}
   m_Layer: 5
-  m_Name: Recenter
+  m_Name: ResetCamera
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -8380,7 +8380,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Zoom
+  m_text: Zoom in/out
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 19fac13b1e3498145856f878972f70e5, type: 2}
   m_sharedMaterial: {fileID: -5232032759608096349, guid: 19fac13b1e3498145856f878972f70e5, type: 2}
@@ -8815,7 +8815,7 @@ GameObject:
   - component: {fileID: 1975885098}
   - component: {fileID: 1975885097}
   m_Layer: 5
-  m_Name: RecenterImage
+  m_Name: ResetCameraImage
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
