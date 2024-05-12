@@ -368,6 +368,10 @@ public class SharedParameters
     public float causticsIntensityNoiseSpeed;
     [Range(0, 1)]
     public float causticsIntensityNoiseStrengh;
+    [Range(0, 1)]
+    public float causticsAdditionalTextureStrengh;
+    [Range(50, 100)]
+    public float causticsAdditionalTextureTiling;
 
     [Space, Range(0, 100)]
     public float foamTextureTiling;
