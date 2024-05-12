@@ -108,7 +108,10 @@ public class EntitiesManagerScript : MonoBehaviour
 
     void Start()
     {
-        EntitiesLayerMask = LayerMask.GetMask(Constants.entitiesLayerName);
+        EntitiesLayerMask = LayerMask.GetMask(
+            Constants.boidsLayerName,
+            Constants.predatorsLayerName
+        );
     }
 
     private void PreCalculateParameters()
