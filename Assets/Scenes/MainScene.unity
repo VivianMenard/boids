@@ -1386,7 +1386,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &403305567
 RectTransform:
   m_ObjectHideFlags: 0
@@ -5198,7 +5198,7 @@ MonoBehaviour:
   timeScale: 1
   calculationInterval: 10
   smoothnessRadiusOffset: 1
-  numberOfBoids: 1200
+  numberOfBoids: 500
   numberOfPredators: 1
   boidsParams:
     prefab: {fileID: 6344359519432126883, guid: ab7c1935bfaca5842af297cf4f8610cc, type: 3}
@@ -5341,7 +5341,7 @@ MonoBehaviour:
     probaChillingAfterHunting: 0.03333333
     probaHuntingAfterAttacking: 0.8
     percentagePreysToAttack: 0.15
-    nbPreysToAttack: 180
+    nbPreysToAttack: 75
     chillingVelocity: 6
     huntingVelocity: 8
     attackingVelocity: 20
@@ -7211,7 +7211,7 @@ MonoBehaviour:
           m_StringArgument: 
           m_BoolArgument: 0
         m_CallState: 2
-  m_IsOn: 1
+  m_IsOn: 0
 --- !u!1 &1511796934
 GameObject:
   m_ObjectHideFlags: 0
