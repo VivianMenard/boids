@@ -165,7 +165,7 @@ Material:
     - _absportionStrengh: 1
     - _alpha: 1
     - _faddingStrengh: 0.7
-    - _foamAdditionalTextureStrengh: 0.7
+    - _foamAdditionalTextureStrengh: 0.8
     - _foamAdditionalTextureTiling: 60
     - _foamGradientSize: 5.2
     - _foamMinHeight: 22.7
@@ -193,7 +193,7 @@ Material:
     - _absportionColor: {r: 0.4823529, g: 0.8196079, b: 1, a: 0}
     - _absportionComplementaryColor: {r: 0.34635097, g: 0.45745814, b: 0.8867924, a: 0}
     - _faddingColor: {r: 0.023529412, g: 0.5372549, b: 0.8117647, a: 0}
-    - _foamColor: {r: 0.75686276, g: 0.74959314, b: 0.7099373, a: 1}
+    - _foamColor: {r: 0.8415094, g: 0.8415094, b: 0.8415094, a: 1}
     - _fogColor: {r: 0.023529407, g: 0.7898055, b: 0.8117647, a: 0}
   m_BuildTextureStacks: []
 --- !u!114 &8373201907044947778
