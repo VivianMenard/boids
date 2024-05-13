@@ -5,17 +5,11 @@ using UnityEngine;
 /// </summary>
 public static class MathHelpers
 {
-    /// <summary>
-    /// A constant representing 1 / √2.
-    /// </summary>
+    /// <summary> A constant representing 1 / √2.</summary>
     public const float OneOverSquareRootOfTwo = 0.7071067812f;
 
-    /// <summary>
-    /// Squares a number.
-    /// </summary>
-    /// 
-    /// <param name="number">The number to square.</param>
-    /// 
+    /// <summary>Squares a number.</summary> 
+    /// <param name="number">The number to square.</param> 
     /// <returns>The squared number</returns>
     public static float Square(float number)
     {
@@ -209,29 +203,17 @@ public static class MathHelpers
             Vector3.zero, 1f, theta, phi);
     }
 
-    /// <summary>
-    /// Converts a quaternion rotation to a forward direction vector.
-    /// </summary>
-    /// 
-    /// <param name="rotation">The quaternion rotation to convert.</param>
-    /// 
-    /// <returns>
-    /// The forward direction vector corresponding to the given rotation.
-    /// </returns>
+    /// <summary>Converts a quaternion rotation to a forward direction vector.</summary> 
+    /// <param name="rotation">The quaternion rotation to convert.</param> 
+    /// <returns>The forward direction vector corresponding to the given rotation.</returns>
     public static Vector3 RotationToDirection(Quaternion rotation)
     {
         return rotation * Vector3.forward;
     }
 
-    /// <summary>
-    /// Converts an angle to its equivalent within the range [-π, π[.
-    /// </summary>
-    /// 
-    /// <param name="initialAngle">The initial angle to convert in radians.</param>
-    /// 
-    /// <returns>
-    /// The equivalent angle within the range [-π, π[.
-    /// </returns>
+    /// <summary>Converts an angle to its equivalent within the range [-π, π[.</summary> 
+    /// <param name="initialAngle">The initial angle to convert in radians.</param>/// 
+    /// <returns>The equivalent angle within the range [-π, π[.</returns>
     public static float EquivalentInTrigoRange(float initialAngle)
     {
         float moduloAngle = initialAngle % (2 * Mathf.PI);
@@ -249,7 +231,9 @@ public static class MathHelpers
     /// </summary>
     /// 
     /// <param name="initialDirection">The initial direction vector to restrict.</param>
-    /// <param name="verticalRestriction">The vertical restriction to apply, between 0 (no restrictions) and 1 (completely horizontal).</param>
+    /// <param name="verticalRestriction">
+    /// The vertical restriction to apply, between 0 (no restrictions) and 1 (completely horizontal).
+    /// </param>
     /// 
     /// <returns>
     /// The direction vector with the vertical angle restricted.
