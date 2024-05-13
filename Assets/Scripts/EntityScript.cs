@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-
+/// <summary>Class whose every instance manage the behavior of an entity.</summary>
 public abstract class EntityScript : MonoBehaviour
 {
     private static int nextId = 0;
@@ -28,7 +28,10 @@ public abstract class EntityScript : MonoBehaviour
     private int rwStateTimeRemaiming;
     protected RwState rwState = RwState.NOT_IN_RW;
 
-    // data format : (frame number) : (position at this frame, rotation at this frame, traveled distance since last frame)
+    /// <summary>
+    /// Dictionay to store trajectory information for the animation of the entity. Data format:
+    /// (frame number) : (position at this frame, rotation at this frame, traveled distance since last frame)
+    /// </summary>
     private Dictionary<long, (Vector3, Quaternion, float)> frameToTransformInfo =
         new Dictionary<long, (Vector3, Quaternion, float)>();
     protected (Vector3, Quaternion)[] bonesPositionsAndRotations;
@@ -78,15 +81,23 @@ public abstract class EntityScript : MonoBehaviour
         }
     }
 
+    /// <summary>Initializes entity parameters.</summary>
     protected abstract void InitParams();
 
+    /// <summary>
+    /// Computes the new optimal direction for the entity based on its state and the other entities that surround it.
+    /// </summary>
     protected abstract Vector3 ComputeNewDirection();
 
+    /// <summary>Computes the initial direction of the entity based on its spawn rotation.</summary>
     private Vector3 GetInitialDirection()
     {
         return MathHelpers.RotationToDirection(myRotation);
     }
 
+    /// <summary>
+    /// Used just after the spawn of the entity to create a fake trajectory history for the entity, to be able to begin animate it.
+    /// </summary>
     private void CreateFakeTransformHistory()
     {
         for (int fakeFrame = 0; fakeFrame < parameters.nbTransformsToStore; fakeFrame++)
@@ -118,10 +129,14 @@ public abstract class EntityScript : MonoBehaviour
         AdaptVelocity();
 
         Move();
-        ManageBones();
+        ManageAnimation();
     }
 
-    private void ManageBones()
+    /// <summary>
+    /// Handles all the stuff related to entity animation. Stores the current position/rotation in the trajectory history, and 
+    /// use this history to animate the bones.
+    /// </summary>
+    private void ManageAnimation()
     {
         if (!parameters.hasRig)
             return;
@@ -135,6 +150,10 @@ public abstract class EntityScript : MonoBehaviour
         ApplyBonesPositionsAndRotations();
     }
 
+    /// <summary>
+    /// Stores the current relevant pieces of information in the trajectory history. Removes history entries that are now too
+    /// old to be relevant.
+    /// </summary>
     private void StoreTransformInfo()
     {
         frameToTransformInfo[entitiesManager.Clock] = (
@@ -146,6 +165,9 @@ public abstract class EntityScript : MonoBehaviour
         frameToTransformInfo.Remove(entitiesManager.Clock - parameters.nbTransformsToStore - 1);
     }
 
+    /// <summary>
+    /// Applies position and rotation stored in <c>bonesPositionsAndRotations</c> to the bones of the entity.
+    /// </summary>
     private void ApplyBonesPositionsAndRotations()
     {
         for (int boneIndex = parameters.animationFirstBone; boneIndex < bones.Length; boneIndex++)
@@ -157,6 +179,10 @@ public abstract class EntityScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Adapts obstacles avoidance parameters to the current velocity of the entity 
+    /// (the higher the entity velocity is, the higher the raycast distance need to be to detect obstacles on time).
+    /// </summary>
     private void AdaptObstacleAvoidanceParams()
     {
         float velocityFactor = velocity / parameters.velocities[parameters.defaultState];
@@ -165,6 +191,9 @@ public abstract class EntityScript : MonoBehaviour
         raycastDistance = velocityFactor * parameters.raycastBaseDistance;
     }
 
+    /// <summary>
+    /// Computes the ideal position of each bone according the entity trajectory history.
+    /// </summary>
     protected virtual void ComputeBonesPositionsAndRotations()
     {
         float traveledDistance = 0f;
@@ -196,11 +225,20 @@ public abstract class EntityScript : MonoBehaviour
         }
     }
 
+    /// <summary>Compute the distance between a specific bone and the head of the entity.</summary>
+    /// <param name="boneIndex">The index of the bone.</param>
+    /// <returns>The distance between the bone ans the head.</returns>
     protected float BoneDistanceToHead(int boneIndex)
     {
         return myScale * parameters.boneBaseDistanceToHead[boneIndex];
     }
 
+    /// <summary>
+    /// Computes a new direction for the entity to make it adopt a random walk behavior.
+    /// The resulting behavior will be globally random but locally coherent. The entity will
+    /// chain straight lines and curves.
+    /// </summary>
+    /// <returns>The direction for a random walk behavior</returns> 
     protected Vector3 RandomWalk() // is abreviated by 'rw' in the rest of the code
     {
         if (rwState == RwState.NOT_IN_RW || rwStateTimeRemaiming == 0)
@@ -214,7 +252,7 @@ public abstract class EntityScript : MonoBehaviour
                 rwState = RwState.DIRECTION_CHANGE;
 
                 rwLastDirection = direction;
-                rwTargetDirection = GetDirectionForRw();
+                rwTargetDirection = GetNewTargetDirectionForRw();
             }
         }
 
@@ -233,6 +271,9 @@ public abstract class EntityScript : MonoBehaviour
         return newDirection;
     }
 
+    /// <summary>
+    /// Updates the multiplicative bonus factor of the entity if the bonus factor cycle is ended.
+    /// </summary>
     private void UpdateVelocityBonusFactor()
     {
         if (sinceLastBonusChange == parameters.nbCalculationsBetweenVelocityBonusFactorChange)
@@ -247,7 +288,12 @@ public abstract class EntityScript : MonoBehaviour
             sinceLastBonusChange++;
     }
 
-    private Vector3 GetDirectionForRw()
+
+    /// /// <summary>
+    /// Finds a new target direction for random walk behavior. Tries to find one that doesn't lead to an obstacle.
+    /// </summary>
+    /// <returns>A new target direction for random walk behavior.</returns> 
+    private Vector3 GetNewTargetDirectionForRw()
     {
         Vector3 TryDirectionForRw()
         {
@@ -259,6 +305,12 @@ public abstract class EntityScript : MonoBehaviour
         int nbAttempts = 0;
         RaycastHit hitInfo;
 
+
+        // Even if this part may seem redondant with the one that avoid obstacles the goal is different.
+        // If the entity is close to the wall and the random walk function leads it trough the wall the 
+        // IterateOnDirectionToAvoidObstacles function will avoid the collision by making the entity go 
+        // along the wall. So without this code an entity close to the wall has 1/2 chance to just 
+        // follow it, which is visually boring.
         while (
             PerformRaycastOnObstacles(directionForRw, out hitInfo) &&
             nbAttempts < parameters.rwMaxAttempts
@@ -271,6 +323,9 @@ public abstract class EntityScript : MonoBehaviour
         return directionForRw;
     }
 
+    /// <summary>Corrects a potential entity direction to take obstacles into account.</summary>
+    /// <param name="initialDirection">The initial direction.</param>
+    /// <returns>The new direction that avoid obstacles if needed.</returns>
     private Vector3 IterateOnDirectionToAvoidObstacles(Vector3 initialDirection)
     {
         RaycastHit hitInfo;
@@ -310,6 +365,11 @@ public abstract class EntityScript : MonoBehaviour
         return initialDirection;
     }
 
+    /// <summary>
+    /// Computes 8 potential avoidance directions around the initial one.
+    /// The result isn't returned but stored in <c>avoidanceDirections</c> attribute to avoid constantly reallocating memory.
+    /// </summary>
+    /// <param name="initialDirection">The initial direction.</param>
     private void ComputeAvoidanceDirections(Vector3 initialDirection)
     {
         (Vector3 axis1, Vector3 axis2) = CreateCoordSystemForAbstacleAvoidance(initialDirection);
