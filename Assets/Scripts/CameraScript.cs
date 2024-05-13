@@ -1,27 +1,30 @@
 using UnityEngine;
 
+/// <summary>
+/// Manages all camera movements.
+/// </summary>
 public class CameraScript : MonoBehaviour
 {
-    [SerializeField]
+    [SerializeField, Tooltip("The area where the camera cannot go.")]
     private GameObject cameraExclusionArea;
-    [SerializeField]
+    [SerializeField, Tooltip("The offset of the initial center of the camera from the center of the exclusion area.")]
     private Vector3 initialOffset;
-    [SerializeField, Range(0, 0.05f)]
+    [SerializeField, Range(0, 0.05f), Tooltip("In rad/screenUnit, rotation speed of the camerag.")]
     private float dragSpeed;
-    [SerializeField, Range(0, 0.1f)]
+    [SerializeField, Range(0, 0.1f), Tooltip("In u/sreenUnit, center moving speed.")]
     private float centerDragSpeed;
-    [SerializeField, Range(0, 30)]
+    [SerializeField, Range(0, 30), Tooltip("In u/scroolUnit, Zoom speed when scrooling.")]
     private float scrollSpeed;
-    [SerializeField, Range(0, 200)]
+    [SerializeField, Range(0, 200), Tooltip("Maximum distance of the camera from the center.")]
     private float maxDistance;
-    [SerializeField, Range(0, 5)]
+    [SerializeField, Range(0, 5), Tooltip("Margin with respect to the camera exclusion area.")]
     private float margin;
 
-    [SerializeField, Range(0, 1), Tooltip("In seconds")]
+    [SerializeField, Range(0, 1), Tooltip("In seconds, duration of the camera centering animation.")]
     private float centeringAnimationTotalTime;
-    [SerializeField, Range(0, 2), Tooltip("In u, distance from origin under which the camera is considered non moved")]
+    [SerializeField, Range(0, 2), Tooltip("In u, distance from origin under which the camera is considered non moved.")]
     private float thresholdForOriginCriteria;
-    [SerializeField, Range(0, 0.1f), Tooltip("In rad, angular distance from origin under which the camera is considered non moved")]
+    [SerializeField, Range(0, 0.1f), Tooltip("In rad, angular distance from origin under which the camera is considered non moved.")]
     private float angularThresholdForOriginCriteria;
     private float centeringTime;
     private bool centeringInProgress = false;
@@ -69,6 +72,13 @@ public class CameraScript : MonoBehaviour
         UpdateRotation();
     }
 
+    /// <summary>
+    /// Allows to get the AreaScript component in the exclusion area gameObject.
+    /// </summary>
+    /// 
+    /// /// <returns>
+    /// The AreaScript.
+    /// </returns>
     private AreaScript GetArea()
     {
         AreaScript area = cameraExclusionArea.GetComponent<AreaScript>();
@@ -80,8 +90,12 @@ public class CameraScript : MonoBehaviour
         return area;
     }
 
-    [ContextMenu("Adjust camera position")]
-    private void AdjustCameraPosition()
+    /// <summary>
+    /// Adjusts the camera position to put it at max distance from the center, and directs it 
+    /// toward the center.
+    /// </summary>
+    [ContextMenu("Adjust camera transform")]
+    private void AdjustCameraTransform()
     {
         AreaScript area = GetArea();
 
@@ -93,6 +107,10 @@ public class CameraScript : MonoBehaviour
         UpdateRotation();
     }
 
+    /// <summary>
+    /// Compute <c>referenceForTheta</c> and <c>thetaOffset</c> in order to have a spherical coordinate system
+    /// where initial camera position corresponds to <c>theta = 0</c>.
+    /// </summary>
     private void ComputeThetaReference()
     {
         Vector3 centerToPosition = transform.position - center;
@@ -112,7 +130,7 @@ public class CameraScript : MonoBehaviour
 
         if (Input.GetKeyDown(KeyCode.C))
         {
-            BeginCenteringAnimation();
+            StartCenteringAnimation();
             return;
         }
 
@@ -157,6 +175,13 @@ public class CameraScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Determines if the camera is at its original position.
+    /// </summary>
+    /// 
+    /// <returns>
+    /// <c>true</c> if the camera is at its original position; otherwise, <c>false</c>.
+    /// </returns>
     private bool IsAtOrigin()
     {
         bool isInitialCenter =
@@ -171,7 +196,10 @@ public class CameraScript : MonoBehaviour
         return isInitialCenter && isInitialDistance && IsInitialTheta && IsInitialPhi;
     }
 
-    private void BeginCenteringAnimation()
+    /// <summary>
+    /// Starts the centering animation the camera is not at its original position.
+    /// </summary>
+    private void StartCenteringAnimation()
     {
         if (IsAtOrigin())
             return;
@@ -186,6 +214,9 @@ public class CameraScript : MonoBehaviour
         beginingAnimPhi = phi;
     }
 
+    /// <summary>
+    /// Continues centering animation.
+    /// </summary>
     private void ProcessCenteringAnimation()
     {
         centeringTime += Time.deltaTime;
@@ -206,6 +237,9 @@ public class CameraScript : MonoBehaviour
         needUpdate = true;
     }
 
+    /// <summary>
+    /// Ends centering animation.
+    /// </summary>
     private void EndCenteringAnimation()
     {
         centeringInProgress = false;
@@ -223,12 +257,18 @@ public class CameraScript : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Updates the rotation of the camera to direct it to <c>center</c>.
+    /// </summary>
     private void UpdateRotation()
     {
         Vector3 cameraToCenter = center - transform.position;
         transform.rotation = Quaternion.LookRotation(cameraToCenter);
     }
 
+    /// <summary>
+    /// Update camera position according to <c>center</c>, <c>distance</c>, <c>theta</c> and <c>phi</c>.
+    /// </summary>
     private void UpdatePosition()
     {
         float epsilon = 0.0001f;
