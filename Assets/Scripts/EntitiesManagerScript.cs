@@ -1,22 +1,31 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+/// <summary>
+/// Manages all information and actions that concern all the entities.
+/// </summary>
 public class EntitiesManagerScript : MonoBehaviour
 {
-    [SerializeField, Range(0, 3)]
+    [SerializeField, Range(0, 3), Tooltip("Time scale of the simulation.")]
     private float timeScale;
 
-    [SerializeField, Range(1, 15), Space, Tooltip("Number of FixedUpdates between velocity calculations")]
+    [SerializeField, Range(1, 15), Space, Tooltip("The number of fixed updates between every entity behavior update.")]
     private int calculationInterval;
     public int CalculationInterval { get { return calculationInterval; } }
 
-    [SerializeField, Range(0, 1), Tooltip("Size of the smoothing zone between two behaviors")]
+    [SerializeField, Range(0, 2), Tooltip("Size of the smoothing zone between two behaviors.")]
     private float smoothnessRadiusOffset;
 
-    [Space, SerializeField, Range(0, 3000)]
+    [Space, SerializeField, Range(0, 3000), Tooltip("Number of boids in the simulation.")]
     private int numberOfBoids;
-    [SerializeField, Range(0, 10)]
+    [SerializeField, Range(0, 10), Tooltip("Number of predators in the simulation.")]
     private int numberOfPredators;
+
+    [Space]
+    public BoidsParameters boidsParams;
+
+    [Space]
+    public PredatorsParameters predatorsParams;
 
     public int NumberOfBoids
     {
@@ -35,12 +44,6 @@ public class EntitiesManagerScript : MonoBehaviour
     }
 
     private int currentNbBoids = 0, currentNbPredators = 0;
-
-    [Space]
-    public BoidsParameters boidsParams;
-
-    [Space]
-    public PredatorsParameters predatorsParams;
 
     private long clock = 0;
     public long Clock { get { return clock; } }
@@ -68,31 +71,55 @@ public class EntitiesManagerScript : MonoBehaviour
     private Dictionary<Collider, Vector3> colliderToDirection = new Dictionary<Collider, Vector3>();
     private Dictionary<Collider, Vector3> colliderToPosition = new Dictionary<Collider, Vector3>();
 
+    /// <summary>Allows to access entity type from its collider.</summary>
+    /// <param name="collider">The entity collider.</param>
+    /// <returns>The entity type.</returns>
     public EntityType ColliderToEntityType(Collider collider)
     {
         return colliderToEntityType[collider];
     }
 
+    /// <summary>Allows to access entity direction from its collider.</summary>
+    /// <param name="collider">The entity collider.</param>
+    /// <returns>The entity direction.</returns>
     public Vector3 ColliderToDirection(Collider collider)
     {
         return colliderToDirection[collider];
     }
 
+    /// <summary>Allows to access entity position from its collider.</summary>
+    /// <param name="collider">The entity collider.</param>
+    /// <returns>The entity position.</returns>
     public Vector3 ColliderToPosition(Collider collider)
     {
         return colliderToPosition[collider];
     }
 
+    /// <summary>
+    /// Updates the stored position of the entity.
+    /// </summary>
+    /// <param name="collider">The entity collider.</param>
+    /// <param name="newPosition">The new position to store.</param>
     public void UpdateEntityPosition(Collider collider, Vector3 newPosition)
     {
         colliderToPosition[collider] = newPosition;
     }
 
+    /// <summary>
+    /// Updates the stored direction of the entity.
+    /// </summary>
+    /// <param name="collider">The entity collider.</param>
+    /// <param name="newDirection">The new direction to store.</param>
     public void UpdateEntityDirection(Collider collider, Vector3 newDirection)
     {
         colliderToDirection[collider] = newDirection;
     }
 
+    /// <summary>
+    /// Removes all the stored information related to an entity.
+    /// Used before entity deletion.
+    /// </summary>
+    /// <param name="collider">The entity collider.</param>
     public void RemoveAssociatedEntries(Collider collider)
     {
         colliderToEntityType.Remove(collider);
@@ -114,6 +141,7 @@ public class EntitiesManagerScript : MonoBehaviour
         );
     }
 
+    /// <summary>Pre-calculate all the entities parameters that require it.</summary>
     private void PreCalculateParameters()
     {
         boidsParams.PreCalculateParameters(
@@ -139,6 +167,9 @@ public class EntitiesManagerScript : MonoBehaviour
         );
     }
 
+    /// <summary> Spawn/Despawn a number of entities of a specific type. </summary> 
+    /// <param name="nbToSpawn">The number of entities to spawn (could be negative if you want to despawn entities).</param>
+    /// <param name="type">The type of entities to spawn.</param>
     private void AdjustNbEntities(int nbToSpawn, EntityType type)
     {
         if (nbToSpawn == 0)
@@ -150,6 +181,9 @@ public class EntitiesManagerScript : MonoBehaviour
             DespawnEntities(-nbToSpawn, type);
     }
 
+    /// <summary>Spawn a number of entities of a specific type.</summary> 
+    /// <param name="nbToSpawn">The number of entities to spawn.</param>
+    /// <param name="type">The type of entities to spawn.</param>
     private void SpawnEntities(int nbToSpawn, EntityType type)
     {
         GameObject entityPrefab = (type == EntityType.BOID) ?
@@ -190,7 +224,10 @@ public class EntitiesManagerScript : MonoBehaviour
         IncrCurrentNbEntities(nbToSpawn, type);
     }
 
-    private void DespawnEntities(int nbToDespanw, EntityType type)
+    /// <summary>Despawn a number of entities of a specific type.</summary> 
+    /// <param name="nbToDespawn">The number of entities to despawn.</param>
+    /// <param name="type">The type of entities to despawn.</param>
+    private void DespawnEntities(int nbToDespawn, EntityType type)
     {
         int startIndex = currentNbBoids - 1;
         int endIndex = numberOfBoids;
@@ -210,9 +247,14 @@ public class EntitiesManagerScript : MonoBehaviour
             Destroy(entity);
         }
 
-        IncrCurrentNbEntities(-nbToDespanw, type);
+        IncrCurrentNbEntities(-nbToDespawn, type);
     }
 
+    /// <summary>
+    /// Adds an increment to <c>currentNbBoids</c> or <c>currentNbPredators</c> depending on the type argument.
+    /// </summary> 
+    /// <param name="increment">The increment to add.</param>
+    /// <param name="type">The type of entities whose related counter you want to increment.</param>
     private void IncrCurrentNbEntities(int increment, EntityType type)
     {
         switch (type)
@@ -226,6 +268,9 @@ public class EntitiesManagerScript : MonoBehaviour
         }
     }
 
+    /// <summary>Set a random scale for an entity according to the parameters related to its type.</summary> 
+    /// <param name="entity">The entity whose scale need to be changed.</param>
+    /// <param name="type">The type of the entity.</param>
     private void SetEntityScale(GameObject entity, EntityType type)
     {
         float scaleVariations = (type == EntityType.BOID) ?
@@ -234,6 +279,9 @@ public class EntitiesManagerScript : MonoBehaviour
         entity.transform.localScale *= (1 + scaleVariations * Random.Range(-1, 1));
     }
 
+    /// <summary>Finds a random position to spawn an entity in the area related to its entity type.</summary>
+    /// <param name="type">The type of the entity.</param>
+    /// <returns>A random position to spawn the entity.</returns>
     private Vector3 GetRandomSpawnablePositionInArea(EntityType type)
     {
         AreaScript spawnArea = (type == EntityType.BOID) ?
@@ -255,6 +303,7 @@ public class EntitiesManagerScript : MonoBehaviour
         AdjustPredatorsColliders();
     }
 
+    /// <summary>Adjusts the size of the predator's collider compoenent according to parameters.</summary>
     private void AdjustPredatorsColliders()
     {
         void AdjustOnePredatorCollider(GameObject predator)
@@ -275,6 +324,7 @@ public class EntitiesManagerScript : MonoBehaviour
             AdjustOnePredatorCollider(predator);
     }
 
+    /// <summary>Adjusts values of specific parameters to meets requirements that link them.</summary>
     private void CheckBoundsForDynamicRangeParameters()
     {
         if (boidsParams.cohesionRadius < boidsParams.separationRadius)
