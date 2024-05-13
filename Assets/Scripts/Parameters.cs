@@ -183,13 +183,6 @@ public class BoidsParameters : EntityParameters
     [Range(0, 50), Tooltip("In u/s, velocity of the boid in AFRAID state.")]
     public float afraidVelocity;
 
-    /// <summary>
-    /// Pre-calculates all the boids parameters that require it.
-    /// </summary>
-    /// 
-    /// <param name="calculationInterval">The number of fixed updates between every entity behavior update.</param>
-    /// <param name="smoothnessRadiusOffset">The size of the gradient area between to behaviors in u, used by the system to smooth behaviors.</param>
-    /// <param name="nbBoids">The number of boids in the simulation.</param>
     public override void PreCalculateParameters(
         int calculationInterval, float smoothnessRadiusOffset, int nbBoids
     )
@@ -283,13 +276,6 @@ public class PredatorsParameters : EntityParameters
     [Range(0, 1), Tooltip("How much the velocity of the predator will impact animation parameters.")]
     public float velocityImpactOnWaves;
 
-    /// <summary>
-    /// Pre-calculates all the predators parameters that require it.
-    /// </summary>
-    /// 
-    /// <param name="calculationInterval">The number of fixed updates between every entity behavior update.</param>
-    /// <param name="smoothnessRadiusOffset">The size of the gradient area between to behaviors in u, used by the system to smooth behaviors.</param>
-    /// <param name="nbBoids">The number of boids in the simulation.</param>
     public override void PreCalculateParameters(
         int calculationInterval, float smoothnessRadiusOffset, int nbBoids
     )
