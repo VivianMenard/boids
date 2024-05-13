@@ -3,37 +3,37 @@ using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
+/// <summary>
+/// Manages high level informations and actions.
+/// </summary>
 public class GlobalManager : MonoBehaviour
 {
     [SerializeField]
     private GameObject Ui, paramsUi, controlsUi, pauseIcon, playIcon;
-
-    [Space, SerializeField]
-    private Color buttonNormalColor, buttonTabSelectedColor;
-    [SerializeField]
-    private List<GameObject> allUiComponentsWithBgColor = new List<GameObject>();
-
-    [Space, SerializeField]
-    private Toggle fpsToggle;
-    [SerializeField]
-    private TextMeshProUGUI fpsDisplay;
-    [SerializeField, Range(0.01f, 1f), Tooltip("Time in seconds between fps display refreshing")]
-    private float fpsRefreshPeriod;
-
-    [Space, SerializeField]
-    private TextMeshProUGUI nbBoidsDisplay;
-    [SerializeField]
-    private TextMeshProUGUI nbPredatorsDisplay;
     [SerializeField]
     private Button controlsButton, paramsButton, addBoidsButton, removeBoidsButton,
     addPredatorsButton, removePredatorsButton;
-    [SerializeField, Range(0, 5000)]
+    [SerializeField]
+    private TextMeshProUGUI fpsDisplay, nbBoidsDisplay, nbPredatorsDisplay;
+    [SerializeField]
+    private Toggle fpsToggle;
+    [SerializeField]
+    private List<GameObject> allUiComponentsWithBgColor = new List<GameObject>();
+
+
+    [Space, SerializeField, Tooltip("Normal color of the buttons.")]
+    private Color buttonNormalColor;
+    [SerializeField, Tooltip("Color of the button when the related tab is open.")]
+    private Color buttonTabSelectedColor;
+    [SerializeField, Range(0.01f, 1f), Tooltip("Time in seconds between fps display refreshing.")]
+    private float fpsRefreshPeriod;
+    [SerializeField, Range(0, 5000), Tooltip("Maximal number of boids that can be set by the user.")]
     private int maxNbBoidsInUi;
-    [SerializeField, Range(0, 500)]
-    private int nbBoidsStep;
-    [SerializeField, Range(0, 20)]
+    [SerializeField, Range(0, 20), Tooltip("Maximal number of predators that can be set by the user.")]
     private int maxNbPredatorsInUi;
-    [SerializeField, Range(0, 5)]
+    [SerializeField, Range(0, 500), Tooltip("Number of boids added every time the user adds boids.")]
+    private int nbBoidsStep;
+    [SerializeField, Range(0, 5), Tooltip("Number of predators added every time the user adds predators.")]
     private int nbPredatorsStep;
 
     private bool pause = false;
@@ -52,6 +52,9 @@ public class GlobalManager : MonoBehaviour
         UpdateButtonsColor();
     }
 
+    /// <summary>
+    /// Allows to update all the components with a background color in once.
+    /// </summary>
     [ContextMenu("Update components color")]
     private void UpdateComponentsColor()
     {
@@ -76,6 +79,9 @@ public class GlobalManager : MonoBehaviour
             ToggleUiDisplay();
     }
 
+    /// <summary>
+    /// Computes FPS and update associated display when needed.
+    /// </summary>
     private void ManageFpsDisplay()
     {
         nbFrameSinceLastFpsUpdate++;
@@ -91,15 +97,21 @@ public class GlobalManager : MonoBehaviour
         }
     }
 
+    /// <summary>
+    /// Allows to quit the game mode or to quit the application depending wether it's the editor or a build.
+    /// </summary>
     public void QuitGame()
     {
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#else
+        #if UNITY_EDITOR
+            UnityEditor.EditorApplication.isPlaying = false;
+        #else
             Application.Quit();
-#endif
+        #endif
     }
 
+    /// <summary>
+    /// Adds <c>nbBoidsStep</c> boids to the simulation, within the limit of <c>maxNbBoidsInUi</c> boids maximum.
+    /// </summary>
     public void AddBoids()
     {
         int newNbBoids = Mathf.Min(
@@ -112,6 +124,9 @@ public class GlobalManager : MonoBehaviour
         UpdateBoidsButtonsInteractivity();
     }
 
+    /// <summary>
+    /// Removes <c>nbBoidsStep</c> boids to the simulation.
+    /// </summary>
     public void RemoveBoids()
     {
         int newNbBoids = Mathf.Max(
@@ -124,6 +139,10 @@ public class GlobalManager : MonoBehaviour
         UpdateBoidsButtonsInteractivity();
     }
 
+    /// <summary>
+    /// Adds <c>nbPredatorsStep</c> predators to the simulation, within the limit of 
+    /// <c>maxNbPredatorsInUi</c> predators maximum.
+    /// </summary>
     public void AddPredators()
     {
         int newNbPredators = Mathf.Min(
@@ -136,6 +155,9 @@ public class GlobalManager : MonoBehaviour
         UpdatePredatorsButtonsInteractivity();
     }
 
+    /// <summary>
+    /// Removes <c>nbPredatorsStep</c> boids to the simulation.
+    /// </summary>
     public void RemovePredators()
     {
         int newNbPredators = Mathf.Max(
@@ -148,18 +170,29 @@ public class GlobalManager : MonoBehaviour
         UpdatePredatorsButtonsInteractivity();
     }
 
+    /// <summary>
+    /// Makes boids add and remove button disabled/enabled depending wether it's relevant or not to be able to
+    /// add/remove boids.
+    /// </summary>
     public void UpdateBoidsButtonsInteractivity()
     {
         addBoidsButton.interactable = entitiesManager.NumberOfBoids < maxNbBoidsInUi;
         removeBoidsButton.interactable = entitiesManager.NumberOfBoids > 0;
     }
 
+    /// <summary>
+    /// Makes predators add and remove button disabled/enabled depending wether it's relevant or not to be able to
+    /// add/remove predators.
+    /// </summary>
     public void UpdatePredatorsButtonsInteractivity()
     {
         addPredatorsButton.interactable = entitiesManager.NumberOfPredators < maxNbPredatorsInUi;
         removePredatorsButton.interactable = entitiesManager.NumberOfPredators > 0;
     }
 
+    /// <summary>
+    /// Updates the number of boids display with the number of boids in the simulation.
+    /// </summary>
     private void UpdateNbBoidsDisplay()
     {
         int nbBoids = entitiesManager.NumberOfBoids;
@@ -170,6 +203,9 @@ public class GlobalManager : MonoBehaviour
         nbBoidsDisplay.text = string.Format(nbFishesDisplayTemplate, formattedNbBoids);
     }
 
+    /// <summary>
+    /// Updates the number of predators display with the number of predators in the simulation.
+    /// </summary>
     private void UpdateNbPredatorsDisplay()
     {
         int nbPredators = entitiesManager.NumberOfPredators;
@@ -180,11 +216,17 @@ public class GlobalManager : MonoBehaviour
         );
     }
 
+    /// <summary>
+    /// Toggles the display of the entire UI.
+    /// </summary>
     private void ToggleUiDisplay()
     {
         Ui.SetActive(!Ui.activeInHierarchy);
     }
 
+    /// <summary>
+    /// Toggles the display of the parameters tab in the UI.
+    /// </summary>
     public void ToggleParamsDisplay()
     {
         controlsUi.SetActive(false);
@@ -192,6 +234,9 @@ public class GlobalManager : MonoBehaviour
         UpdateButtonsColor();
     }
 
+    /// <summary>
+    /// Toggles the display of controls tab in the UI.
+    /// </summary>
     public void ToggleControlsDisplay()
     {
         paramsUi.SetActive(false);
@@ -199,6 +244,12 @@ public class GlobalManager : MonoBehaviour
         UpdateButtonsColor();
     }
 
+    /// <summary>
+    /// Updates the color of a specific button regarding wether the related tab is selected or not.
+    /// </summary>
+    /// 
+    /// <param name="button">The specific button.</param>
+    /// <param name="isTabSelected">Is the related tab selected.</param>
     private void UpdateButtonColor(Button button, bool isTabSelected)
     {
         Image imageComponent = button.GetComponent<Image>();
@@ -212,17 +263,26 @@ public class GlobalManager : MonoBehaviour
             buttonNormalColor;
     }
 
+    /// <summary>
+    /// Updates the color of parameters button and controls button regarding wether their related tab is selected or not.
+    /// </summary>
     private void UpdateButtonsColor()
     {
         UpdateButtonColor(paramsButton, paramsUi.activeInHierarchy);
         UpdateButtonColor(controlsButton, controlsUi.activeInHierarchy);
     }
 
+    /// <summary>
+    /// Toggles the display of FPS in the UI.
+    /// </summary>
     public void ToggleFpsDisplay()
     {
         fpsDisplay.gameObject.SetActive(fpsToggle.isOn);
     }
 
+    /// <summary>
+    /// Toggles simulation pause state. Manages entities movements and shader movements.
+    /// </summary>
     public void TogglePause()
     {
         if (pause)
@@ -242,6 +302,9 @@ public class GlobalManager : MonoBehaviour
         playIcon.SetActive(pause);
     }
 
+    /// <summary>
+    /// Pauses all shader animations.
+    /// </summary>
     private void PauseShaders()
     {
         float currentTimeOffset = Shader.GetGlobalFloat(Constants.shaderTimeOffsetReference);
@@ -249,6 +312,9 @@ public class GlobalManager : MonoBehaviour
         Shader.SetGlobalFloat(Constants.shaderTimeOffsetReference, Time.time + currentTimeOffset);
     }
 
+    /// <summary>
+    /// Unpauses all shader animations.
+    /// </summary>
     private void UnPauseShaders()
     {
         float currentTimeOffset = Shader.GetGlobalFloat(Constants.shaderTimeOffsetReference);
