@@ -98,21 +98,21 @@ public class PredatorScript : EntityScript
         switch (state)
         {
             case State.CHILLING:
-                if (Bernoulli(predatorsParams.probaHuntingAfterChilling))
+                if (MathHelpers.Bernoulli(predatorsParams.probaHuntingAfterChilling))
                     state = State.HUNTING;
                 break;
 
             case State.HUNTING:
                 if (nbPreysInFOV > predatorsParams.nbPreysToAttack)
                     state = State.ATTACKING;
-                else if (Bernoulli(predatorsParams.probaChillingAfterHunting))
+                else if (MathHelpers.Bernoulli(predatorsParams.probaChillingAfterHunting))
                     state = State.CHILLING;
                 break;
 
             case State.ATTACKING:
                 if (nbPreysInFOV < predatorsParams.nbPreysToAttack)
                 {
-                    if (Bernoulli(predatorsParams.probaHuntingAfterAttacking))
+                    if (MathHelpers.Bernoulli(predatorsParams.probaHuntingAfterAttacking))
                         state = State.HUNTING;
                     else
                         state = State.CHILLING;

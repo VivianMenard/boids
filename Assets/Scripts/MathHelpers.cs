@@ -252,4 +252,60 @@ public static class MathHelpers
         return SphericalToCartesian(
             Vector3.zero, distance, theta, restrictedPhi);
     }
+
+    /// <summary>
+    /// Generates two orthogonal axes around a given vector.
+    /// </summary>
+    /// 
+    /// <param name="originalAxis">The main axis around which to generate the orthogonal axes.</param>
+    /// <param name="reference">[Optional] Default <c>Vector3.up</c>, the reference vector to define one of the orthogonal axes.</param>
+    /// 
+    /// <returns>
+    ///   A tuple containing two vectors representing the orthogonal axes generated around the main axis.
+    ///   The first axis is perpendicular to the main axis and the reference vector.
+    ///   The second axis is perpendicular to the main axis and the first axis.
+    /// </returns>
+    public static (Vector3, Vector3) GenerateOrthogonalAxesAroundVector(Vector3 originalAxis, Vector3 reference = default)
+    {
+        if (reference == default)
+            reference = Vector3.up;
+
+        Vector3 axis1 = Vector3.Cross(originalAxis, reference).normalized;
+        Vector3 axis2 = Vector3.Cross(originalAxis, axis1).normalized;
+
+        return (axis1, axis2);
+    }
+
+    /// <summary>
+    /// Remaps a value from one range to another.
+    /// </summary>
+    /// 
+    /// <param name="value">The value to remap.</param>
+    /// <param name="fromMin">The minimum value of the original range.</param>
+    /// <param name="fromMax">The maximum value of the original range.</param>
+    /// <param name="toMin">The minimum value of the target range.</param>
+    /// <param name="toMax">The maximum value of the target range.</param>
+    /// 
+    /// <returns>
+    /// The value remapped from the original range to the target range.
+    /// If the value exceeds the original range, it will be clamped to the range bounds.
+    /// </returns>
+    public static float Remap(float value, float fromMin, float fromMax, float toMin, float toMax)
+    {
+        float clampedValue = Mathf.Clamp(value, fromMin, fromMax);
+        return toMin + (clampedValue - fromMin) * (toMax - toMin) / (fromMax - fromMin);
+    }
+
+    /// <summary>
+    /// Generates a Bernoulli trial outcome based on a given probability of success.
+    /// </summary>
+    /// <param name="probaSuccess">The probability of success for the Bernoulli trial (between 0 and 1).</param>
+    /// <returns>
+    ///   <c>true</c> if the trial is successful (random value is less than the probability of success); otherwise, <c>false</c>.
+    /// </returns>
+    public static bool Bernoulli(float probaSuccess)
+    {
+        float randomValue = Random.Range(0f, 1f);
+        return randomValue < probaSuccess;
+    }
 }

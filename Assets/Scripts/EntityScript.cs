@@ -245,7 +245,7 @@ public abstract class EntityScript : MonoBehaviour
         {
             rwStateTimeRemaiming = parameters.rwStatePeriod;
 
-            if (Bernoulli(parameters.rwProbaStraightLine))
+            if (MathHelpers.Bernoulli(parameters.rwProbaStraightLine))
                 rwState = RwState.STRAIGHT_LINE;
             else
             {
@@ -372,7 +372,8 @@ public abstract class EntityScript : MonoBehaviour
     /// <param name="initialDirection">The initial direction.</param>
     private void ComputeAvoidanceDirections(Vector3 initialDirection)
     {
-        (Vector3 axis1, Vector3 axis2) = CreateCoordSystemForAbstacleAvoidance(initialDirection);
+        (Vector3 axis1, Vector3 axis2) = MathHelpers.GenerateOrthogonalAxesAroundVector(
+            initialDirection, GetObstacleAvoidanceReference());
 
         avoidanceDirections[0] = axis1;
         avoidanceDirections[1] = -axis1;
@@ -384,33 +385,19 @@ public abstract class EntityScript : MonoBehaviour
         avoidanceDirections[7] = -axis2;
     }
 
-    private (Vector3, Vector3) CreateCoordSystemForAbstacleAvoidance(Vector3 axis3)
-    {
-        Vector3 axis1 = Vector3.Cross(axis3, GetObstacleAvoidanceReference()).normalized;
-        Vector3 axis2 = Vector3.Cross(axis3, axis1).normalized;
-
-        return (axis1, axis2);
-    }
-
     protected abstract Vector3 GetObstacleAvoidanceReference();
 
     private Vector3 BlendAvoidanceDirectionWithDirection(
         Vector3 avoidanceDirection, Vector3 initialDirection, float hitDistance
     )
     {
-        float perceivedDistance = Remap(
+        float perceivedDistance = MathHelpers.Remap(
             hitDistance, obstacleMargin, raycastDistance, 0, raycastDistance);
 
         return (
             initialDirection * perceivedDistance +
             avoidanceDirection * (raycastDistance - perceivedDistance)
         ).normalized;
-    }
-
-    private float Remap(float value, float fromMin, float fromMax, float toMin, float toMax)
-    {
-        float clampedValue = Mathf.Clamp(value, fromMin, fromMax);
-        return toMin + (clampedValue - fromMin) * (toMax - toMin) / (fromMax - fromMin);
     }
 
     private bool PerformRaycastOnObstacles(Vector3 raycastDirection, out RaycastHit hitInfo)
@@ -447,11 +434,6 @@ public abstract class EntityScript : MonoBehaviour
         sinceLastCalculation = 0;
     }
 
-    protected Vector3 GetDirectionToSpecificPosition(Vector3 specificPosition)
-    {
-        return (specificPosition - myPosition).normalized;
-    }
-
     protected Collider[] GetNearbyEntityColliders()
     {
         return Physics.OverlapSphere(
@@ -475,8 +457,8 @@ public abstract class EntityScript : MonoBehaviour
         }
 
         Vector3 averagePosition = relevantSum / totalWeight;
-        Vector3 directionToAveragePosition = GetDirectionToSpecificPosition(
-            averagePosition);
+        Vector3 directionToAveragePosition =
+            (averagePosition - myPosition).normalized;
 
         if (behavior == Behavior.SEPARATION)
             return -directionToAveragePosition;
@@ -487,12 +469,6 @@ public abstract class EntityScript : MonoBehaviour
     protected float GetReelWeight(float nbInvolvedEntities, float baseWeight)
     {
         return Mathf.Min(nbInvolvedEntities, 1) * baseWeight;
-    }
-
-    protected bool Bernoulli(float probaSuccess)
-    {
-        float randomValue = Random.Range(0f, 1f);
-        return randomValue < probaSuccess;
     }
 
     protected float GetEntityWeightAccordingToVisionDistance(float squaredDistance)
