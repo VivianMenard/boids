@@ -84,6 +84,14 @@ public class PredatorScript : EntityScript
         return Vector3.up;
     }
 
+    /// <summary>
+    /// Calculates the weight of a predator for peer repulsion behavior calculation,
+    /// based on the squared distance between the two predators.
+    /// </summary>
+    /// <param name="squaredDistance">The squared distance between the two predators.</param>
+    /// <returns>
+    /// The weight of the predator for peer repulsion behavior calculation.
+    /// </returns>
     private float GetEntityPeerRepulsionWeight(float squaredDistance)
     {
         return Mathf.InverseLerp(
@@ -93,7 +101,11 @@ public class PredatorScript : EntityScript
         );
     }
 
-    private void AdaptState(int nbPreysInFOV = 0)
+    /// <summary>
+    /// Adapts the state of the predator regarding its current state and the number boids in its FOV.
+    /// </summary>
+    /// <param name="nbBoidsNearby">The number of boids in its FOV.</param>
+    private void AdaptState(int nbPreysInFOV)
     {
         switch (state)
         {
@@ -121,15 +133,22 @@ public class PredatorScript : EntityScript
         }
     }
 
+    /// <summary>
+    /// Computes the ideal position of each bone according the entity trajectory history.
+    /// Adds wave motion animation to them.
+    /// </summary>
     protected override void ComputeBonesPositionsAndRotations()
     {
         base.ComputeBonesPositionsAndRotations();
 
-        AddWaveMotion();
-        smoothBonesRotations();
+        AddWaveMotionAnimation();
+        SmoothBonesRotations();
     }
 
-    private void AddWaveMotion()
+    /// <summary>
+    /// Adds wave motion animation to the bones.
+    /// </summary>
+    private void AddWaveMotionAnimation()
     {
         float velocityFactor = 1 +
             predatorsParams.velocityImpactOnWaves *
@@ -147,23 +166,29 @@ public class PredatorScript : EntityScript
             Vector3 right = Vector3.Cross(boneDirection, Vector3.up).normalized;
 
             float distanceToHead = BoneDistanceToHead(boneIndex);
-            Vector3 boneNewPosition = bonePosition + magnitude * Enveloppe(distanceToHead) * Wave(
+            Vector3 boneNewPosition = bonePosition + magnitude * Enveloppe(distanceToHead) * Mathf.Sin(
                 predatorsParams.wavesBaseSpacialFrequency * distanceToHead - currentAnimationPhase) * right;
             bonesPositionsAndRotations[boneIndex] = (boneNewPosition, boneRotation);
         }
     }
 
-    private float Enveloppe(float x)
+    /// <summary>
+    /// Allows to get the correct multiplicator for the wave motion magnitude regarding the distance between a bone 
+    /// and the head of the predator.
+    /// </summary>
+    /// <param name="distanceToHead">Distance between the bone and the head of the predator.</param>
+    /// <returns>
+    /// The correct multiplicator for the wave motion magnitude.
+    /// </returns>
+    private float Enveloppe(float distanceToHead)
     {
-        return predatorsParams.wavesEnveloppeGradient * x + predatorsParams.wavesEnveloppeMin;
+        return predatorsParams.wavesEnveloppeGradient * distanceToHead + predatorsParams.wavesEnveloppeMin;
     }
 
-    private float Wave(float x)
-    {
-        return Mathf.Sin(x);
-    }
-
-    private void smoothBonesRotations()
+    /// <summary>
+    /// Adjusts bones rotation to correspond to make it fit their position.
+    /// </summary>
+    private void SmoothBonesRotations()
     {
         for (int boneIndex = parameters.animationFirstBone; boneIndex < bones.Length - 1; boneIndex++)
         {

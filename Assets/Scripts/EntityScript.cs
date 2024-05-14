@@ -392,7 +392,7 @@ public abstract class EntityScript : MonoBehaviour
     /// Allows to get the reference to generate avoidance directions. This reference is random for the boids (to make them avoid obstacles
     /// without preferencial direction), and <c>Vector3.up</c> for predators to have more control on which directions to priviledge.
     /// </summary>
-    /// <returns>The reference to generate avoidance direction.</returns>
+    /// <returns>The reference to generate avoidance directions.</returns>
     protected abstract Vector3 GetObstacleAvoidanceReference();
 
     /// <summary>
