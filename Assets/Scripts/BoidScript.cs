@@ -125,6 +125,14 @@ public class BoidScript : EntityScript
         return MathHelpers.GetRandomDirection();
     }
 
+    /// <summary>
+    /// Calculates the weight of another boid for <c>SEPARATION</c> behavior calculation,
+    /// based on the squared distance between the two boids.
+    /// </summary>
+    /// <param name="squaredDistance">The squared distance between the two boids.</param>
+    /// <returns>
+    /// The weight of the other boid for <c>SEPARATION</c> behavior calculation.
+    /// </returns>
     private float GetEntitySeparationWeight(float squaredDistance)
     {
         return Mathf.InverseLerp(
@@ -134,6 +142,14 @@ public class BoidScript : EntityScript
         );
     }
 
+    /// <summary>
+    /// Calculates the weight of another boid for <c>COHESION</c> behavior calculation,
+    /// based on the squared distance between the two boids.
+    /// </summary>
+    /// <param name="squaredDistance">The squared distance between the two boids.</param>
+    /// <returns>
+    /// The weight of the other boid for <c>COHESION</c> behavior calculation.
+    /// </returns>
     private float GetEntityCohesionWeight(float squaredDistance)
     {
         return Mathf.InverseLerp(
@@ -143,6 +159,14 @@ public class BoidScript : EntityScript
         );
     }
 
+    /// <summary>
+    /// Calculates the weight of a predator for fear behavior calculation,
+    /// based on the squared distance between the boid and the predator.
+    /// </summary>
+    /// <param name="squaredDistance">The squared distance between the boid and the predator.</param>
+    /// <returns>
+    /// The weight of the predator for fear behavior calculation.
+    /// </returns>
     private float GetEntityFearWeight(float squaredDistance)
     {
         return Mathf.InverseLerp(
@@ -152,6 +176,11 @@ public class BoidScript : EntityScript
         );
     }
 
+    /// <summary>
+    /// Adapts the state of the boid regarding the number of other nearby boids and the number of nearby predator.
+    /// </summary>
+    /// <param name="nbBoidsNearby">The number of nearby boids.</param>
+    /// <param name="nbPredatorsNearby">The number of nearby predators.</param>
     private void AdaptState(int nbBoidsNearby, int nbPredatorsNearby)
     {
         if (nbPredatorsNearby > 0)
@@ -162,6 +191,12 @@ public class BoidScript : EntityScript
             state = State.NORMAL;
     }
 
+    /// <summary>
+    /// Adapts the vision distance of the boid regarding the number of other boids in its FOV.
+    /// The more boids there are in its FOV, the shorter will be its vision distance, in order to
+    /// have always approximatly <c>idealNbNeighbors</c> boids in its FOV.
+    /// </summary>
+    /// <param name="nbBoidsInFOV">The number of other boids in the FOV of the boid.</param>
     private void AdaptVisionDistance(int nbBoidsInFOV)
     {
         if (nbBoidsInFOV > boidsParams.idealNbNeighbors)
