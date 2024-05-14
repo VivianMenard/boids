@@ -3,7 +3,7 @@ using UnityEngine;
 /// <summary>
 /// Just few tools to help with godrays set dressing.
 /// </summary>
-public class GodRays : MonoBehaviour
+public class GodRaysScript : MonoBehaviour
 {
     /// <summary>
     /// Automatically rotate all god rays to make them come from the center (the first child in the hierarchy).

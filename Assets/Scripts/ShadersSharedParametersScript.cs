@@ -6,7 +6,7 @@ using System;
 /// <summary>
 /// Allows to easily set global shaders parameters from the inspector.
 /// </summary>
-public class ShadersSharedParameters : MonoBehaviour
+public class ShadersSharedParametersScript : MonoBehaviour
 {
     [SerializeField]
     private SharedParameters sharedParameters;

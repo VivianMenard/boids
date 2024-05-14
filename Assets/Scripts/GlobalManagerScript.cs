@@ -6,7 +6,7 @@ using UnityEngine.UI;
 /// <summary>
 /// Manages high level informations and actions.
 /// </summary>
-public class GlobalManager : MonoBehaviour
+public class GlobalManagerScript : MonoBehaviour
 {
     [SerializeField]
     private GameObject Ui, paramsUi, controlsUi, pauseIcon, playIcon;
@@ -102,11 +102,11 @@ public class GlobalManager : MonoBehaviour
     /// </summary>
     public void QuitGame()
     {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
             Application.Quit();
-        #endif
+#endif
     }
 
     /// <summary>
