@@ -70,8 +70,6 @@ public abstract class EntityParameters
     public State defaultState;
 
     [HideInInspector]
-    public bool hasRig;
-    [HideInInspector]
     public float[] boneBaseDistanceToHead;
     [HideInInspector]
     public int nbTransformsToStore;
@@ -108,31 +106,30 @@ public abstract class EntityParameters
 
         SkinnedMeshRenderer skinnedMeshRenderer = prefab.
             GetComponentInChildren<SkinnedMeshRenderer>();
-        hasRig = skinnedMeshRenderer != null;
 
-        if (hasRig)
+        if (skinnedMeshRenderer == null)
+            throw new MissingComponentException("The entity has no rig.");
+
+        Transform[] bones = skinnedMeshRenderer.bones;
+
+        boneBaseDistanceToHead = new float[bones.Length];
+        boneBaseRotation = new Quaternion[bones.Length];
+        Vector3 headPosition = bones[0].position;
+
+        for (int boneIndex = 0; boneIndex < bones.Length; boneIndex++)
         {
-            Transform[] bones = skinnedMeshRenderer.bones;
-
-            boneBaseDistanceToHead = new float[bones.Length];
-            boneBaseRotation = new Quaternion[bones.Length];
-            Vector3 headPosition = bones[0].position;
-
-            for (int boneIndex = 0; boneIndex < bones.Length; boneIndex++)
-            {
-                boneBaseDistanceToHead[boneIndex] = Vector3.Distance(
-                    headPosition,
-                    bones[boneIndex].position
-                );
-                boneBaseRotation[boneIndex] = bones[boneIndex].rotation;
-            }
-
-            float minVelocity = velocities.Values.ToArray().Min();
-            nbTransformsToStore = (int)Mathf.Ceil(
-                boneBaseDistanceToHead[bones.Length - 1] * (1 + scaleVariations) /
-                (minVelocityBonusFactor * minVelocity * Time.fixedDeltaTime)
+            boneBaseDistanceToHead[boneIndex] = Vector3.Distance(
+                headPosition,
+                bones[boneIndex].position
             );
+            boneBaseRotation[boneIndex] = bones[boneIndex].rotation;
         }
+
+        float minVelocity = velocities.Values.ToArray().Min();
+        nbTransformsToStore = (int)Mathf.Ceil(
+            boneBaseDistanceToHead[bones.Length - 1] * (1 + scaleVariations) /
+            (minVelocityBonusFactor * minVelocity * Time.fixedDeltaTime)
+        );
     }
 }
 

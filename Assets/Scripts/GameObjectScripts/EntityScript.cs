@@ -72,13 +72,9 @@ public abstract class EntityScript : MonoBehaviour
                 "No Collider component on Entity."
             );
 
-        if (parameters.hasRig)
-        {
-            bones = GetComponentInChildren<SkinnedMeshRenderer>().bones;
-            bonesPositionsAndRotations = new (Vector3, Quaternion)[bones.Length];
-
-            CreateFakeTransformHistory();
-        }
+        bones = GetComponentInChildren<SkinnedMeshRenderer>().bones;
+        bonesPositionsAndRotations = new (Vector3, Quaternion)[bones.Length];
+        CreateFakeTransformHistory();
     }
 
     /// <summary>Initializes entity parameters.</summary>
@@ -141,9 +137,6 @@ public abstract class EntityScript : MonoBehaviour
     /// </summary>
     private void ManageAnimation()
     {
-        if (!parameters.hasRig)
-            return;
-
         StoreTransformInfo();
 
         if (!frameToTransformInfo.ContainsKey(entitiesManager.Clock - parameters.nbTransformsToStore))
