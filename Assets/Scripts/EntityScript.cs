@@ -86,10 +86,13 @@ public abstract class EntityScript : MonoBehaviour
 
     /// <summary>
     /// Computes the new optimal direction for the entity based on its state and the other entities that surround it.
+    /// The result will be a weighted average between the optimal directions for each behavior.
     /// </summary>
+    /// <returns>The new optimal direction for the entity.</returns>
     protected abstract Vector3 ComputeNewDirection();
 
     /// <summary>Computes the initial direction of the entity based on its spawn rotation.</summary>
+    /// <returns>The initial direction for the entity to adopt.</returns>
     private Vector3 GetInitialDirection()
     {
         return MathHelpers.RotationToDirection(myRotation);
@@ -366,7 +369,7 @@ public abstract class EntityScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Computes 8 potential avoidance directions around the initial one.
+    /// Computes 8 potential avoidance directions around the initial one (perpendicular to it).
     /// The result isn't returned but stored in <c>avoidanceDirections</c> attribute to avoid constantly reallocating memory.
     /// </summary>
     /// <param name="initialDirection">The initial direction.</param>
@@ -385,8 +388,24 @@ public abstract class EntityScript : MonoBehaviour
         avoidanceDirections[7] = -axis2;
     }
 
+    /// <summary>
+    /// Allows to get the reference to generate avoidance directions. This reference is random for the boids (to make them avoid obstacles
+    /// without preferencial direction), and <c>Vector3.up</c> for predators to have more control on which directions to priviledge.
+    /// </summary>
+    /// <returns>The reference to generate avoidance direction.</returns>
     protected abstract Vector3 GetObstacleAvoidanceReference();
 
+    /// <summary>
+    /// Blends the avoidance direction with the initial direction according to the distance of the obstacle.
+    /// If the obstacle is far away the initial direction will only be slightly deviated, but the closer it is the more the 
+    /// weight of the avoidance direction in the final result will be important.
+    /// </summary>
+    /// <param name="avoidanceDirection">The direction to avoid the obstacle (perpendicular to <c>initialDirection</c>).</param>
+    /// <param name="initialDirection">The initial direction.</param>
+    /// <param name="hitDistance">The distance of the obstacle.</param>
+    /// <returns>
+    ///   The blended direction vector based on the distance of the obstacle.
+    /// </returns>
     private Vector3 BlendAvoidanceDirectionWithDirection(
         Vector3 avoidanceDirection, Vector3 initialDirection, float hitDistance
     )
@@ -400,6 +419,15 @@ public abstract class EntityScript : MonoBehaviour
         ).normalized;
     }
 
+    /// <summary>
+    /// Performs a raycast in a specified direction to detect obstacles. Automatically use the appropriate
+    /// raycast distance and layerMask.
+    /// </summary>
+    /// <param name="raycastDirection">The direction in which to cast the ray.</param>
+    /// <param name="hitInfo">Object to put information about the collider hit by the raycast, if any.</param>
+    /// <returns>
+    ///   <c>true</c> if the raycast hits an obstacle within the specified distance; otherwise, <c>false</c>.
+    /// </returns>
     private bool PerformRaycastOnObstacles(Vector3 raycastDirection, out RaycastHit hitInfo)
     {
         Ray ray = new Ray(myPosition, raycastDirection);
@@ -411,6 +439,13 @@ public abstract class EntityScript : MonoBehaviour
         );
     }
 
+    /// <summary>
+    /// Checks if a given entity position is within the field of view (FOV) of this entity.
+    /// </summary>
+    /// <param name="entityPosition">The position of the entity to be checked.</param>
+    /// <returns>
+    ///   <c>true</c> if the entity position is within the FOV of this entity; otherwise, <c>false</c>.
+    /// </returns>
     protected bool IsInMyFOV(Vector3 entityPosition)
     {
         float cosAngle = Vector3.Dot(
@@ -421,6 +456,15 @@ public abstract class EntityScript : MonoBehaviour
         return cosAngle >= parameters.cosVisionSemiAngle;
     }
 
+    /// <summary>
+    /// Sets a new direction target for the entity. In the following updates the entity will smoothly tend to
+    /// this new direction target.
+    /// </summary>
+    /// <param name="newDirection">The new direction to target.</param>
+    /// <param name="initialization">
+    /// [Optional] default <c>false</c>, flag indicating if this target direction is the first given to the 
+    /// entity during initialization or not.
+    /// </param>
     private void SetNewDirectionTarget(Vector3 newDirection, bool initialization = false)
     {
         if (initialization)
@@ -434,6 +478,12 @@ public abstract class EntityScript : MonoBehaviour
         sinceLastCalculation = 0;
     }
 
+    /// <summary>
+    /// Gets the colliders of nearby entities within the vision distance of the entity.
+    /// </summary>
+    /// <returns>
+    /// An array of colliders representing the nearby entities within the vision distance.
+    /// </returns>
     protected Collider[] GetNearbyEntityColliders()
     {
         return Physics.OverlapSphere(
@@ -443,11 +493,26 @@ public abstract class EntityScript : MonoBehaviour
         );
     }
 
+    /// <summary>
+    /// Calculates the ideal direction for a specified behavior.
+    /// </summary>
+    /// <param name="behavior">The behavior for which to calculate the ideal direction.</param>
+    /// <param name="relevantSum">
+    /// The relevant sum, that could be a sum of directions for <c>ALIGNMENT</c> behavior, or a sum of positions 
+    /// for the other behaviors.
+    /// </param>
+    /// <param name="weightedNbInvolvedEntities">
+    /// Number of entities involved, it's a float because some entities are just partially counted as they are close
+    /// to the limit radius of action of the behavior.
+    /// </param>
+    /// <returns>
+    /// The ideal direction for the specified behavior.
+    /// </returns>
     protected Vector3 GetIdealDirectionForBehavior(
-        Behavior behavior, Vector3 relevantSum, float totalWeight
+        Behavior behavior, Vector3 relevantSum, float weightedNbInvolvedEntities
     )
     {
-        if (totalWeight < Mathf.Epsilon)
+        if (weightedNbInvolvedEntities < Mathf.Epsilon)
             return Vector3.zero;
 
         if (behavior == Behavior.ALIGNMENT)
@@ -456,7 +521,7 @@ public abstract class EntityScript : MonoBehaviour
             return averageDirection;
         }
 
-        Vector3 averagePosition = relevantSum / totalWeight;
+        Vector3 averagePosition = relevantSum / weightedNbInvolvedEntities;
         Vector3 directionToAveragePosition =
             (averagePosition - myPosition).normalized;
 
@@ -466,11 +531,30 @@ public abstract class EntityScript : MonoBehaviour
         return directionToAveragePosition;
     }
 
-    protected float GetReelWeight(float nbInvolvedEntities, float baseWeight)
+    /// <summary>
+    /// Calculates the real weight of a behavior in the choice of the new direction of the entity.
+    /// </summary>
+    /// <param name="weightedNbInvolvedEntities">
+    /// Number of entities involved, it's a float because some entities are just partially counted as they are close
+    /// to the limit radius of action of the behavior.
+    /// </param>
+    /// <param name="baseWeight">The base weight of the behavior.</param>
+    /// <returns>
+    /// The reel weight of the behavior, which is equal to <c>baseWeight</c> if at least one entity is involved, or less otherwise.
+    /// </returns>
+    protected float GetReelWeight(float weightedNbInvolvedEntities, float baseWeight)
     {
-        return Mathf.Min(nbInvolvedEntities, 1) * baseWeight;
+        return Mathf.Min(weightedNbInvolvedEntities, 1) * baseWeight;
     }
 
+    /// <summary>
+    /// Calculates the weight of another entity in the choice of the new direction, based on its squared distance.
+    /// </summary>
+    /// <param name="squaredDistance">The squared distance between the two entities.</param>
+    /// <returns>
+    /// The weight of the entity, which is 0 if it's out of see, 1 if it's significantly in the vision range and 
+    /// between the two if it's close to the limit.
+    /// </returns>
     protected float GetEntityWeightAccordingToVisionDistance(float squaredDistance)
     {
         return Mathf.InverseLerp(
@@ -480,6 +564,9 @@ public abstract class EntityScript : MonoBehaviour
         );
     }
 
+    /// <summary>
+    /// Updates direction and rotation of the entity to approach smoothly the rotation target.
+    /// </summary>
     private void UpdateDirectionAndRotation()
     {
         float rotationProgress = (float)sinceLastCalculation /
@@ -494,13 +581,16 @@ public abstract class EntityScript : MonoBehaviour
         direction = MathHelpers.RotationToDirection(newRotation);
         // the direction is based on the rotation and not the contrary, it's intentionnal.
         // It allows the rotation twists to be smooth, what wouldn't be the case if the lerp
-        // was on the direction and the rotation was based on the result
+        // was on the direction and the rotation was based on the result.
 
         entitiesManager.UpdateEntityDirection(myCollider, direction);
 
         sinceLastCalculation++;
     }
 
+    /// <summary>
+    /// Moves the entity according to its velocity and direction. Updates the related information.
+    /// </summary>
     private void Move()
     {
         Vector3 newPosition = myPosition + velocity * Time.fixedDeltaTime * direction;
@@ -510,6 +600,10 @@ public abstract class EntityScript : MonoBehaviour
         entitiesManager.UpdateEntityPosition(myCollider, newPosition);
     }
 
+    /// <summary>
+    /// Adapts the entity velocity to approach smoothly the velocity target which is calculated regarding 
+    /// the current state of the entity and its current random velocity bonus factor.
+    /// </summary>
     private void AdaptVelocity()
     {
         float velocityGoal = parameters.velocities[state] * randomBonusVelocityFactor;
