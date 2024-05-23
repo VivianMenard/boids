@@ -167,32 +167,6 @@ public abstract class EntityScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Applies position and rotation stored in <c>bonesPositionsAndRotations</c> to the bones of the entity.
-    /// </summary>
-    private void ApplyBonesPositionsAndRotations()
-    {
-        for (int boneIndex = parameters.animationFirstBone; boneIndex < bones.Length; boneIndex++)
-        {
-            (Vector3 boneNewPosition, Quaternion boneNewRotation) = bonesPositionsAndRotations[boneIndex];
-
-            bones[boneIndex].rotation = boneNewRotation * parameters.boneBaseRotation[boneIndex];
-            bones[boneIndex].position = boneNewPosition;
-        }
-    }
-
-    /// <summary>
-    /// Adapts obstacles avoidance parameters to the current velocity of the entity 
-    /// (the higher the entity velocity is, the higher the raycast distance need to be to detect obstacles on time).
-    /// </summary>
-    private void AdaptObstacleAvoidanceParams()
-    {
-        float velocityFactor = velocity / parameters.velocities[parameters.defaultState];
-
-        obstacleMargin = velocityFactor * parameters.obstacleBaseMargin;
-        raycastDistance = velocityFactor * parameters.raycastBaseDistance;
-    }
-
-    /// <summary>
     /// Computes the ideal position of each bone according the entity trajectory history.
     /// </summary>
     protected virtual void ComputeBonesPositionsAndRotations()
@@ -235,6 +209,20 @@ public abstract class EntityScript : MonoBehaviour
     }
 
     /// <summary>
+    /// Applies position and rotation stored in <c>bonesPositionsAndRotations</c> to the bones of the entity.
+    /// </summary>
+    private void ApplyBonesPositionsAndRotations()
+    {
+        for (int boneIndex = parameters.animationFirstBone; boneIndex < bones.Length; boneIndex++)
+        {
+            (Vector3 boneNewPosition, Quaternion boneNewRotation) = bonesPositionsAndRotations[boneIndex];
+
+            bones[boneIndex].rotation = boneNewRotation * parameters.boneBaseRotation[boneIndex];
+            bones[boneIndex].position = boneNewPosition;
+        }
+    }
+
+    /// <summary>
     /// Computes a new direction for the entity to make it adopt a random walk behavior.
     /// The resulting behavior will be globally random but locally coherent. The entity will
     /// chain straight lines and curves.
@@ -271,24 +259,6 @@ public abstract class EntityScript : MonoBehaviour
         rwStateTimeRemaiming--;
         return newDirection;
     }
-
-    /// <summary>
-    /// Updates the multiplicative bonus factor of the entity if the bonus factor cycle is ended.
-    /// </summary>
-    private void UpdateVelocityBonusFactor()
-    {
-        if (sinceLastBonusChange == parameters.nbCalculationsBetweenVelocityBonusFactorChange)
-        {
-            randomBonusVelocityFactor = Random.Range(
-                parameters.minVelocityBonusFactor,
-                parameters.maxVelocityBonusFactor
-            );
-            sinceLastBonusChange = 0;
-        }
-        else
-            sinceLastBonusChange++;
-    }
-
 
     /// /// <summary>
     /// Finds a new target direction for random walk behavior. Tries to find one that doesn't lead to an obstacle.
@@ -438,6 +408,21 @@ public abstract class EntityScript : MonoBehaviour
     }
 
     /// <summary>
+    /// Gets the colliders of nearby entities within the vision distance of the entity.
+    /// </summary>
+    /// <returns>
+    /// An array of colliders representing the nearby entities within the vision distance.
+    /// </returns>
+    protected Collider[] GetNearbyEntityColliders()
+    {
+        return Physics.OverlapSphere(
+            myPosition,
+            visionDistance,
+            entitiesManager.EntitiesLayerMask
+        );
+    }
+
+    /// <summary>
     /// Checks if a given entity position is within the field of view (FOV) of this entity.
     /// </summary>
     /// <param name="entityPosition">The position of the entity to be checked.</param>
@@ -452,43 +437,6 @@ public abstract class EntityScript : MonoBehaviour
         );
 
         return cosAngle >= parameters.cosVisionSemiAngle;
-    }
-
-    /// <summary>
-    /// Sets a new direction target for the entity. In the following updates the entity will smoothly tend to
-    /// this new direction target.
-    /// </summary>
-    /// <param name="newDirection">The new direction to target.</param>
-    /// <param name="initialization">
-    /// [Optional] default <c>false</c>, flag indicating if this target direction is the first given to the 
-    /// entity during initialization or not.
-    /// </param>
-    private void SetNewDirectionTarget(Vector3 newDirection, bool initialization = false)
-    {
-        if (initialization)
-            direction = newDirection;
-
-        Quaternion newRotation = Quaternion.LookRotation(newDirection);
-
-        lastRotation = (initialization) ? newRotation : targetRotation;
-        targetRotation = newRotation;
-
-        sinceLastCalculation = 0;
-    }
-
-    /// <summary>
-    /// Gets the colliders of nearby entities within the vision distance of the entity.
-    /// </summary>
-    /// <returns>
-    /// An array of colliders representing the nearby entities within the vision distance.
-    /// </returns>
-    protected Collider[] GetNearbyEntityColliders()
-    {
-        return Physics.OverlapSphere(
-            myPosition,
-            visionDistance,
-            entitiesManager.EntitiesLayerMask
-        );
     }
 
     /// <summary>
@@ -563,6 +511,28 @@ public abstract class EntityScript : MonoBehaviour
     }
 
     /// <summary>
+    /// Sets a new direction target for the entity. In the following updates the entity will smoothly tend to
+    /// this new direction target.
+    /// </summary>
+    /// <param name="newDirection">The new direction to target.</param>
+    /// <param name="initialization">
+    /// [Optional] default <c>false</c>, flag indicating if this target direction is the first given to the 
+    /// entity during initialization or not.
+    /// </param>
+    private void SetNewDirectionTarget(Vector3 newDirection, bool initialization = false)
+    {
+        if (initialization)
+            direction = newDirection;
+
+        Quaternion newRotation = Quaternion.LookRotation(newDirection);
+
+        lastRotation = (initialization) ? newRotation : targetRotation;
+        targetRotation = newRotation;
+
+        sinceLastCalculation = 0;
+    }
+
+    /// <summary>
     /// Updates direction and rotation of the entity to approach smoothly the rotation target.
     /// </summary>
     private void UpdateDirectionAndRotation()
@@ -599,6 +569,23 @@ public abstract class EntityScript : MonoBehaviour
     }
 
     /// <summary>
+    /// Updates the multiplicative bonus factor of the entity if the bonus factor cycle is ended.
+    /// </summary>
+    private void UpdateVelocityBonusFactor()
+    {
+        if (sinceLastBonusChange == parameters.nbCalculationsBetweenVelocityBonusFactorChange)
+        {
+            randomBonusVelocityFactor = Random.Range(
+                parameters.minVelocityBonusFactor,
+                parameters.maxVelocityBonusFactor
+            );
+            sinceLastBonusChange = 0;
+        }
+        else
+            sinceLastBonusChange++;
+    }
+
+    /// <summary>
     /// Adapts the entity velocity to approach smoothly the velocity target which is calculated regarding 
     /// the current state of the entity and its current random velocity bonus factor.
     /// </summary>
@@ -616,5 +603,17 @@ public abstract class EntityScript : MonoBehaviour
 
         if (parameters.applyVelocityFactor)
             AdaptObstacleAvoidanceParams();
+    }
+
+    /// <summary>
+    /// Adapts obstacles avoidance parameters to the current velocity of the entity 
+    /// (the higher the entity velocity is, the higher the raycast distance need to be to detect obstacles on time).
+    /// </summary>
+    private void AdaptObstacleAvoidanceParams()
+    {
+        float velocityFactor = velocity / parameters.velocities[parameters.defaultState];
+
+        obstacleMargin = velocityFactor * parameters.obstacleBaseMargin;
+        raycastDistance = velocityFactor * parameters.raycastBaseDistance;
     }
 }

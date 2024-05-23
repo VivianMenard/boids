@@ -137,6 +137,23 @@ public class CameraScript : MonoBehaviour
     }
 
     /// <summary>
+    /// Adjusts the camera position to put it at max distance from the center, and directs it 
+    /// toward the center.
+    /// </summary>
+    [ContextMenu("Adjust camera transform")]
+    private void AdjustCameraTransform()
+    {
+        AreaScript area = GetArea();
+
+        center = area.transform.position + initialOffset;
+
+        Vector3 cameraDirection = (transform.position - center).normalized;
+        transform.position = center + cameraDirection * maxDistance;
+
+        UpdateRotation();
+    }
+
+    /// <summary>
     /// Allows to get the AreaScript component in the exclusion area gameObject.
     /// </summary>
     /// 
@@ -152,23 +169,6 @@ public class CameraScript : MonoBehaviour
             );
 
         return area;
-    }
-
-    /// <summary>
-    /// Adjusts the camera position to put it at max distance from the center, and directs it 
-    /// toward the center.
-    /// </summary>
-    [ContextMenu("Adjust camera transform")]
-    private void AdjustCameraTransform()
-    {
-        AreaScript area = GetArea();
-
-        center = area.transform.position + initialOffset;
-
-        Vector3 cameraDirection = (transform.position - center).normalized;
-        transform.position = center + cameraDirection * maxDistance;
-
-        UpdateRotation();
     }
 
     /// <summary>

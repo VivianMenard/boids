@@ -176,6 +176,13 @@ public class EntitiesManagerScript : MonoBehaviour
         );
     }
 
+    /// <summary>Adjusts values of specific parameters to meets requirements that link them.</summary>
+    private void CheckBoundsForDynamicRangeParameters()
+    {
+        if (boidsParams.cohesionRadius < boidsParams.separationRadius)
+            boidsParams.cohesionRadius = boidsParams.separationRadius;
+    }
+
     /// <summary> Spawn/Despawn a number of entities of a specific type. </summary> 
     /// <param name="nbToSpawn">The number of entities to spawn (could be negative if you want to despawn entities).</param>
     /// <param name="type">The type of entities to spawn.</param>
@@ -303,7 +310,7 @@ public class EntitiesManagerScript : MonoBehaviour
         );
     }
 
-    /// <summary>Adjusts the size of the predator's collider compoenent according to parameters.</summary>
+    /// <summary>Adjusts the size of predators colliders components according to parameters.</summary>
     private void AdjustPredatorsColliders()
     {
         void AdjustOnePredatorCollider(GameObject predator)
@@ -322,12 +329,5 @@ public class EntitiesManagerScript : MonoBehaviour
 
         foreach (GameObject predator in predators)
             AdjustOnePredatorCollider(predator);
-    }
-
-    /// <summary>Adjusts values of specific parameters to meets requirements that link them.</summary>
-    private void CheckBoundsForDynamicRangeParameters()
-    {
-        if (boidsParams.cohesionRadius < boidsParams.separationRadius)
-            boidsParams.cohesionRadius = boidsParams.separationRadius;
     }
 }

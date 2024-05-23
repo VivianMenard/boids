@@ -86,33 +86,15 @@ public class GlobalManagerScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Computes FPS and update associated display when needed.
-    /// </summary>
-    private void ManageFpsDisplay()
-    {
-        nbFrameSinceLastFpsUpdate++;
-        fpsTimer += Time.unscaledDeltaTime;
-
-        if (fpsTimer > fpsRefreshPeriod)
-        {
-            int averageFps = (int)(nbFrameSinceLastFpsUpdate / fpsTimer);
-            fpsDisplay.text = string.Format(Constants.fpsDisplayTemplate, averageFps);
-
-            fpsTimer = 0f;
-            nbFrameSinceLastFpsUpdate = 0;
-        }
-    }
-
-    /// <summary>
     /// Allows to quit the game mode or to quit the application depending wether it's the editor or a build.
     /// </summary>
     public void QuitGame()
     {
-#if UNITY_EDITOR
+        #if UNITY_EDITOR
         UnityEditor.EditorApplication.isPlaying = false;
-#else
-            Application.Quit();
-#endif
+        #else
+        Application.Quit();
+        #endif
     }
 
     /// <summary>
@@ -177,6 +159,96 @@ public class GlobalManagerScript : MonoBehaviour
     }
 
     /// <summary>
+    /// Toggles the display of the parameters tab in the UI.
+    /// </summary>
+    public void ToggleParamsDisplay()
+    {
+        controlsUi.SetActive(false);
+        paramsUi.SetActive(!paramsUi.activeInHierarchy);
+        UpdateButtonsColor();
+    }
+
+    /// <summary>
+    /// Toggles the display of controls tab in the UI.
+    /// </summary>
+    public void ToggleControlsDisplay()
+    {
+        paramsUi.SetActive(false);
+        controlsUi.SetActive(!controlsUi.activeInHierarchy);
+        UpdateButtonsColor();
+    }
+
+    /// <summary>
+    /// Toggles the display of FPS in the UI.
+    /// </summary>
+    public void ToggleFpsDisplay()
+    {
+        fpsDisplay.gameObject.SetActive(fpsToggle.isOn);
+    }
+
+    /// <summary>
+    /// Toggles simulation pause state. Manages entities movements and shader movements.
+    /// </summary>
+    public void TogglePause()
+    {
+        if (pause)
+        {
+            UnPauseShaders();
+            entitiesManager.EntitiesMovement = true;
+        }
+        else
+        {
+            PauseShaders();
+            entitiesManager.EntitiesMovement = false;
+        }
+
+        pause = !pause;
+
+        pauseIcon.SetActive(!pause);
+        playIcon.SetActive(pause);
+    }
+
+    /// <summary>
+    /// Pauses all shader animations.
+    /// </summary>
+    private void PauseShaders()
+    {
+        float currentTimeOffset = Shader.GetGlobalFloat(Constants.shaderTimeOffsetReference);
+        Shader.SetGlobalInt(Constants.shaderPauseReference, 1);
+        Shader.SetGlobalFloat(Constants.shaderTimeOffsetReference, Time.time + currentTimeOffset);
+    }
+
+    /// <summary>
+    /// Unpauses all shader animations.
+    /// </summary>
+    private void UnPauseShaders()
+    {
+        float currentTimeOffset = Shader.GetGlobalFloat(Constants.shaderTimeOffsetReference);
+        float timeDiff = Time.time - currentTimeOffset;
+
+        Shader.SetGlobalInt(Constants.shaderPauseReference, 0);
+        Shader.SetGlobalFloat(Constants.shaderTimeOffsetReference, -timeDiff);
+    }
+
+    /// <summary>
+    /// Computes FPS and update associated display when needed.
+    /// </summary>
+    private void ManageFpsDisplay()
+    {
+        nbFrameSinceLastFpsUpdate++;
+        fpsTimer += Time.unscaledDeltaTime;
+
+        if (fpsTimer > fpsRefreshPeriod)
+        {
+            int averageFps = (int)(nbFrameSinceLastFpsUpdate / fpsTimer);
+            fpsDisplay.text = string.Format(Constants.fpsDisplayTemplate, averageFps);
+
+            fpsTimer = 0f;
+            nbFrameSinceLastFpsUpdate = 0;
+        }
+    }
+
+    /// <summary>
     /// Makes boids add and remove button disabled/enabled depending wether it's relevant or not to be able to
     /// add/remove boids.
     /// </summary>
@@ -231,26 +303,6 @@ public class GlobalManagerScript : MonoBehaviour
     }
 
     /// <summary>
-    /// Toggles the display of the parameters tab in the UI.
-    /// </summary>
-    public void ToggleParamsDisplay()
-    {
-        controlsUi.SetActive(false);
-        paramsUi.SetActive(!paramsUi.activeInHierarchy);
-        UpdateButtonsColor();
-    }
-
-    /// <summary>
-    /// Toggles the display of controls tab in the UI.
-    /// </summary>
-    public void ToggleControlsDisplay()
-    {
-        paramsUi.SetActive(false);
-        controlsUi.SetActive(!controlsUi.activeInHierarchy);
-        UpdateButtonsColor();
-    }
-
-    /// <summary>
     /// Updates the color of a specific button regarding wether the related tab is selected or not.
     /// </summary>
     /// 
@@ -276,57 +328,5 @@ public class GlobalManagerScript : MonoBehaviour
     {
         UpdateButtonColor(paramsButton, paramsUi.activeInHierarchy);
         UpdateButtonColor(controlsButton, controlsUi.activeInHierarchy);
-    }
-
-    /// <summary>
-    /// Toggles the display of FPS in the UI.
-    /// </summary>
-    public void ToggleFpsDisplay()
-    {
-        fpsDisplay.gameObject.SetActive(fpsToggle.isOn);
-    }
-
-    /// <summary>
-    /// Toggles simulation pause state. Manages entities movements and shader movements.
-    /// </summary>
-    public void TogglePause()
-    {
-        if (pause)
-        {
-            UnPauseShaders();
-            entitiesManager.EntitiesMovement = true;
-        }
-        else
-        {
-            PauseShaders();
-            entitiesManager.EntitiesMovement = false;
-        }
-
-        pause = !pause;
-
-        pauseIcon.SetActive(!pause);
-        playIcon.SetActive(pause);
-    }
-
-    /// <summary>
-    /// Pauses all shader animations.
-    /// </summary>
-    private void PauseShaders()
-    {
-        float currentTimeOffset = Shader.GetGlobalFloat(Constants.shaderTimeOffsetReference);
-        Shader.SetGlobalInt(Constants.shaderPauseReference, 1);
-        Shader.SetGlobalFloat(Constants.shaderTimeOffsetReference, Time.time + currentTimeOffset);
-    }
-
-    /// <summary>
-    /// Unpauses all shader animations.
-    /// </summary>
-    private void UnPauseShaders()
-    {
-        float currentTimeOffset = Shader.GetGlobalFloat(Constants.shaderTimeOffsetReference);
-        float timeDiff = Time.time - currentTimeOffset;
-
-        Shader.SetGlobalInt(Constants.shaderPauseReference, 0);
-        Shader.SetGlobalFloat(Constants.shaderTimeOffsetReference, -timeDiff);
     }
 }
