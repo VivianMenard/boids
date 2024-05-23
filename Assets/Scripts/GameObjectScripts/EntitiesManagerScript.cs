@@ -141,17 +141,6 @@ public class EntitiesManagerScript : MonoBehaviour
         );
     }
 
-    /// <summary>Pre-calculate all the entities parameters that require it.</summary>
-    private void PreCalculateParameters()
-    {
-        boidsParams.PreCalculateParameters(
-            calculationInterval, smoothnessRadiusOffset, numberOfBoids
-        );
-        predatorsParams.PreCalculateParameters(
-            calculationInterval, smoothnessRadiusOffset, numberOfBoids
-        );
-    }
-
     private void FixedUpdate()
     {
         if (EntitiesMovement)
@@ -164,6 +153,26 @@ public class EntitiesManagerScript : MonoBehaviour
         AdjustNbEntities(
             numberOfPredators - currentNbPredators,
             EntityType.PREDATOR
+        );
+    }
+
+    private void OnValidate()
+    {
+        Time.timeScale = timeScale;
+
+        CheckBoundsForDynamicRangeParameters();
+        PreCalculateParameters();
+        AdjustPredatorsColliders();
+    }
+
+    /// <summary>Pre-calculate all the entities parameters that require it.</summary>
+    private void PreCalculateParameters()
+    {
+        boidsParams.PreCalculateParameters(
+            calculationInterval, smoothnessRadiusOffset, numberOfBoids
+        );
+        predatorsParams.PreCalculateParameters(
+            calculationInterval, smoothnessRadiusOffset, numberOfBoids
         );
     }
 
@@ -292,15 +301,6 @@ public class EntitiesManagerScript : MonoBehaviour
             UnityEngine.Random.Range(spawnArea.MinPt.y, spawnArea.MaxPt.y),
             UnityEngine.Random.Range(spawnArea.MinPt.z, spawnArea.MaxPt.z)
         );
-    }
-
-    private void OnValidate()
-    {
-        Time.timeScale = timeScale;
-
-        CheckBoundsForDynamicRangeParameters();
-        PreCalculateParameters();
-        AdjustPredatorsColliders();
     }
 
     /// <summary>Adjusts the size of the predator's collider compoenent according to parameters.</summary>

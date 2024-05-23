@@ -72,54 +72,6 @@ public class CameraScript : MonoBehaviour
         UpdateRotation();
     }
 
-    /// <summary>
-    /// Allows to get the AreaScript component in the exclusion area gameObject.
-    /// </summary>
-    /// 
-    /// /// <returns>
-    /// The AreaScript.
-    /// </returns>
-    private AreaScript GetArea()
-    {
-        AreaScript area = cameraExclusionArea.GetComponent<AreaScript>();
-        if (area == null)
-            throw new MissingComponentException(
-                "No AreaScript component on cameraExclusionArea GameObject."
-            );
-
-        return area;
-    }
-
-    /// <summary>
-    /// Adjusts the camera position to put it at max distance from the center, and directs it 
-    /// toward the center.
-    /// </summary>
-    [ContextMenu("Adjust camera transform")]
-    private void AdjustCameraTransform()
-    {
-        AreaScript area = GetArea();
-
-        center = area.transform.position + initialOffset;
-
-        Vector3 cameraDirection = (transform.position - center).normalized;
-        transform.position = center + cameraDirection * maxDistance;
-
-        UpdateRotation();
-    }
-
-    /// <summary>
-    /// Compute <c>referenceForTheta</c> and <c>thetaOffset</c> in order to have a spherical coordinate system
-    /// where initial camera position corresponds to <c>theta = 0</c>.
-    /// </summary>
-    private void ComputeThetaReference()
-    {
-        Vector3 centerToPosition = transform.position - center;
-        Vector2 centerToPositionXZ = new Vector2(centerToPosition.x, centerToPosition.z);
-
-        referenceForTheta = centerToPositionXZ.normalized;
-        thetaOffset = Vector2.Angle(centerToPositionXZ, Vector2.right) * Mathf.Deg2Rad;
-    }
-
     void Update()
     {
         if (centeringInProgress)
@@ -173,6 +125,63 @@ public class CameraScript : MonoBehaviour
 
             centerDragOrigin = Input.mousePosition;
         }
+    }
+
+    void FixedUpdate()
+    {
+        if (needUpdate)
+        {
+            UpdatePosition();
+            needUpdate = false;
+        }
+    }
+
+    /// <summary>
+    /// Allows to get the AreaScript component in the exclusion area gameObject.
+    /// </summary>
+    /// 
+    /// /// <returns>
+    /// The AreaScript.
+    /// </returns>
+    private AreaScript GetArea()
+    {
+        AreaScript area = cameraExclusionArea.GetComponent<AreaScript>();
+        if (area == null)
+            throw new MissingComponentException(
+                "No AreaScript component on cameraExclusionArea GameObject."
+            );
+
+        return area;
+    }
+
+    /// <summary>
+    /// Adjusts the camera position to put it at max distance from the center, and directs it 
+    /// toward the center.
+    /// </summary>
+    [ContextMenu("Adjust camera transform")]
+    private void AdjustCameraTransform()
+    {
+        AreaScript area = GetArea();
+
+        center = area.transform.position + initialOffset;
+
+        Vector3 cameraDirection = (transform.position - center).normalized;
+        transform.position = center + cameraDirection * maxDistance;
+
+        UpdateRotation();
+    }
+
+    /// <summary>
+    /// Compute <c>referenceForTheta</c> and <c>thetaOffset</c> in order to have a spherical coordinate system
+    /// where initial camera position corresponds to <c>theta = 0</c>.
+    /// </summary>
+    private void ComputeThetaReference()
+    {
+        Vector3 centerToPosition = transform.position - center;
+        Vector2 centerToPositionXZ = new Vector2(centerToPosition.x, centerToPosition.z);
+
+        referenceForTheta = centerToPositionXZ.normalized;
+        thetaOffset = Vector2.Angle(centerToPositionXZ, Vector2.right) * Mathf.Deg2Rad;
     }
 
     /// <summary>
@@ -246,15 +255,6 @@ public class CameraScript : MonoBehaviour
 
         dragOrigin = Input.mousePosition;
         centerDragOrigin = Input.mousePosition;
-    }
-
-    void FixedUpdate()
-    {
-        if (needUpdate)
-        {
-            UpdatePosition();
-            needUpdate = false;
-        }
     }
 
     /// <summary>

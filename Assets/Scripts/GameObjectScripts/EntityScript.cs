@@ -77,6 +77,33 @@ public abstract class EntityScript : MonoBehaviour
         CreateFakeTransformHistory();
     }
 
+    private void FixedUpdate()
+    {
+        if (!entitiesManager.EntitiesMovement)
+            return;
+
+        if (entitiesManager.Clock % entitiesManager.CalculationInterval ==
+            id % entitiesManager.CalculationInterval)
+        {
+            Vector3 optimalDirection = ComputeNewDirection();
+            Vector3 adjustedDirection = IterateOnDirectionToAvoidObstacles(
+                optimalDirection);
+            SetNewDirectionTarget(adjustedDirection);
+            UpdateVelocityBonusFactor();
+        }
+
+        UpdateDirectionAndRotation();
+        AdaptVelocity();
+
+        Move();
+        ManageAnimation();
+    }
+
+    private void OnDestroy()
+    {
+        entitiesManager.RemoveAssociatedEntries(myCollider);
+    }
+
     /// <summary>Initializes entity parameters.</summary>
     protected abstract void InitParams();
 
@@ -107,28 +134,6 @@ public abstract class EntityScript : MonoBehaviour
                 velocity * Time.fixedDeltaTime
             );
         }
-    }
-
-    private void FixedUpdate()
-    {
-        if (!entitiesManager.EntitiesMovement)
-            return;
-
-        if (entitiesManager.Clock % entitiesManager.CalculationInterval ==
-            id % entitiesManager.CalculationInterval)
-        {
-            Vector3 optimalDirection = ComputeNewDirection();
-            Vector3 adjustedDirection = IterateOnDirectionToAvoidObstacles(
-                optimalDirection);
-            SetNewDirectionTarget(adjustedDirection);
-            UpdateVelocityBonusFactor();
-        }
-
-        UpdateDirectionAndRotation();
-        AdaptVelocity();
-
-        Move();
-        ManageAnimation();
     }
 
     /// <summary>
@@ -611,10 +616,5 @@ public abstract class EntityScript : MonoBehaviour
 
         if (parameters.applyVelocityFactor)
             AdaptObstacleAvoidanceParams();
-    }
-
-    private void OnDestroy()
-    {
-        entitiesManager.RemoveAssociatedEntries(myCollider);
     }
 }

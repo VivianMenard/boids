@@ -52,6 +52,20 @@ public class GlobalManagerScript : MonoBehaviour
         UpdateButtonsColor();
     }
 
+    void Update()
+    {
+        ManageFpsDisplay();
+
+        if (Input.GetKeyDown(KeyCode.U))
+            ToggleUiDisplay();
+    }
+
+    private void OnApplicationQuit()
+    {
+        Shader.SetGlobalInt(Constants.shaderPauseReference, 0);
+        Shader.SetGlobalFloat(Constants.shaderTimeOffsetReference, 0f);
+    }
+
     /// <summary>
     /// Allows to update all the components with a background color in once.
     /// </summary>
@@ -69,14 +83,6 @@ public class GlobalManagerScript : MonoBehaviour
 
             imageComponent.color = buttonNormalColor;
         }
-    }
-
-    void Update()
-    {
-        ManageFpsDisplay();
-
-        if (Input.GetKeyDown(KeyCode.U))
-            ToggleUiDisplay();
     }
 
     /// <summary>
@@ -322,11 +328,5 @@ public class GlobalManagerScript : MonoBehaviour
 
         Shader.SetGlobalInt(Constants.shaderPauseReference, 0);
         Shader.SetGlobalFloat(Constants.shaderTimeOffsetReference, -timeDiff);
-    }
-
-    private void OnApplicationQuit()
-    {
-        Shader.SetGlobalInt(Constants.shaderPauseReference, 0);
-        Shader.SetGlobalFloat(Constants.shaderTimeOffsetReference, 0f);
     }
 }
