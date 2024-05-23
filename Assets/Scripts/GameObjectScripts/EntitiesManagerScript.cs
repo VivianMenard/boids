@@ -246,7 +246,7 @@ public class EntitiesManagerScript : MonoBehaviour
     private void DespawnEntities(int nbToDespawn, EntityType type)
     {
         int startIndex = currentNbBoids - 1;
-        int endIndex = numberOfBoids;
+        int endIndex = currentNbBoids - nbToDespawn;
         List<GameObject> entitiesList = boids;
 
         if (type == EntityType.PREDATOR)
