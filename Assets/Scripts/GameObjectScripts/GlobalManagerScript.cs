@@ -180,7 +180,7 @@ public class GlobalManagerScript : MonoBehaviour
     /// Makes boids add and remove button disabled/enabled depending wether it's relevant or not to be able to
     /// add/remove boids.
     /// </summary>
-    public void UpdateBoidsButtonsInteractivity()
+    private void UpdateBoidsButtonsInteractivity()
     {
         addBoidsButton.interactable = entitiesManager.NumberOfBoids < maxNbBoidsInUi;
         removeBoidsButton.interactable = entitiesManager.NumberOfBoids > 0;
@@ -190,7 +190,7 @@ public class GlobalManagerScript : MonoBehaviour
     /// Makes predators add and remove button disabled/enabled depending wether it's relevant or not to be able to
     /// add/remove predators.
     /// </summary>
-    public void UpdatePredatorsButtonsInteractivity()
+    private void UpdatePredatorsButtonsInteractivity()
     {
         addPredatorsButton.interactable = entitiesManager.NumberOfPredators < maxNbPredatorsInUi;
         removePredatorsButton.interactable = entitiesManager.NumberOfPredators > 0;
