@@ -1,6 +1,6 @@
 # Boids
 ## Description
-This project is a 3D simulation of boids (a 'boid', derived from 'bird', is used to describe entities that interact together to form flocks. In my case, these entities are fishes) created with Unity. It features flocking behavior, obstacle avoidance, and interactions with predators. Entities are procedurally animated with detailed 3D graphics and shaders. A simple user interface allows control over main aspects of the simulation. 
+This project is a 3D simulation of boids (a 'boid', derived from 'bird', is used to describe entities that interact together to form flocks. In my case, these entities are fishes) created with Unity. It features flocking behavior, obstacle avoidance, and interactions with predators. Entities are procedurally animated with 3D graphics and shaders. A simple user interface also allows to control the main aspects of the simulation. 
 
 Developed as a first Unity project for fun and learning.
 
@@ -59,7 +59,7 @@ That's it! You should now have the project installed and running on your machine
 - **State Machine Mechanism**: Entities use state machines to exhibit a variety of behaviors, adding depth and interest to the simulation.
 - **Procedural Animation**: Entities are animated procedurally, providing smooth and natural movements.
 - **3D Graphics and Shaders**:
-  - 3D models for fishes, sharks and sea floor.
+  - Fishes, sharks and sea floor 3D models.
   - **Water Shader**: Includes wave movement, refraction, absorption, foam, and reflections.
   - **Caustics Shader**: Adds realistic light patterns on underwater surfaces.
   - **Godrays Shader**: Creates shafts of light penetrating through water surface.
@@ -69,7 +69,7 @@ That's it! You should now have the project installed and running on your machine
 
 ## Author
 
-I'm Vivian Ménard, the developer behind this project.
+I'm Vivian Ménard, the developer behind this project. I recently completed an engineering degree with a specialization in computer science at l'École Centrale de Lyon in France. I'm passionate about development, algorithms, and mathematics.
 
 If you have any questions or suggestions, feel free to reach out to me via email at menardvivian@gmail.com or via [my LinkedIn profile](https://www.linkedin.com/in/vivian-m%C3%A9nard-a30376202/).
 
