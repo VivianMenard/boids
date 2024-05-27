@@ -1,6 +1,6 @@
 # Boids
 ## Description
-This project is a 3D simulation of boids (a 'boid', derived from 'bird', is used to describe entities that interact together to form flocks. In my case, these entities are fishes) created with Unity. It features flocking behavior, obstacle avoidance, and interactions with predators. Entities are procedurally animated with 3D graphics and shaders. A simple user interface also allows to control the main aspects of the simulation. 
+This project is a real time 3D simulation of boids (a 'boid', derived from 'bird', is used to describe entities that interact together to form flocks. In my case, these entities are fishes) created with Unity. It features flocking behavior, obstacle avoidance, and interactions with predators. Entities are procedurally animated with 3D graphics and shaders. A simple user interface also allows to control the main aspects of the simulation. 
 
 Developed as a first Unity project for fun and learning.
 
