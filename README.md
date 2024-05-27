@@ -80,3 +80,7 @@ I would like to thank [Anastasia Kasyanik](https://www.linkedin.com/in/anastasia
 I would also like to thank the authors of the following resources that help me in my project:
 - [Flocks, Herds, and Schools: A Distributed Behavioral Model](https://team.inria.fr/imagine/files/2014/10/flocks-hers-and-schools.pdf) by Craig W. Reynolds, for the basis behind boids behavior.
 - [How Games Fake Water](https://www.youtube.com/watch?v=PH9q0HNBjT4&list=PLz_az9HWXUw1zG6iDTOjvVzGS2qwYiJ_n&index=21&ab_channel=Acerola), for the mathematical basis behind water movement.
+
+## License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.
