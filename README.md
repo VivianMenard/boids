@@ -67,6 +67,10 @@ That's it! You should now have the project installed and running on your machine
 - **User Interface**: Simple UI to control main parameters of the simulation and to pause it.
 - **Intuitive Camera Controls**: Allows users to easily navigate and view the simulation from any desired angle.
 
+## Documentation
+
+For a detailed explanation of the mathematical and algorithmic principles behind this project, please refer to the [Technical Documentation](./technical_documentation.pdf).
+
 ## Author
 
 I'm Vivian Ménard, the developer behind this project. I recently completed an engineering degree with a specialization in computer science at l'École Centrale de Lyon in France. I'm passionate about development, algorithms, and mathematics.
