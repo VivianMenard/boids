@@ -71,6 +71,10 @@ That's it! You should now have the project installed and running on your machine
 
 For a detailed explanation of the mathematical and algorithmic principles behind this project, please refer to the [Technical Documentation](./technical_documentation.pdf).
 
+## Screenshot
+
+![Boids Simulation](screens/boids.jpg)
+
 ## Author
 
 I'm Vivian Ménard, the developer behind this project. I recently completed an engineering degree with a specialization in computer science at l'École Centrale de Lyon in France. I'm passionate about development, algorithms, and mathematics.
