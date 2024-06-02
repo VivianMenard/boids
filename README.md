@@ -4,6 +4,8 @@ This project is a real time 3D simulation of boids (a 'boid', derived from 'bird
 
 Developed as a first Unity project for fun and learning.
 
+![Boids Simulation](screens/boids.jpg)
+
 ## Installation
 
 Follow these steps to install and run the project locally on your machine:
@@ -70,10 +72,6 @@ That's it! You should now have the project installed and running on your machine
 ## Documentation
 
 For a detailed explanation of the mathematical and algorithmic principles behind this project, please refer to the [Technical Documentation](./technical_documentation.pdf).
-
-## Screenshot
-
-![Boids Simulation](screens/boids.jpg)
 
 ## Author
 
