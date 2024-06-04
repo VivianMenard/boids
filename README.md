@@ -10,6 +10,10 @@ Developed as a first Unity project for fun and learning.
 
 [Boids simulation video demo on YouTube](https://www.youtube.com/watch?v=RCrR4KQPHqg&ab_channel=VivianM%C3%A9nard)
 
+## Build
+
+[Download a build on Itch.io](https://vivianmenard.itch.io/boids)
+
 ## Installation
 
 Follow these steps to install and run the project locally on your machine:
