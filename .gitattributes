@@ -1,0 +1,5 @@
+*.shader linguist-generated
+*.cginc linguist-generated
+*.hlsl linguist-generated
+
+Assets/TextMesh\ Pro/** linguist-generated
