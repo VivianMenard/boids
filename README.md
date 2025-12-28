@@ -81,12 +81,6 @@ That's it! You should now have the project installed and running on your machine
 
 For a detailed explanation of the mathematical and algorithmic principles behind this project, please refer to the [Technical Documentation](./technical_documentation.pdf).
 
-## Author
-
-I'm Vivian Ménard, the developer behind this project. I recently completed an engineering degree with a specialization in computer science at l'École Centrale de Lyon in France. I'm passionate about development, algorithms, and mathematics.
-
-If you have any questions or suggestions, feel free to reach out to me via email at menardvivian@gmail.com or via [my LinkedIn profile](https://www.linkedin.com/in/vivian-m%C3%A9nard-a30376202/).
-
 ## Acknowledgements & Resources
 
 I would like to thank [Anastasia Kasyanik](https://www.linkedin.com/in/anastasia-kasyanik-b5a5a2170/) for her artistic advice on the project.
